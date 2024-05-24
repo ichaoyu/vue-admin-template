@@ -9,7 +9,7 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs';
 import allGloablComponent from '@/components';
 import 'virtual:svg-icons-register';
 
-import './style.css';
+import '@/assets/styles/index.scss';
 import App from './App.vue';
 
 const app = createApp(App);

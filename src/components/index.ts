@@ -1,5 +1,5 @@
 //引入项目中全部的全局组件
-import SvgIcon from './SvgIcon/index.vue';
+import SvgIcon from './SvgIcon';
 // import Pagination from './Pagination/index.vue'
 // import Category from './Category/index.vue'
 //引入element-plus提供全部图标组件
