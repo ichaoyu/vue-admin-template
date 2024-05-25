@@ -1,5 +1,18 @@
 <script setup lang="ts">
+import { onMounted } from 'vue';
+import axios from 'axios';
 import HelloWorld from './components/HelloWorld.vue';
+
+onMounted(() => {
+  axios({
+    url: '/api/user/login',
+    method: 'POST',
+    data: {
+      username: 'admin',
+      password: 'admin',
+    },
+  });
+});
 </script>
 
 <template>
