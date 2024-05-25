@@ -1,17 +1,14 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import axios from 'axios';
+import { loginApi } from '@/api/user';
 import HelloWorld from './components/HelloWorld.vue';
 
-onMounted(() => {
-  axios({
-    url: '/api/user/login',
-    method: 'POST',
-    data: {
-      username: 'admin',
-      password: 'admin',
-    },
+onMounted(async () => {
+  const loginData = await loginApi({
+    username: 'admin',
+    password: 'admin',
   });
+  console.log(loginData);
 });
 </script>
 

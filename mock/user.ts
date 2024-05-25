@@ -22,7 +22,7 @@ const List: {
 ];
 export default [
   {
-    url: '/api/user/login',
+    url: '/api/mock/user/login',
     method: 'post',
     response: ({ body }) => {
       const data = body;
