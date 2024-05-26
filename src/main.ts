@@ -8,6 +8,8 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs';
 // 引入全部组件
 import allGloablComponent from '@/components';
 import 'virtual:svg-icons-register';
+// 引入路由
+import router from './router';
 
 import '@/assets/styles/index.scss';
 import App from './App.vue';
@@ -15,8 +17,12 @@ import App from './App.vue';
 const app = createApp(App);
 
 app.use(ElementPlus, {
+  // ElementPlus国际化
   locale: zhCn,
 });
+// 安装自定义组件
 app.use(allGloablComponent);
+// 注册路由
+app.use(router);
 
 app.mount('#app');
