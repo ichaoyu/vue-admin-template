@@ -3,7 +3,7 @@ export const constantRoute = [
   {
     //登录路由
     path: '/login',
-    component: () => import('@/views/login/index.vue'),
+    component: () => import('@/views/login'),
     name: 'login', //命名路由
   },
   {
