@@ -22,6 +22,7 @@ app.use(ElementPlus, {
   // ElementPlus国际化
   locale: zhCn,
 });
+
 // 安装自定义组件
 app.use(allGloablComponent);
 // 注册路由

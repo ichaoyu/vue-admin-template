@@ -14,7 +14,7 @@ export const constantRoute: AppRouteRecordRaw[] = [
   {
     //登录成功后展示数据路由
     path: '/',
-    component: () => import('@/views/home'),
+    component: () => import('@/layout/index.vue'),
     name: 'layout',
     meta: {
       hidden: true,
