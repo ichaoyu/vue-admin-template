@@ -3,6 +3,7 @@ const List: {
   password: string;
   role: string;
   roleId: string;
+  token: string;
   permissions: string | string[];
 }[] = [
   {
@@ -11,6 +12,7 @@ const List: {
     role: 'admin',
     roleId: '1',
     permissions: ['*.*.*'],
+    token: 'x0Pliqum',
   },
   {
     username: 'test',
@@ -18,6 +20,7 @@ const List: {
     role: 'test',
     roleId: '2',
     permissions: ['example:dialog:create', 'example:dialog:delete'],
+    token: 'x0Pliqum',
   },
 ];
 export default [
