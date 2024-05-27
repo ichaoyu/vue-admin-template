@@ -10,6 +10,8 @@ import allGloablComponent from '@/components';
 import 'virtual:svg-icons-register';
 // 引入路由
 import router from './router';
+// 引入pinia
+import store from './store';
 
 import '@/assets/styles/index.scss';
 import App from './App.vue';
@@ -24,5 +26,7 @@ app.use(ElementPlus, {
 app.use(allGloablComponent);
 // 注册路由
 app.use(router);
+// 注册pinia
+app.use(store);
 
 app.mount('#app');
