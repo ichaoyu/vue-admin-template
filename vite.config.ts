@@ -7,10 +7,9 @@ import { viteMockServe } from 'vite-plugin-mock';
 
 const root = process.cwd();
 const pathResolve = (pathname: string) => resolve(root, '.', pathname);
-// https://vitejs.dev/config/
+
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, root);
-  const isBuild = command === 'build';
   return {
     plugins: [
       vue(),
@@ -28,6 +27,18 @@ export default defineConfig(({ command, mode }) => {
     resolve: {
       alias: {
         '@/': pathResolve('src') + '/',
+      },
+    },
+    server: {
+      open: true,
+      port: 7002,
+      // 代理配置
+      proxy: {
+        '/api': {
+          target: 'http://localhost:7001',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ''),
+        },
       },
     },
   };

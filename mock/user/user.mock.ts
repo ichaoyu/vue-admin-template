@@ -36,6 +36,7 @@ export default [
           return {
             code: 0,
             data: user,
+            msg: '操作成功',
           };
         }
       }
