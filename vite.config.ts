@@ -29,6 +29,14 @@ export default defineConfig(({ command, mode }) => {
         '@/': pathResolve('src') + '/',
       },
     },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          javascriptEnable: true,
+          additionalData: `@import "./src/assets/styles/var.scss";`,
+        },
+      },
+    },
     server: {
       open: true,
       port: 7002,
