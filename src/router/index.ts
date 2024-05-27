@@ -1,9 +1,13 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import {
+  createRouter,
+  createWebHistory,
+  type RouteRecordRaw,
+} from 'vue-router';
 import { constantRoute } from './routes';
 
 const router = createRouter({
   history: createWebHistory(),
-  routes: constantRoute,
+  routes: constantRoute as RouteRecordRaw[],
   scrollBehavior() {
     return {
       left: 0,
