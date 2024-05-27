@@ -1,7 +1,9 @@
 <template>
   <div class="layout-container">
     <!--左侧菜单 -->
-    <div class="layout-sider">123</div>
+    <div class="layout-sider">
+      <Logo />
+    </div>
 
     <!--顶部导航 -->
     <div class="layout-tabbar">456</div>
@@ -11,7 +13,9 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Logo from '@/components/Logo';
+</script>
 
 <style scoped lang="scss">
 .layout-container {
