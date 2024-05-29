@@ -1,6 +1,5 @@
 <template>
-  <el-button size="small" icon="Refresh" circle />
-  <el-button size="small" icon="FullScreen" circle />
+  <el-button size="small" icon="FullScreen" circle @click="onFullScreen" />
   <el-button size="small" icon="Setting" circle />
   <el-icon><Avatar /></el-icon>
   <el-dropdown>
@@ -18,6 +17,15 @@
   </el-dropdown>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const onFullScreen = () => {
+  const full = document.fullscreenElement;
+  if (!full) {
+    document.documentElement.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+};
+</script>
 
 <style scoped lang="scss"></style>
