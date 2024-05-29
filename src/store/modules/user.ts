@@ -1,14 +1,8 @@
 import { defineStore } from 'pinia';
 import { loginApi } from '@/api/user';
-import { UserType, UserLoginType } from '@/interface';
-interface UserState {
-  userInfo?: UserType;
-  tokenKey: string;
-  token: string;
-  roleRouters?: string[] | AppCustomRouteRecordRaw[];
-  rememberMe: boolean;
-  loginInfo?: UserLoginType;
-}
+import { UserLoginType, UserState } from '@/interface';
+import { constantRoute } from '@/router/routes';
+
 const useUserStore = defineStore('User', {
   state: (): UserState => {
     return {
@@ -19,6 +13,7 @@ const useUserStore = defineStore('User', {
       // 记住我
       rememberMe: true,
       loginInfo: undefined,
+      menuRoutes: constantRoute,
     };
   },
   actions: {

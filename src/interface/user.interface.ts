@@ -8,3 +8,13 @@ export interface UserType {
   role: string;
   roleId: string;
 }
+
+export interface UserState {
+  userInfo?: UserType;
+  tokenKey: string;
+  token: string;
+  roleRouters?: string[] | AppCustomRouteRecordRaw[];
+  rememberMe: boolean;
+  loginInfo?: UserLoginType;
+  menuRoutes?: AppRouteRecordRaw[];
+}

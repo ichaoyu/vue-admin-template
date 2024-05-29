@@ -1,3 +1,4 @@
+import Layout from '@/layout/index.vue';
 //对外暴露配置路由
 export const constantRoute: AppRouteRecordRaw[] = [
   {
@@ -14,7 +15,8 @@ export const constantRoute: AppRouteRecordRaw[] = [
   {
     //登录成功后展示数据路由
     path: '/',
-    component: () => import('@/layout/index.vue'),
+    component: Layout,
+    redirect: '/dashboard',
     name: 'layout',
     meta: {
       hidden: true,
@@ -41,5 +43,70 @@ export const constantRoute: AppRouteRecordRaw[] = [
       title: '404',
       noTagsView: true,
     },
+  },
+  {
+    path: '/dashboard',
+    component: Layout,
+    redirect: '/dashboard/analysis',
+    name: 'Dashboard',
+    meta: {
+      title: 'dashboard',
+      icon: 'HomeFilled',
+      alwaysShow: true,
+    },
+    children: [
+      {
+        path: 'analysis',
+        component: () => import('@/views/home'),
+        name: 'Analysis',
+        meta: {
+          title: 'analysis',
+          noCache: true,
+          affix: true,
+        },
+      },
+      {
+        path: 'workplace',
+        component: () => import('@/views/home'),
+        name: 'Workplace',
+        meta: {
+          title: 'Workplace',
+          noCache: true,
+        },
+      },
+    ],
+  },
+  {
+    path: '/onechild',
+    component: Layout,
+    meta: {
+      title: 'onechild-P',
+      icon: 'Grid',
+      alwaysShow: true,
+    },
+    name: 'onechild-P',
+    children: [
+      {
+        path: 'onechild',
+        component: () => import('@/views/home'),
+        name: 'onechild',
+        meta: {
+          title: 'onechild',
+          noCache: true,
+          affix: true,
+        },
+      },
+    ],
+  },
+  {
+    path: '/nochild',
+    component: Layout,
+    meta: {
+      title: 'nochild',
+      noCache: true,
+      affix: true,
+      icon: 'List',
+    },
+    name: 'nochild',
   },
 ];

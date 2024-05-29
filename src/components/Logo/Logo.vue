@@ -5,7 +5,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 import config from '@/layout/settings';
 </script>
@@ -13,6 +13,7 @@ import config from '@/layout/settings';
 <style lang="scss" scoped>
 .logo {
   display: flex;
+  box-sizing: border-box;
   align-items: center;
   width: 100%;
   height: $base-menu-logo-height;
