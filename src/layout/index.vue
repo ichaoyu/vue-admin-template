@@ -1,38 +1,31 @@
 <template>
   <el-container class="layout">
-    <el-aside class="layout-aside">
+    <el-aside :class="['layout-aside', SettingsStore.menuFold ? 'fold' : '']">
       <Logo />
       <el-scrollbar>
-        <Menu :isCollapse="isCollapse" :menuList="userStore.menuRoutes" />
+        <Menu :menuList="userStore.menuRoutes" />
       </el-scrollbar>
     </el-aside>
     <el-container class="layout-container">
       <el-header class="layout-header">
-        <el-button @click="onCollapseMenu">展开/折叠</el-button>
-        <div class="layout-header-toolbar">
-          <el-dropdown>
-            <el-icon style="margin-top: 1px; margin-right: 8px">
-              <setting />
-            </el-icon>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item>View</el-dropdown-item>
-                <el-dropdown-item>Add</el-dropdown-item>
-                <el-dropdown-item>Delete</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-          <span>Tom</span>
+        <div class="tabbar-left">
+          <!--顶部左侧图标 -->
+          <HeaderBreadcrumb />
+        </div>
+        <!--顶部右侧设置按钮 -->
+        <div class="tabbar-right">
+          <HeaderSettings />
         </div>
       </el-header>
 
       <!-- <el-scrollbar class="layout-container-scrollbar"> -->
       <el-main class="layout-main">
-        <el-table :data="tableData">
-          <el-table-column prop="date" label="Date" width="140" />
-          <el-table-column prop="name" label="Name" width="120" />
-          <el-table-column prop="address" label="Address" />
-        </el-table>
+        <router-view v-slot="{ Component }">
+          <transition name="fade">
+            <!-- 渲染一级路由的子路由 -->
+            <component :is="Component" />
+          </transition>
+        </router-view>
       </el-main>
       <!-- </el-scrollbar> -->
     </el-container>
@@ -40,37 +33,36 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import Menu from './Menu.vue';
-import Logo from '@/components/Logo';
 import useUserStore from '@/store/modules/user';
+import useSettingsStore from '@/store/modules/seeings';
+
+import Logo from '@/components/Logo';
+import Menu from './components/Menu.vue';
+import HeaderBreadcrumb from './components/HeaderBreadcrumb.vue';
+import HeaderSettings from './components/HeaderSettings.vue';
 
 const userStore = useUserStore();
-const item = {
-  date: '2016-05-02',
-  name: 'Tom',
-  address: 'No. 189, Grove St, Los Angeles',
-};
-const tableData = ref(Array.from({ length: 20 }).fill(item));
 
-const isCollapse = ref<boolean>(false);
-const onCollapseMenu = () => {
-  isCollapse.value = !isCollapse.value;
-};
+const SettingsStore = useSettingsStore();
 </script>
 
 <style scoped lang="scss">
 .layout {
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   overflow: hidden;
 
   &-aside {
-    --el-aside-width: 200px;
+    // --el-aside-width: $base-menu-width;
 
     box-sizing: border-box;
+    width: $base-menu-width;
     overflow: hidden;
-    // width: $base-menu-width;
+    transition: all 0.3s;
+
+    &.fold {
+      width: $base-menu-min-width;
+    }
   }
 
   &-container {
@@ -87,12 +79,15 @@ const onCollapseMenu = () => {
     font-size: 12px;
     text-align: right;
 
-    &-toolbar {
-      display: inline-flex;
-      right: 20px;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
+    .tabbar-left {
+      display: flex;
+      align-items: center; //Y轴侧轴居中
+      margin-left: 20px;
+    }
+
+    .tabbar-right {
+      display: flex;
+      align-items: center; //Y轴侧轴居中
     }
   }
 
@@ -104,5 +99,19 @@ const onCollapseMenu = () => {
   &-main {
     overflow-y: auto;
   }
+}
+
+.fade-enter-from {
+  transform: scale(0);
+  opacity: 0;
+}
+
+.fade-enter-active {
+  transition: all 0.3s;
+}
+
+.fade-enter-to {
+  transform: scale(1);
+  opacity: 1;
 }
 </style>

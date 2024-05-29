@@ -20,6 +20,8 @@ export const constantRoute: AppRouteRecordRaw[] = [
     name: 'layout',
     meta: {
       hidden: true,
+      icon: '',
+      title: '',
     },
   },
   {
