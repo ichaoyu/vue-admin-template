@@ -58,7 +58,7 @@ export const constantRoute: AppRouteRecordRaw[] = [
     },
     children: [
       {
-        path: 'analysis',
+        path: '/dashboard/analysis',
         component: () => import('@/views/home'),
         name: 'Analysis',
         meta: {
@@ -68,7 +68,7 @@ export const constantRoute: AppRouteRecordRaw[] = [
         },
       },
       {
-        path: 'workplace',
+        path: '/dashboard/workplace',
         component: () => import('@/views/home'),
         name: 'Workplace',
         meta: {
@@ -89,7 +89,7 @@ export const constantRoute: AppRouteRecordRaw[] = [
     name: 'onechild-P',
     children: [
       {
-        path: 'onechild',
+        path: '/onechild/onechild',
         component: () => import('@/views/home'),
         name: 'onechild',
         meta: {
