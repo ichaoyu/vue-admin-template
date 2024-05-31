@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia';
-import { loginApi } from '@/api/user';
-import { UserLoginType, UserState } from '@/interface';
+
+import { UserLoginType, UserState, UserType } from '@/interface';
 import { constantRoute } from '@/router/routes';
+import store from '../index';
 
 const useUserStore = defineStore('User', {
   state: (): UserState => {
@@ -17,15 +18,44 @@ const useUserStore = defineStore('User', {
     };
   },
   actions: {
-    async login(data: UserLoginType) {
-      const res = await loginApi(data);
-      if (res?.code === 0) {
-        this.token = res.data.token;
-        localStorage.setItem('TOKEN', res.data.token);
-      }
+    setTokenKey(tokenKey: string) {
+      this.tokenKey = tokenKey;
+    },
+    setToken(token: string) {
+      this.token = token;
+    },
+    setUserInfo(userInfo?: UserType) {
+      this.userInfo = userInfo;
+    },
+    setRoleRouters(roleRouters: string[] | AppCustomRouteRecordRaw[]) {
+      this.roleRouters = roleRouters;
     },
   },
-  getters: {},
+  getters: {
+    getTokenKey(): string {
+      return this.tokenKey;
+    },
+    getToken(): string {
+      return this.token;
+    },
+    getUserInfo(): UserType | undefined {
+      return this.userInfo;
+    },
+    getRoleRouters(): string[] | AppCustomRouteRecordRaw[] | undefined {
+      return this.roleRouters;
+    },
+    getRememberMe(): boolean {
+      return this.rememberMe;
+    },
+    getLoginInfo(): UserLoginType | undefined {
+      return this.loginInfo;
+    },
+  },
+  persist: true,
 });
+
+export const useUserStoreWithOut = () => {
+  return useUserStore(store);
+};
 
 export default useUserStore;
