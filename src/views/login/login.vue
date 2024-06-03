@@ -42,19 +42,28 @@ import { User, Lock } from '@element-plus/icons-vue';
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElNotification } from 'element-plus';
+import { loginApi } from '@/api/user';
 import useUserStore from '@/store/modules/user';
+import { useStorage } from '@/hooks/useStorage';
 
 const router = useRouter();
 const userStore = useUserStore();
+const { setStorage } = useStorage();
+
 let loginForm = reactive({
   username: 'admin',
-  password: 'admin',
+  password: '123456',
 });
 const loading = ref<boolean>(false);
 const onSubmit = async () => {
   try {
     loading.value = true;
-    await userStore.login(loginForm);
+    const res: IResponse = await loginApi(loginForm);
+    console.log('res: ', res);
+    userStore.setToken(res.data.token);
+    userStore.setUserInfo(res.data);
+    setStorage('TOKEN', res.data.token);
+    setStorage('USERINFO', res.data);
     router.push('/');
   } catch (err) {
     ElNotification({

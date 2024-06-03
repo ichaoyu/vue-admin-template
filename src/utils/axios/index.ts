@@ -8,6 +8,7 @@ import {
   RequestConfig,
   AxiosResponse,
 } from './types';
+import { useUserStoreWithOut } from '@/store/modules/user';
 
 const isMock = import.meta.env.VITE_USE_MOCK;
 const PATH_URL = import.meta.env.VITE_APP_BASE_API;
@@ -74,11 +75,11 @@ axiosInstance.interceptors.response.use(
     if (response?.config?.responseType === 'blob') {
       // 文件流直接返回全部
       return response;
-    } else if (response.data.code === 0) {
+    } else if (response?.status === 200) {
       // 成功直接返回data数据
       return response.data;
     } else {
-      ElMessage.error(response?.data?.message ?? '未知错误1');
+      ElMessage.error(response?.data?.msg ?? '未知错误1');
     }
   },
   (error) => {
@@ -106,7 +107,7 @@ const service = (config: RequestConfig) => {
   });
 };
 const request = (option: AxiosConfig) => {
-  console.log('option: ', option);
+  const userStore = useUserStoreWithOut();
   const { url, method, params, data, headers, responseType } = option;
   return service({
     url,
@@ -116,6 +117,7 @@ const request = (option: AxiosConfig) => {
     responseType,
     headers: {
       'Content-Type': 'application/json',
+      [userStore.getTokenKey ?? 'Authorization']: userStore.getToken ?? '',
       ...headers,
     },
   });

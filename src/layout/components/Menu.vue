@@ -33,12 +33,14 @@ export default {
 };
 </script>
 <script lang="ts" setup>
-import { defineProps } from 'vue';
 import type { PropType } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import useSettingsStore from '@/store/modules/seeings';
 const SettingsStore = useSettingsStore();
-
+// interface PropsDefin = {
+//   isCollapse: Boolean,
+//   menuList: []
+// }
 const props = defineProps({
   isCollapse: {
     type: Boolean,
@@ -50,12 +52,12 @@ const props = defineProps({
   },
 });
 //获取路由器对象
-const $router = useRouter();
+const router = useRouter();
 const route = useRoute();
 //点击菜单的回调
 const goRoute = (vc: any) => {
   //路由跳转
-  $router.push(vc.index);
+  router.push(vc.index);
 };
 </script>
 

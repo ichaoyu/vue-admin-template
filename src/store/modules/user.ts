@@ -3,13 +3,16 @@ import { defineStore } from 'pinia';
 import { UserLoginType, UserState, UserType } from '@/interface';
 import { constantRoute } from '@/router/routes';
 import store from '../index';
+import { useStorage } from '@/hooks/useStorage';
+
+const { getStorage } = useStorage();
 
 const useUserStore = defineStore('User', {
   state: (): UserState => {
     return {
       userInfo: undefined,
       tokenKey: 'Authorization',
-      token: localStorage.getItem('TOKEN') || '',
+      token: getStorage('TOKEN') || '',
       roleRouters: undefined,
       // 记住我
       rememberMe: true,
@@ -51,7 +54,6 @@ const useUserStore = defineStore('User', {
       return this.loginInfo;
     },
   },
-  persist: true,
 });
 
 export const useUserStoreWithOut = () => {

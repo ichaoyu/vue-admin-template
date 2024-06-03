@@ -14,6 +14,9 @@ import router from './router';
 import store from './store';
 
 import '@/assets/styles/index.scss';
+
+import '@/router/permission';
+
 import App from './App.vue';
 
 const app = createApp(App);

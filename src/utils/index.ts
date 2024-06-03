@@ -1,5 +1,4 @@
-import request from './axios';
+export * as request from './axios';
 export * from './utils';
 export * from './tree';
-
-export { request };
+export * from './is';

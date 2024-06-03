@@ -8,7 +8,7 @@ const List: {
 }[] = [
   {
     username: 'admin',
-    password: 'admin',
+    password: '123456',
     role: 'admin',
     roleId: '1',
     permissions: ['*.*.*'],

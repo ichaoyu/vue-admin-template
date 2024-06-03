@@ -6,8 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import config from '@/layout/settings';
+import config from '@/config/settings';
 </script>
 
 <style lang="scss" scoped>

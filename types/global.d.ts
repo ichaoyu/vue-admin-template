@@ -3,6 +3,7 @@ declare global {
   declare interface Fn<T = any> {
     (...arg: T[]): T;
   }
+  declare type ElRef<T extends HTMLElement = HTMLDivElement> = Nullable<T>;
   declare type Recordable<T = any, K = string> = Record<
     K extends null | undefined ? string : K,
     T

@@ -3,4 +3,5 @@ export interface Settings {
   title?: string;
   isShowLogo?: boolean;
   menuWidth?: string;
+  storagePrefix?: string;
 }
