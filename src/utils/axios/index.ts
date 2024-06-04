@@ -10,7 +10,7 @@ import {
 } from './types';
 import { useUserStoreWithOut } from '@/store/modules/user';
 
-const isMock = import.meta.env.VITE_USE_MOCK;
+const isMock = import.meta.env.VITE_USE_MOCK === 'true';
 const PATH_URL = import.meta.env.VITE_APP_BASE_API;
 /**
  * 创建axios实例
@@ -57,8 +57,10 @@ axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const url = config.url || '';
   if (isMock) {
     // 使用mock时更换url 用于区分
+    console.log('config.url: ', config.url);
     config.url = url.replace('/api', '/mock');
   }
+  console.log('config: ', config);
   return config;
 });
 

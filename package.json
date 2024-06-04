@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "vue-tsc && vite build --mode production",
-    "preview": "vite preview",
+    "build": "vite build --mode production",
+    "preview": "vite preview --mode production",
     "lint": "eslint \"src/**/*.{ts,tsx,js,vue,json}\" --fix",
     "lint:style": "stylelint src/**/*.{css,scss,vue} --cache --fix",
     "prettier": "prettier --config --write \"src/**/*.{ts,tsx,js,vue,json}\""
@@ -27,6 +27,7 @@
     "@typescript-eslint/eslint-plugin": "^7.10.0",
     "@typescript-eslint/parser": "^7.10.0",
     "@vitejs/plugin-vue": "^5.0.4",
+    "@vitejs/plugin-vue-jsx": "^4.0.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",

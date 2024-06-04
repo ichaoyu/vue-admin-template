@@ -4,7 +4,7 @@
     :collapse="SettingsStore.menuFold"
     :default-active="route.path"
   >
-    <template v-for="item in $props.menuList" :key="item.path">
+    <template v-for="item in props.menuList" :key="item.path">
       <!--没有子路由-->
       <template v-if="!item.children">
         <el-menu-item

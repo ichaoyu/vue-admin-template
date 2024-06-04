@@ -1,8 +1,6 @@
 import { request } from '@/utils';
-interface UserType {
-  username: string;
-  password: string;
-}
-export const loginApi = (data: UserType) => {
+import { UserLoginType } from '@/interface/user.interface';
+
+export const loginApi = (data: UserLoginType) => {
   return request.post({ url: '/api/user/login', data });
 };
