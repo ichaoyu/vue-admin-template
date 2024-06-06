@@ -1,5 +1,10 @@
 <template>
-  <el-menu class="aside-menu" :collapse="collapse" :default-active="route.path">
+  <el-menu
+    class="aside-menu"
+    :collapse="collapse"
+    :default-active="currentPath.activeMenuItem"
+    :default-openeds="currentPath.opend"
+  >
     <template v-for="item in props.menuList" :key="item.path">
       <!--没有子路由-->
       <template v-if="!item.children">
@@ -32,7 +37,7 @@ export default {
 };
 </script>
 <script lang="ts" setup>
-import type { PropType } from 'vue';
+import { computed, type PropType } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 const props = defineProps({
@@ -52,6 +57,13 @@ const props = defineProps({
 //获取路由器对象
 const router = useRouter();
 const route = useRoute();
+const currentPath = computed(() => {
+  const opend = route.matched.map((item) => item.path);
+  return {
+    activeMenuItem: route.path,
+    opend,
+  };
+});
 //点击菜单的回调
 const goRoute = (vc: any) => {
   //路由跳转

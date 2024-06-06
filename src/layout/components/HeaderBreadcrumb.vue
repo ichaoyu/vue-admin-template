@@ -12,17 +12,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { useAppStore } from '@/store/modules/app';
-const appStore = useAppStore();
-const collapse = computed(() => appStore.getCollapse);
 
 const route = useRoute();
-
-const onChangeMenuFold = () => {
-  appStore.setCollapse(!collapse.value);
-};
 </script>
 
 <style scoped lang="scss">

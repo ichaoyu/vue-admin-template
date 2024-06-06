@@ -5,12 +5,14 @@
       <el-scrollbar>
         <Menu :menuList="menuList" :collapse="collapse" />
       </el-scrollbar>
-      <el-icon class="icon-menufold">
-        <component
-          :is="collapse ? 'Fold' : 'Expand'"
-          @click="onChangeMenuFold"
-        />
-      </el-icon>
+      <div class="layout-aside-opr">
+        <el-icon class="icon icon-menufold">
+          <component
+            :is="collapse ? 'Expand' : 'Fold'"
+            @click="onChangeMenuFold"
+          />
+        </el-icon>
+      </div>
     </el-aside>
     <el-container class="layout-container">
       <el-header class="layout-header">
@@ -50,6 +52,9 @@ const collapse = computed(() => appStore.getCollapse);
 
 const permissionStore = usePermissionStore();
 const menuList = computed(() => permissionStore.getRouters);
+const onChangeMenuFold = () => {
+  appStore.setCollapse(!collapse.value);
+};
 </script>
 
 <style scoped lang="scss">
@@ -68,11 +73,25 @@ const menuList = computed(() => permissionStore.getRouters);
     border-right: 1px solid var(--el-menu-border-color);
 
     :deep(.el-scrollbar) {
-      height: calc(100vh - 2 * $base-menu-logo-height);
+      height: calc(100vh - $base-menu-opr-height - $base-menu-logo-height);
     }
 
     &.fold {
       width: $base-menu-min-width;
+    }
+
+    &-opr {
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      justify-content: flex-end;
+      height: $base-menu-opr-height;
+      padding: 0 10px;
+      cursor: pointer;
+
+      .icon {
+        font-size: 20px;
+      }
     }
   }
 
