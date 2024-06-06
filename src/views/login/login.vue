@@ -43,7 +43,7 @@ import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElNotification } from 'element-plus';
 import { loginApi } from '@/api/user';
-import useUserStore from '@/store/modules/user';
+import { useUserStore } from '@/store/modules/user';
 import { useStorage } from '@/hooks/useStorage';
 
 const router = useRouter();

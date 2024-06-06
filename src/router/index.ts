@@ -3,7 +3,7 @@ import {
   createWebHistory,
   type RouteRecordRaw,
 } from 'vue-router';
-import { constantRoute } from './routes';
+import { constantRoute, asyncRouter } from './routes';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -15,5 +15,5 @@ const router = createRouter({
     };
   },
 });
-
 export default router;
+export { asyncRouter, constantRoute };

@@ -1,50 +1,63 @@
 import router from '@/router';
+import type { RouteRecordRaw } from 'vue-router';
+
 import { useNProgress } from '@/hooks/useNProgress';
-import settings from '../config/settings';
-import useUserStoreWithOut from '@/store/modules/user';
-import { useStorage } from '@/hooks/useStorage';
+import { useUserStoreOut } from '@/store/modules/user';
+import { useAppStoreOut } from '@/store/modules/app';
+import { usePermissionStoreOut } from '@/store/modules/permission';
 
 const { start, done } = useNProgress();
-const { getStorage } = useStorage();
+
+const NO_REDIRECT_WHITE_LIST = ['/login'];
+
 //全局前置守卫
 router.beforeEach(async (to: any, from: any, next: any) => {
   start();
-  const userStore = useUserStoreWithOut();
-  document.title = `${settings.title} - ${to.meta.title}`;
-  // 获取token,判断是否登录
-  const token = userStore.getToken;
-  const userInfo = getStorage('USERINFO');
-  //用户登录判断
-  if (token) {
-    if (to.path == '/login') {
-      //已登录访问login则跳转到首页
+  const userStore = useUserStoreOut();
+  const permissionStore = usePermissionStoreOut();
+  const appStore = useAppStoreOut();
+  if (userStore.getUserInfo) {
+    if (to.path === '/login') {
       next({ path: '/' });
     } else {
-      // 登录成功访问其余六个路由(登录排除)
-      if (userInfo) {
-        //有用户信息
+      if (permissionStore.getIsAddRouters) {
         next();
-      } else {
-        // 没有用户信息则获取用户信息再放行
-        try {
-          // await userStore.userInfo(); //获取用户信息
-          console.log('获取用户信息');
-          //放行
-          next({ ...to });
-        } catch (error) {
-          // token过期
-          // userStore.userLogout();
-          console.log('token过期');
-          next({ path: '/login', query: { redirect: to.path } });
-        }
+        return;
       }
+
+      // 开发者可根据实际情况进行修改
+      const roleRouters = userStore.getRoleRouters || [];
+
+      // 是否使用动态路由
+      if (appStore.getDynamicRouter) {
+        appStore.serverDynamicRouter
+          ? await permissionStore.generateRoutes(
+              'server',
+              roleRouters as AppCustomRouteRecordRaw[],
+            )
+          : await permissionStore.generateRoutes(
+              'frontEnd',
+              roleRouters as string[],
+            );
+      } else {
+        await permissionStore.generateRoutes('static');
+      }
+
+      permissionStore.getAddRouters.forEach((route) => {
+        router.addRoute(route as unknown as RouteRecordRaw); // 动态添加可访问路由表
+      });
+      const redirectPath = from.query.redirect || to.path;
+      const redirect = decodeURIComponent(redirectPath as string);
+      const nextData =
+        to.path === redirect ? { ...to, replace: true } : { path: redirect };
+      permissionStore.setIsAddRouters(true);
+      next(nextData);
     }
   } else {
-    //用户未登录判断
-    if (to.path == '/login') {
+    if (NO_REDIRECT_WHITE_LIST.indexOf(to.path) !== -1) {
       next();
     } else {
-      next({ path: '/login', query: { redirect: to.path } });
+      next(`/login?redirect=${to.path}`); // 否则全部重定向到登录页
     }
   }
 });

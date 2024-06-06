@@ -1,13 +1,12 @@
 import { defineStore } from 'pinia';
 
 import { UserLoginType, UserState, UserType } from '@/interface';
-import { constantRoute } from '@/router/routes';
 import store from '../index';
 import { useStorage } from '@/hooks/useStorage';
 
 const { getStorage } = useStorage();
 
-const useUserStore = defineStore('User', {
+export const useUserStore = defineStore('User', {
   state: (): UserState => {
     return {
       userInfo: undefined,
@@ -17,7 +16,6 @@ const useUserStore = defineStore('User', {
       // 记住我
       rememberMe: true,
       loginInfo: undefined,
-      menuRoutes: constantRoute,
     };
   },
   actions: {
@@ -56,8 +54,6 @@ const useUserStore = defineStore('User', {
   },
 });
 
-export const useUserStoreWithOut = () => {
+export const useUserStoreOut = () => {
   return useUserStore(store);
 };
-
-export default useUserStore;

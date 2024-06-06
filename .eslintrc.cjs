@@ -15,7 +15,7 @@ module.exports = {
     },
     // project: './tsconfig.*?.json',
     createDefaultProgram: false,
-    extraFileExtensions: ['.vue'],
+    extraFileExtensions: ['.vue', '.tsx', 'ts'],
   },
   plugins: ['vue', '@typescript-eslint'],
   extends: [
@@ -60,5 +60,6 @@ module.exports = {
     ],
     'vue/multi-word-component-names': 'off',
     'no-undef': 'off',
+    'no-case-declarations': 'off',
   },
 };

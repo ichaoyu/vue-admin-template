@@ -1,12 +1,17 @@
 <template>
   <div class="logo">
     <img src="@/assets/vue.svg" alt="logo" />
-    <p>{{ config.title }}</p>
+    <p v-if="!props.collapse">vue admin</p>
   </div>
 </template>
 
 <script setup lang="ts">
-import config from '@/config/settings';
+const props = defineProps({
+  collapse: {
+    type: Boolean,
+    defaulat: false,
+  },
+});
 </script>
 
 <style lang="scss" scoped>
@@ -17,7 +22,7 @@ import config from '@/config/settings';
   width: 100%;
   height: $base-menu-logo-height;
   padding: 10px;
-  color: #fff;
+  color: #000;
 
   img {
     width: 40px;

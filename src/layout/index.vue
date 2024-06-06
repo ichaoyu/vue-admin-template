@@ -1,10 +1,16 @@
 <template>
   <el-container class="layout">
-    <el-aside :class="['layout-aside', SettingsStore.menuFold ? 'fold' : '']">
-      <Logo />
+    <el-aside :class="['layout-aside', collapse ? 'fold' : '']">
+      <Logo :collapse="collapse" />
       <el-scrollbar>
-        <Menu :menuList="userStore.menuRoutes" />
+        <Menu :menuList="menuList" :collapse="collapse" />
       </el-scrollbar>
+      <el-icon class="icon-menufold">
+        <component
+          :is="collapse ? 'Fold' : 'Expand'"
+          @click="onChangeMenuFold"
+        />
+      </el-icon>
     </el-aside>
     <el-container class="layout-container">
       <el-header class="layout-header">
@@ -18,32 +24,32 @@
         </div>
       </el-header>
 
-      <!-- <el-scrollbar class="layout-container-scrollbar"> -->
       <el-main class="layout-main">
-        <router-view v-slot="{ Component }">
-          <transition name="fade">
-            <!-- 渲染一级路由的子路由 -->
-            <component :is="Component" />
-          </transition>
+        <router-view>
+          <template #default="{ Component, route }">
+            <component :is="Component" :key="route.fullPath" />
+          </template>
         </router-view>
       </el-main>
-      <!-- </el-scrollbar> -->
     </el-container>
   </el-container>
 </template>
 
 <script lang="ts" setup>
-import useUserStore from '@/store/modules/user';
-import useSettingsStore from '@/store/modules/seeings';
+import { computed } from 'vue';
+import { usePermissionStore } from '@/store/modules/permission';
+import { useAppStore } from '@/store/modules/app';
 
-import Logo from '@/components/Logo';
+import Logo from './components/Logo.vue';
 import Menu from './components/Menu.vue';
 import HeaderBreadcrumb from './components/HeaderBreadcrumb.vue';
 import HeaderSettings from './components/HeaderSettings.vue';
 
-const userStore = useUserStore();
+const appStore = useAppStore();
+const collapse = computed(() => appStore.getCollapse);
 
-const SettingsStore = useSettingsStore();
+const permissionStore = usePermissionStore();
+const menuList = computed(() => permissionStore.getRouters);
 </script>
 
 <style scoped lang="scss">
@@ -59,6 +65,11 @@ const SettingsStore = useSettingsStore();
     width: $base-menu-width;
     overflow: hidden;
     transition: all 0.3s;
+    border-right: 1px solid var(--el-menu-border-color);
+
+    :deep(.el-scrollbar) {
+      height: calc(100vh - 2 * $base-menu-logo-height);
+    }
 
     &.fold {
       width: $base-menu-min-width;

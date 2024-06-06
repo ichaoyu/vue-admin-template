@@ -1,4 +1,5 @@
-import Layout from '@/layout/index.vue';
+import { Layout } from '@/utils';
+
 //对外暴露配置路由
 export const constantRoute: AppRouteRecordRaw[] = [
   {
@@ -58,7 +59,7 @@ export const constantRoute: AppRouteRecordRaw[] = [
     },
     children: [
       {
-        path: '/dashboard/analysis',
+        path: 'analysis',
         component: () => import('@/views/home'),
         name: 'Analysis',
         meta: {
@@ -68,7 +69,7 @@ export const constantRoute: AppRouteRecordRaw[] = [
         },
       },
       {
-        path: '/dashboard/workplace',
+        path: 'workplace',
         component: () => import('@/views/home'),
         name: 'Workplace',
         meta: {
@@ -89,7 +90,7 @@ export const constantRoute: AppRouteRecordRaw[] = [
     name: 'onechild-P',
     children: [
       {
-        path: '/onechild/onechild',
+        path: 'onechild',
         component: () => import('@/views/home'),
         name: 'onechild',
         meta: {
@@ -110,5 +111,40 @@ export const constantRoute: AppRouteRecordRaw[] = [
       icon: 'List',
     },
     name: 'nochild',
+  },
+];
+
+export const asyncRouter: AppRouteRecordRaw[] = [
+  {
+    path: '/workplace',
+    component: Layout,
+    redirect: '/workplace/workplace',
+    name: 'workplaceH',
+    meta: {
+      title: 'workplaceH',
+      icon: 'HomeFilled',
+      alwaysShow: true,
+    },
+    children: [
+      {
+        path: 'workplace',
+        component: () => import('@/views/home'),
+        name: 'workplace',
+        meta: {
+          title: 'workplace',
+          noCache: true,
+          affix: true,
+        },
+      },
+      {
+        path: 'dashboard',
+        component: () => import('@/views/home'),
+        name: 'Wdashboard',
+        meta: {
+          title: 'Wdashboard',
+          noCache: true,
+        },
+      },
+    ],
   },
 ];

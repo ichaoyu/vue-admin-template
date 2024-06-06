@@ -1,10 +1,4 @@
 <template>
-  <el-icon class="icon-menufold">
-    <component
-      :is="SettingsStore.menuFold ? 'Fold' : 'Expand'"
-      @click="onChangeMenuFold"
-    />
-  </el-icon>
   <el-breadcrumb separator="/">
     <el-breadcrumb-item
       v-for="(item, index) in route.matched"
@@ -18,14 +12,16 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import useSettingsStore from '@/store/modules/seeings';
+import { useAppStore } from '@/store/modules/app';
+const appStore = useAppStore();
+const collapse = computed(() => appStore.getCollapse);
 
-const SettingsStore = useSettingsStore();
 const route = useRoute();
 
 const onChangeMenuFold = () => {
-  SettingsStore.menuFold = !SettingsStore.menuFold;
+  appStore.setCollapse(!collapse.value);
 };
 </script>
 

@@ -8,7 +8,7 @@ import {
   RequestConfig,
   AxiosResponse,
 } from './types';
-import { useUserStoreWithOut } from '@/store/modules/user';
+import { useUserStoreOut } from '@/store/modules/user';
 
 const isMock = import.meta.env.VITE_USE_MOCK === 'true';
 const PATH_URL = import.meta.env.VITE_APP_BASE_API;
@@ -109,7 +109,7 @@ const service = (config: RequestConfig) => {
   });
 };
 const request = (option: AxiosConfig) => {
-  const userStore = useUserStoreWithOut();
+  const userStore = useUserStoreOut();
   const { url, method, params, data, headers, responseType } = option;
   return service({
     url,

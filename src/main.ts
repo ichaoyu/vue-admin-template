@@ -1,4 +1,5 @@
 import { createApp } from 'vue';
+import 'vue/jsx';
 
 import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css';
@@ -20,7 +21,8 @@ import '@/router/permission';
 import App from './App.vue';
 
 const app = createApp(App);
-
+// 注册pinia
+app.use(store);
 app.use(ElementPlus, {
   // ElementPlus国际化
   locale: zhCn,
@@ -28,9 +30,8 @@ app.use(ElementPlus, {
 
 // 安装自定义组件
 app.use(allGloablComponent);
+
 // 注册路由
 app.use(router);
-// 注册pinia
-app.use(store);
 
 app.mount('#app');
