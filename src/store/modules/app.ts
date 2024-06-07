@@ -34,7 +34,7 @@ export const useAppStore = defineStore('App', {
       serverDynamicRouter: true,
       pageLoading: false,
       layout: 'classic',
-      title: import.meta.env.VITE_APP_TITLE,
+      title: import.meta.env.VITE_GLOB_APP_TITLE,
       isDark: false,
       currentSize: 'default',
       sizeMap: ['default', 'large', 'small'],
@@ -300,6 +300,7 @@ export const useAppStore = defineStore('App', {
       // isDark.value = this.getIsDark;
     },
   },
+  persist: true,
 });
 
 export const useAppStoreOut = () => {

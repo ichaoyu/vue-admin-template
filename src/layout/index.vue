@@ -1,7 +1,7 @@
 <template>
   <el-container class="layout">
     <el-aside :class="['layout-aside', collapse ? 'fold' : '']">
-      <Logo :collapse="collapse" />
+      <Logo :collapse="collapse" :title="title" />
       <el-scrollbar>
         <Menu :menuList="menuList" :collapse="collapse" />
       </el-scrollbar>
@@ -52,6 +52,7 @@ const collapse = computed(() => appStore.getCollapse);
 
 const permissionStore = usePermissionStore();
 const menuList = computed(() => permissionStore.getRouters);
+const title = computed(() => appStore.getTitle);
 const onChangeMenuFold = () => {
   appStore.setCollapse(!collapse.value);
 };

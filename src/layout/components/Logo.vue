@@ -1,7 +1,7 @@
 <template>
   <div class="logo">
     <img src="@/assets/vue.svg" alt="logo" />
-    <p v-if="!props.collapse">vue admin</p>
+    <p v-if="!props.collapse">{{ props.title }}</p>
   </div>
 </template>
 
@@ -10,6 +10,10 @@ const props = defineProps({
   collapse: {
     type: Boolean,
     defaulat: false,
+  },
+  title: {
+    type: String,
+    default: '',
   },
 });
 </script>

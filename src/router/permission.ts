@@ -13,10 +13,11 @@ const NO_REDIRECT_WHITE_LIST = ['/login'];
 //全局前置守卫
 router.beforeEach(async (to: any, from: any, next: any) => {
   start();
-  const userStore = useUserStoreOut();
+  const { getUserInfo, getRoleRouters } = useUserStoreOut();
   const permissionStore = usePermissionStoreOut();
   const appStore = useAppStoreOut();
-  if (userStore.getUserInfo) {
+  console.log('userStore.getUserInfo: ', getUserInfo);
+  if (getUserInfo) {
     if (to.path === '/login') {
       next({ path: '/' });
     } else {
@@ -26,7 +27,7 @@ router.beforeEach(async (to: any, from: any, next: any) => {
       }
 
       // 开发者可根据实际情况进行修改
-      const roleRouters = userStore.getRoleRouters || [];
+      const roleRouters = getRoleRouters || [];
 
       // 是否使用动态路由
       if (appStore.getDynamicRouter) {

@@ -16,6 +16,8 @@ import store from './store';
 
 import '@/assets/styles/index.scss';
 
+import 'element-plus/theme-chalk/dark/css-vars.css';
+
 import '@/router/permission';
 
 import App from './App.vue';

@@ -60,10 +60,10 @@ const onSubmit = async () => {
     loading.value = true;
     const res: IResponse = await loginApi(loginForm);
     console.log('res: ', res);
-    userStore.setToken(res.data.token);
-    userStore.setUserInfo(res.data);
     setStorage('TOKEN', res.data.token);
     setStorage('USERINFO', res.data);
+    userStore.setToken(res.data.token);
+    userStore.setUserInfo(res.data);
     router.push('/');
   } catch (err) {
     ElNotification({

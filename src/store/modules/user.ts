@@ -52,6 +52,7 @@ export const useUserStore = defineStore('User', {
       return this.loginInfo;
     },
   },
+  persist: true,
 });
 
 export const useUserStoreOut = () => {
