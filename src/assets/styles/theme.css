@@ -1,0 +1,13 @@
+@import url('element-plus/theme-chalk/dark/css-vars.css');
+html.dark{
+  color-scheme:dark;
+  --base-menu-background-image: linear-gradient(179deg, #141721 0%, #1a1e29 100%);
+  --show-color: rgba(0, 0, 0, 0.72)
+  }
+
+:root{
+  color-scheme: light;
+  --base-menu-background-image: linear-gradient(179deg, #e9fbff 0%, #f3f5ff 100%);
+  --shadow-length-connected-overlay: 0 2px 8px 0;
+  --shadow-color: rgba(0, 0, 0, 0.3)
+}

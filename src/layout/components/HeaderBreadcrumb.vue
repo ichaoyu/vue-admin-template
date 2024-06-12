@@ -1,5 +1,5 @@
 <template>
-  <el-breadcrumb separator="/">
+  <el-breadcrumb separator="/" class="breadcrumb">
     <el-breadcrumb-item
       v-for="(item, index) in route.matched"
       :key="index"
@@ -18,9 +18,8 @@ const route = useRoute();
 </script>
 
 <style scoped lang="scss">
-.icon-menufold {
-  margin-right: 20px;
-  font-size: 20px;
-  cursor: pointer;
+.breadcrumb {
+  margin-left: 20px;
+  font-size: 12px;
 }
 </style>

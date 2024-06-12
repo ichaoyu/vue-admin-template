@@ -1,40 +1,26 @@
 <template>
-  <el-switch
-    v-model="isDark"
-    :active-icon="Moon"
-    :inactive-icon="Sunny"
-    inline-prompt
-    @change="toggleDark"
-  />
-  <el-button size="small" icon="FullScreen" circle @click="onFullScreen" />
-  <el-button size="small" icon="Setting" circle />
-  <el-icon><Avatar /></el-icon>
-  <el-dropdown>
-    <span class="el-dropdown-link">
-      admin
-      <el-icon class="el-icon--right">
-        <arrow-down />
-      </el-icon>
-    </span>
-    <template #dropdown>
-      <el-dropdown-menu>
-        <el-dropdown-item>退出登录</el-dropdown-item>
-      </el-dropdown-menu>
-    </template>
-  </el-dropdown>
+  <el-space>
+    <el-button size="small" icon="FullScreen" circle @click="onFullScreen" />
+    <el-button size="small" icon="Setting" circle />
+
+    <el-dropdown>
+      <span class="avatar-box">
+        <el-avatar :icon="UserFilled" size="small" class="icon" />
+        admin
+      </span>
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item>个人中心</el-dropdown-item>
+          <el-dropdown-item>个人设置</el-dropdown-item>
+          <el-dropdown-item>退出登录</el-dropdown-item>
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+  </el-space>
 </template>
 
 <script setup lang="ts">
-import { useAppStore } from '@/store/modules/app';
-import { Sunny, Moon } from '@element-plus/icons-vue';
-import { computed } from 'vue';
-
-const appStore = useAppStore();
-const isDark = computed(() => appStore.getIsDark);
-const toggleDark = () => {
-  appStore.setIsDark(!isDark.value);
-};
-
+import { UserFilled } from '@element-plus/icons-vue';
 const onFullScreen = () => {
   const full = document.fullscreenElement;
   if (!full) {
@@ -45,4 +31,14 @@ const onFullScreen = () => {
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.avatar-box {
+  @include flex-layout();
+
+  cursor: pointer;
+
+  .icon {
+    margin-right: 5px;
+  }
+}
+</style>

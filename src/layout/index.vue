@@ -1,30 +1,40 @@
 <template>
   <el-container class="layout">
-    <el-aside :class="['layout-aside', collapse ? 'fold' : '']">
-      <Logo :collapse="collapse" :title="title" />
-      <el-scrollbar>
-        <Menu :menuList="menuList" :collapse="collapse" />
-      </el-scrollbar>
-      <div class="layout-aside-opr">
-        <el-icon class="icon icon-menufold">
-          <component
-            :is="collapse ? 'Expand' : 'Fold'"
-            @click="onChangeMenuFold"
-          />
-        </el-icon>
+    <el-header class="layout-header">
+      <div class="tabbar-left">
+        <Logo :collapse="collapse" :title="title" />
+        <!--顶部左侧图标 -->
+        <!-- <HeaderBreadcrumb /> -->
       </div>
-    </el-aside>
+      <!--顶部右侧设置按钮 -->
+      <div class="tabbar-right">
+        <HeaderSettings />
+      </div>
+    </el-header>
+
     <el-container class="layout-container">
-      <el-header class="layout-header">
-        <div class="tabbar-left">
-          <!--顶部左侧图标 -->
-          <HeaderBreadcrumb />
+      <el-aside :class="['layout-aside', collapse ? 'fold' : '']">
+        <el-scrollbar class="menu-scroll">
+          <Menu :menuList="menuList" :collapse="collapse" />
+        </el-scrollbar>
+        <div
+          :class="['layout-aside-opr', collapse ? 'layout-aside-collapse' : '']"
+        >
+          <el-switch
+            v-model="isDark"
+            :active-icon="Moon"
+            :inactive-icon="Sunny"
+            inline-prompt
+            @change="toggleDark"
+          />
+          <el-icon class="icon icon-menufold">
+            <component
+              :is="collapse ? 'Expand' : 'Fold'"
+              @click="onChangeMenuFold"
+            />
+          </el-icon>
         </div>
-        <!--顶部右侧设置按钮 -->
-        <div class="tabbar-right">
-          <HeaderSettings />
-        </div>
-      </el-header>
+      </el-aside>
 
       <el-main class="layout-main">
         <router-view>
@@ -41,10 +51,10 @@
 import { computed } from 'vue';
 import { usePermissionStore } from '@/store/modules/permission';
 import { useAppStore } from '@/store/modules/app';
-
+import { Sunny, Moon } from '@element-plus/icons-vue';
 import Logo from './components/Logo.vue';
 import Menu from './components/Menu.vue';
-import HeaderBreadcrumb from './components/HeaderBreadcrumb.vue';
+// import HeaderBreadcrumb from './components/HeaderBreadcrumb.vue';
 import HeaderSettings from './components/HeaderSettings.vue';
 
 const appStore = useAppStore();
@@ -55,6 +65,11 @@ const menuList = computed(() => permissionStore.getRouters);
 const title = computed(() => appStore.getTitle);
 const onChangeMenuFold = () => {
   appStore.setCollapse(!collapse.value);
+};
+
+const isDark = computed(() => appStore.getIsDark);
+const toggleDark = () => {
+  appStore.setIsDark(!isDark.value);
 };
 </script>
 
@@ -71,9 +86,10 @@ const onChangeMenuFold = () => {
     width: $base-menu-width;
     overflow: hidden;
     transition: all 0.3s;
-    border-right: 1px solid var(--el-menu-border-color);
+    box-shadow: var(--shadow-length-connected-overlay, 0 2px 8px 0)
+      var(--shadow-color, rgb(37 43 58 / 100%));
 
-    :deep(.el-scrollbar) {
+    .menu-scroll {
       height: calc(100vh - $base-menu-opr-height - $base-menu-logo-height);
     }
 
@@ -82,10 +98,8 @@ const onChangeMenuFold = () => {
     }
 
     &-opr {
-      display: flex;
-      flex-flow: row nowrap;
-      align-items: center;
-      justify-content: flex-end;
+      @include flex-layout($justify: space-around);
+
       height: $base-menu-opr-height;
       padding: 0 10px;
       cursor: pointer;
@@ -94,6 +108,10 @@ const onChangeMenuFold = () => {
         font-size: 20px;
       }
     }
+
+    &-collapse {
+      flex-flow: column nowrap;
+    }
   }
 
   &-container {
@@ -101,24 +119,21 @@ const onChangeMenuFold = () => {
   }
 
   &-header {
-    display: flex;
+    @include flex-layout($justify: space-between);
+
     box-sizing: border-box;
-    flex-flow: row nowrap;
-    align-items: center;
-    justify-content: space-between;
     height: $base-tabbar-height;
+    box-shadow: var(--shadow-length-connected-overlay, 0 2px 8px 0)
+      var(--shadow-color, rgb(37 43 58 / 10%));
     font-size: 12px;
     text-align: right;
 
     .tabbar-left {
-      display: flex;
-      align-items: center; //Y轴侧轴居中
-      margin-left: 20px;
+      @include flex-layout();
     }
 
     .tabbar-right {
-      display: flex;
-      align-items: center; //Y轴侧轴居中
+      @include flex-layout();
     }
   }
 

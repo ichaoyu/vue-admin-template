@@ -23,9 +23,7 @@ const props = defineProps({
   display: flex;
   box-sizing: border-box;
   align-items: center;
-  width: 100%;
   height: $base-menu-logo-height;
-  padding: 10px;
   color: #000;
 
   img {

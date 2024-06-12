@@ -2,3 +2,8 @@
   margin: 0;
   padding: 0;
 }
+
+.el-dropdown,
+.el-dropdown * {
+  outline: none;
+}

@@ -1,5 +1,6 @@
 @import './reset';
 @import './var';
+@import './mixin';
 
 #app {
   width: 100%;
@@ -56,31 +57,13 @@
   }
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    background-color: #fff;
-    color: #213547;
-  }
-
-  a:hover {
-    color: #747bff;
-  }
-
-  button {
-    background-color: #f9f9f9;
-  }
-}
-
 :root {
-  // background-color: #242424;
-  // color: rgb(255 255 255 / 87%);
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: HuaweiFont, helvetica, arial, PingFang, 'Microsoft YaHei',
+    'Hiragino Sans GB', 'Microsoft JhengHei', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
   line-height: 1.5;
   text-rendering: optimizelegibility;
-
-  // color-scheme: light dark;
   font-synthesis: none;
 }

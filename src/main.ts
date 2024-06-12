@@ -16,7 +16,7 @@ import store from './store';
 
 import '@/assets/styles/index.scss';
 
-import 'element-plus/theme-chalk/dark/css-vars.css';
+import '@/assets/styles/theme.css';
 
 import '@/router/permission';
 

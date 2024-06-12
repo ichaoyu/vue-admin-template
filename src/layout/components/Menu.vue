@@ -81,8 +81,13 @@ const getPath = (parentPath: string, path: string) => {
   width: 100%;
 }
 
+:deep(.el-menu) {
+  background: none;
+}
+
 .aside-menu {
   border-right: none;
+  background: none;
 
   &:not(.el-menu--collapse) {
     width: $base-menu-width;
