@@ -1,15 +1,15 @@
 <template>
-  <svg :style="{ width, height }">
+  <svg class="icon" aria-hidden="true" :style="{ width, height }">
     <use :xlink:href="prefix + name" :fill="color" />
   </svg>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-defineProps({
+import * as icon from './iconfont';
+const props = defineProps({
   prefix: {
     type: String,
-    default: '#icon-',
+    default: '#',
   },
   name: {
     type: String,
@@ -17,7 +17,7 @@ defineProps({
   },
   color: {
     type: String,
-    default: '#000',
+    default: 'var(--el-text-color-primary)',
   },
   width: {
     type: String,
@@ -30,4 +30,12 @@ defineProps({
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.icon {
+  width: 1em;
+  height: 1em;
+  overflow: hidden;
+  fill: currentcolor;
+  vertical-align: -0.15em;
+}
+</style>

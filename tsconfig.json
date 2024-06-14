@@ -27,7 +27,6 @@
     "types": [
       "vite/client",
       "element-plus/global",
-      "vite-plugin-svg-icons/client"
     ]
   },
   "include": ["src", "types/**/*.d.ts", "mock/**/*.ts"]

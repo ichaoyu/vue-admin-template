@@ -3,7 +3,6 @@ import { resolve } from 'node:path';
 import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import VueJsx from '@vitejs/plugin-vue-jsx';
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 import { viteMockServe } from 'vite-plugin-mock';
 
 const root = process.cwd();
@@ -15,10 +14,6 @@ export default defineConfig(({ command, mode }) => {
     plugins: [
       vue(),
       VueJsx(),
-      createSvgIconsPlugin({
-        iconDirs: [resolve(process.cwd(), 'src/assets/icons')],
-        symbolId: 'icon-[dir]-[name]',
-      }),
       env.VITE_USE_MOCK === 'true'
         ? viteMockServe({
             ignore: /^_/,
