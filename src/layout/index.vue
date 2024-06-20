@@ -86,10 +86,10 @@ const toggleDark = () => {
   overflow: hidden;
 
   &-aside {
-    // --el-aside-width: $base-menu-width;
-
     box-sizing: border-box;
     width: $base-menu-width;
+    // --el-aside-width: $base-menu-width;
+    padding-top: 8px;
     overflow: hidden;
     transition: all 0.3s;
     box-shadow: var(--shadow-length-connected-overlay, 0 2px 8px 0)

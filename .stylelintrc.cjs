@@ -92,6 +92,7 @@ module.exports = {
       ],
       { severity: 'error' },
     ],
+    'string-no-newline': null
   },
   ignoreFiles: ['**/*.js', '**/*.jsx', '**/*.tsx', '**/*.ts'],
 }
