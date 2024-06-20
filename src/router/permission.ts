@@ -11,23 +11,23 @@ const NO_REDIRECT_WHITE_LIST = ['/login'];
 router.beforeEach(async (to: any, from: any, next: any) => {
   start();
   const { getRoleIDs, getToken } = useUserStoreOut();
-  const hasPermission = to?.meat?.roles.some((role) =>
-    getRoleIDs?.includes(role),
-  );
+  let hasPermission = true;
+  // 未设置meta.roles的路由直接放行
+  if (!to?.meta?.roles || to?.meta?.roles.length < 1) {
+    hasPermission = true;
+  } else {
+    hasPermission = to?.meta?.roles?.some((role: string) =>
+      getRoleIDs?.includes(role),
+    );
+  }
   // 已登录
   if (getToken) {
-    console.log('!to?.meta?.requireAuth: ', !to?.meta?.requireAuth);
-    // 路由不需要鉴权 或 当前用户有访问路由的权限
-    if (!to?.meta?.requireAuth || hasPermission) {
+    // 当前用户有访问路由的权限
+    if (hasPermission) {
       next();
-      return true;
+      return;
     }
     // 当前用户没有访问路由的权限
-    const redirectPath = from.query.redirect || to.path;
-    const redirect = decodeURIComponent(redirectPath as string);
-    const nextData =
-      to.path === redirect ? { ...to, replace: true } : { path: redirect };
-    console.log('nextData: ', nextData);
     next('/403');
   } else {
     // 未登录
@@ -35,7 +35,11 @@ router.beforeEach(async (to: any, from: any, next: any) => {
     if (NO_REDIRECT_WHITE_LIST.indexOf(to.path) !== -1) {
       next();
     } else {
-      next(`/login?redirect=${to.path}`); // 否则全部重定向到登录页
+      // 重定向到登录页
+      const path = !['/404', '/403'].includes(to.path)
+        ? `/login?redirect=${to.path}`
+        : '/login';
+      next(path);
     }
   }
 });

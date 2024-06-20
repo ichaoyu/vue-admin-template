@@ -79,7 +79,8 @@ const onSubmit = async () => {
     if (res) {
       onSetStore(res as unknown as UserState);
     }
-    push('/');
+    push({ path: redirect.value || '/' });
+    // push('/');
   } catch (err) {
     ElNotification({
       type: 'error',

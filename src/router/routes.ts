@@ -219,8 +219,6 @@ export const asyncRouter: AppRouteRecordRaw[] = [
       title: '系统监控',
       icon: 'icon-watch',
       hidden: false,
-      requireAuth: false,
-      roles: ['test'],
     },
     children: [
       {
