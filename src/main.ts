@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
 import 'vue/jsx';
-
+import '@/assets/styles/index.scss';
 import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css';
 // @ts-ignore 忽略当前文件ts类型的检测否则有红色提示(打包会失败)
@@ -15,9 +15,8 @@ import router from './router';
 // 引入pinia
 import store from './store';
 
-import '@/assets/styles/index.scss';
-
 import '@/assets/styles/theme.css';
+import '@/assets/styles/index.scss';
 
 import '@/router/permission';
 // iconfont字体

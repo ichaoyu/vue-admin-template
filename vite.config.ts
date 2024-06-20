@@ -4,6 +4,7 @@ import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import VueJsx from '@vitejs/plugin-vue-jsx';
 import { viteMockServe } from 'vite-plugin-mock';
+import ElementPlus from 'unplugin-element-plus/vite';
 
 const root = process.cwd();
 const pathResolve = (pathname: string) => resolve(root, '.', pathname);
@@ -20,6 +21,10 @@ export default defineConfig(({ command, mode }) => {
             mockPath: 'mock',
           })
         : undefined,
+      // 使用element主题scss变量
+      ElementPlus({
+        useSource: true,
+      }),
     ],
     resolve: {
       alias: {
@@ -30,7 +35,10 @@ export default defineConfig(({ command, mode }) => {
       preprocessorOptions: {
         scss: {
           javascriptEnable: true,
-          additionalData: `@import "./src/assets/styles/var.scss";`,
+          additionalData: `
+          @use "@/assets/styles/element.scss" as *;
+          @use "@/assets/styles/var.scss" as *;
+        `,
         },
       },
     },

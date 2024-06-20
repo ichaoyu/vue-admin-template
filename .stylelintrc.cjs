@@ -2,7 +2,7 @@
  * @type {import('stylelint').Config}
  */
 module.exports = {
-  extends: ['stylelint-config-standard', 'stylelint-config-property-sort-order-smacss'],
+  extends: ['stylelint-config-standard', 'stylelint-config-property-sort-order-smacss','stylelint-config-recommended-scss'],
   plugins: ['stylelint-order', 'stylelint-prettier'],
   // customSyntax: 'postcss-html',
   overrides: [
@@ -58,6 +58,8 @@ module.exports = {
           'include',
           'mixin',
           'extend',
+          'use',
+          'forward'
         ],
       },
     ],
