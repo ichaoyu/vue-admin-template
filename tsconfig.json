@@ -13,6 +13,7 @@
     "lib": ["esnext", "dom"],
     "baseUrl": "./",
     "allowJs": true,
+    "noEmit": true,
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
     "strictFunctionTypes": false,
@@ -29,6 +30,6 @@
       "element-plus/global",
     ]
   },
-  "include": ["src", "types/**/*.d.ts", "mock/**/*.ts"]
-  // "exclude": ["dist", "node_modules"]
+  "include": ["src", "types/**/*.d.ts", "mock/**/*.ts", "**/*/iconfont.js"],
+  // "exclude": ["dist", "node_modules", "**/*/iconfont.js"]
 }

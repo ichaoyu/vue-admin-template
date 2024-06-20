@@ -5,8 +5,7 @@
 </template>
 
 <script setup>
-import * as icon from './iconfont';
-const props = defineProps({
+defineProps({
   prefix: {
     type: String,
     default: '#',
@@ -17,15 +16,15 @@ const props = defineProps({
   },
   color: {
     type: String,
-    default: 'var(--el-text-color-primary)',
+    default: '',
   },
   width: {
     type: String,
-    default: '50px',
+    default: '',
   },
   height: {
     type: String,
-    default: '50px',
+    default: '',
   },
 });
 </script>
