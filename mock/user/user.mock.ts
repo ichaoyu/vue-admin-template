@@ -1,26 +1,21 @@
-const List: {
-  username: string;
-  password: string;
-  role: string;
-  roleId: string;
-  token: string;
-  permissions: string | string[];
-}[] = [
+import { UserState } from '@/interface';
+interface List extends UserState {
+  password?: string;
+}
+const List: List[] = [
   {
     username: 'admin',
-    password: '123456',
-    role: 'admin',
-    roleId: '1',
-    permissions: ['*.*.*'],
+    roleIDs: ['admin'],
+    permission: ['*.*.*'],
     token: 'x0Pliqum',
+    password: '123456',
   },
   {
     username: 'test',
-    password: 'test',
-    role: 'test',
-    roleId: '2',
-    permissions: ['example:dialog:create', 'example:dialog:delete'],
+    roleIDs: ['test'],
+    permission: ['example:dialog:create', 'example:dialog:delete'],
     token: 'x0Pliqum',
+    password: '123456',
   },
 ];
 export default [
@@ -46,9 +41,20 @@ export default [
       if (!hasUser) {
         return {
           code: 500,
-          message: '账号或密码错误',
+          msg: '账号或密码错误',
         };
       }
+    },
+  },
+  // 退出接口
+  {
+    url: '/api/mock/user/loginOut',
+    method: 'get',
+    response: () => {
+      return {
+        code: 0,
+        data: null,
+      };
     },
   },
 ];

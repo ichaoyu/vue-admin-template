@@ -1,28 +1,34 @@
-import { unref } from 'vue';
 import { defineStore } from 'pinia';
 import { ElMessage, ComponentSize } from 'element-plus';
-
+import { unref } from 'vue';
 import { AppState } from '@/interface';
 import {
   setCssVar,
-  getCssVar,
   humpToUnderline,
+  mix,
   colorIsDark,
   hexToRGB,
   lighten,
-  mix,
 } from '@/utils';
 import store from '../index';
 
-// export const useAppStore = defineStore('App', {
 export const useAppStore = defineStore('App', {
   state: (): AppState => {
     return {
       collapse: false,
+      mobile: false,
+      breadcrumb: true,
+      breadcrumbIcon: true,
+      uniqueOpened: false,
+      hamburger: true,
+      screenfull: true,
+      tagsView: true,
+      tagsViewIcon: true,
+      fixedHeader: true,
       size: true,
       logo: true,
-      dynamicRouter: true,
-      serverDynamicRouter: true,
+      dynamicRouter: false,
+      serverDynamicRouter: false,
       pageLoading: false,
       layout: 'classic',
       title: import.meta.env.VITE_GLOB_APP_TITLE,
@@ -46,14 +52,50 @@ export const useAppStore = defineStore('App', {
         topToolBorderColor: '#eee',
       },
       fixedMenu: true,
+      greyMode: false,
+      footer: true,
+      locale: true,
     };
   },
   getters: {
+    getBreadcrumb(): boolean {
+      return this.breadcrumb;
+    },
+    getBreadcrumbIcon(): boolean {
+      return this.breadcrumbIcon;
+    },
     getCollapse(): boolean {
       return this.collapse;
     },
+    getUniqueOpened(): boolean {
+      return this.uniqueOpened;
+    },
+    getHamburger(): boolean {
+      return this.hamburger;
+    },
+    getScreenfull(): boolean {
+      return this.screenfull;
+    },
+    getSize(): boolean {
+      return this.size;
+    },
+    getLocale(): boolean {
+      return this.locale;
+    },
+    getTagsView(): boolean {
+      return this.tagsView;
+    },
+    getTagsViewIcon(): boolean {
+      return this.tagsViewIcon;
+    },
     getLogo(): boolean {
       return this.logo;
+    },
+    getFixedHeader(): boolean {
+      return this.fixedHeader;
+    },
+    getGreyMode(): boolean {
+      return this.greyMode;
     },
     getDynamicRouter(): boolean {
       return this.dynamicRouter;
@@ -61,8 +103,14 @@ export const useAppStore = defineStore('App', {
     getServerDynamicRouter(): boolean {
       return this.serverDynamicRouter;
     },
+    getFixedMenu(): boolean {
+      return this.fixedMenu;
+    },
     getPageLoading(): boolean {
       return this.pageLoading;
+    },
+    getLayout(): LayoutType {
+      return this.layout;
     },
     getTitle(): string {
       return this.title;
@@ -76,22 +124,64 @@ export const useAppStore = defineStore('App', {
     getSizeMap(): ComponentSize[] {
       return this.sizeMap;
     },
+    getMobile(): boolean {
+      return this.mobile;
+    },
+    getTheme(): ThemeTypes {
+      return this.theme;
+    },
+    getFooter(): boolean {
+      return this.footer;
+    },
   },
   actions: {
+    setBreadcrumb(breadcrumb: boolean) {
+      this.breadcrumb = breadcrumb;
+    },
+    setBreadcrumbIcon(breadcrumbIcon: boolean) {
+      this.breadcrumbIcon = breadcrumbIcon;
+    },
     setCollapse(collapse: boolean) {
       this.collapse = collapse;
+    },
+    setUniqueOpened(uniqueOpened: boolean) {
+      this.uniqueOpened = uniqueOpened;
+    },
+    setHamburger(hamburger: boolean) {
+      this.hamburger = hamburger;
+    },
+    setScreenfull(screenfull: boolean) {
+      this.screenfull = screenfull;
     },
     setSize(size: boolean) {
       this.size = size;
     },
+    setLocale(locale: boolean) {
+      this.locale = locale;
+    },
+    setTagsView(tagsView: boolean) {
+      this.tagsView = tagsView;
+    },
+    setTagsViewIcon(tagsViewIcon: boolean) {
+      this.tagsViewIcon = tagsViewIcon;
+    },
     setLogo(logo: boolean) {
       this.logo = logo;
+    },
+    setFixedHeader(fixedHeader: boolean) {
+      this.fixedHeader = fixedHeader;
+    },
+    setGreyMode(greyMode: boolean) {
+      this.greyMode = greyMode;
     },
     setDynamicRouter(dynamicRouter: boolean) {
       this.dynamicRouter = dynamicRouter;
     },
     setServerDynamicRouter(serverDynamicRouter: boolean) {
       this.serverDynamicRouter = serverDynamicRouter;
+    },
+    setFixedMenu(fixedMenu: boolean) {
+      this.fixedMenu = fixedMenu;
     },
     setPageLoading(pageLoading: boolean) {
       this.pageLoading = pageLoading;
@@ -120,18 +210,20 @@ export const useAppStore = defineStore('App', {
     setCurrentSize(currentSize: ComponentSize) {
       this.currentSize = currentSize;
     },
-
+    setMobile(mobile: boolean) {
+      this.mobile = mobile;
+    },
     setTheme(theme: ThemeTypes) {
       this.theme = Object.assign(this.theme, theme);
     },
-    /**
-     * 将theme对象转换为css变量
-     */
     setCssVarTheme() {
       for (const key in this.theme) {
         setCssVar(`--${humpToUnderline(key)}`, this.theme[key]);
       }
       this.setPrimaryLight();
+    },
+    setFooter(footer: boolean) {
+      this.footer = footer;
     },
     setPrimaryLight() {
       if (this.theme.elColorPrimary) {
@@ -147,8 +239,57 @@ export const useAppStore = defineStore('App', {
         setCssVar(`--el-color-primary-dark-2`, mix(color, elColorPrimary, 0.2));
       }
     },
+    setMenuTheme(color: string) {
+      const primaryColor = '--el-color-primary';
+      const isDarkColor = colorIsDark(color);
+      const theme: Recordable = {
+        // 左侧菜单边框颜色
+        leftMenuBorderColor: isDarkColor ? 'inherit' : '#eee',
+        // 左侧菜单背景颜色
+        leftMenuBgColor: color,
+        // 左侧菜单浅色背景颜色
+        leftMenuBgLightColor: isDarkColor ? lighten(color!, 6) : color,
+        // 左侧菜单选中背景颜色
+        leftMenuBgActiveColor: isDarkColor
+          ? 'var(--el-color-primary)'
+          : hexToRGB(unref(primaryColor), 0.1),
+        // 左侧菜单收起选中背景颜色
+        leftMenuCollapseBgActiveColor: isDarkColor
+          ? 'var(--el-color-primary)'
+          : hexToRGB(unref(primaryColor), 0.1),
+        // 左侧菜单字体颜色
+        leftMenuTextColor: isDarkColor ? '#bfcbd9' : '#333',
+        // 左侧菜单选中字体颜色
+        leftMenuTextActiveColor: isDarkColor
+          ? '#fff'
+          : 'var(--el-color-primary)',
+        // logo字体颜色
+        logoTitleTextColor: isDarkColor ? '#fff' : 'inherit',
+        // logo边框颜色
+        logoBorderColor: isDarkColor ? color : '#eee',
+      };
+      this.setTheme(theme);
+      this.setCssVarTheme();
+    },
+    setHeaderTheme(color: string) {
+      const isDarkColor = colorIsDark(color);
+      const textColor = isDarkColor ? '#fff' : 'inherit';
+      const textHoverColor = isDarkColor ? lighten(color!, 6) : '#f6f6f6';
+      const topToolBorderColor = isDarkColor ? color : '#eee';
+      setCssVar('--top-header-bg-color', color);
+      setCssVar('--top-header-text-color', textColor);
+      setCssVar('--top-header-hover-color', textHoverColor);
+      this.setTheme({
+        topHeaderBgColor: color,
+        topHeaderTextColor: textColor,
+        topHeaderHoverColor: textHoverColor,
+        topToolBorderColor,
+      });
+      if (this.getLayout === 'top') {
+        this.setMenuTheme(color);
+      }
+    },
     initTheme() {
-      console.log('initTheme: ');
       // const isDark = useDark({
       //   valueDark: 'dark',
       //   valueLight: 'light',
@@ -156,7 +297,10 @@ export const useAppStore = defineStore('App', {
       // isDark.value = this.getIsDark;
     },
   },
-  persist: true,
+  persist: {
+    key: 'appSettings',
+    storage: sessionStorage,
+  },
 });
 
 export const useAppStoreOut = () => {

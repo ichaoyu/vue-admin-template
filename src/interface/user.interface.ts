@@ -11,58 +11,43 @@ export interface UserLoginType {
    */
   password: string;
 }
-/**
- * 用户类型
- */
-export interface UserType {
-  /**
-   * 用户名
-   */
-  username: string;
-  /**
-   * 密码
-   */
-  password: string;
-  /**
-   * 角色
-   */
-  role: string;
-  /**
-   * 角色id
-   */
-  roleId: string;
-}
 
 /**
  * 用户状态
  */
 export interface UserState {
   /**
-   * 用户信息
+   * 用户名
    */
-  userInfo?: UserType;
+  username: string;
   /**
    * token key值
    */
-  tokenKey: string;
+  tokenKey?: string;
   /**
    * token
    */
   token: string;
   /**
-   * 角色路由
+   * 角色
    */
-  roleRouters?: string[] | AppCustomRouteRecordRaw[];
+  roleIDs?: string[];
+  /**
+   * 权限
+   */
+  permission?: string[];
   /**
    * 记住我
    */
-  rememberMe: boolean;
+  rememberMe?: boolean;
+}
+
+/**
+ * 角色信息
+ */
+export interface RoleParams {
   /**
-   * 登录信息
+   * 用户角色名称
    */
-  loginInfo?: UserLoginType;
-  /**
-   * 菜单路由
-   */
-  menuRoutes?: AppRouteRecordRaw[];
+  roleName: string;
 }

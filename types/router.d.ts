@@ -20,22 +20,10 @@ import { defineComponent } from 'vue';
     activeMenu: '/dashboard'  显示高亮的路由路径
     canTo: true               设置为true即使hidden为true，也依然可以进行路由跳转(默认 false)
     permission: ['edit','add', 'delete']    设置该路由的权限
+    requireAuth: true         需要用户权限
+    roles: ['admin', 'guest']     受访问限制的角色
   }
 **/
-
-interface RouteMetaCustom extends Record<string | number | symbol, unknown> {
-  hidden?: boolean;
-  alwaysShow?: boolean;
-  title?: string;
-  icon?: string;
-  noCache?: boolean;
-  breadcrumb?: boolean;
-  affix?: boolean;
-  activeMenu?: string;
-  noTagsView?: boolean;
-  canTo?: boolean;
-  permission?: string[];
-}
 
 declare module 'vue-router' {
   interface RouteMeta extends RouteMetaCustom {}
@@ -47,6 +35,21 @@ type Component<T = any> =
   | (() => Promise<T>);
 
 declare global {
+  interface RouteMetaCustom extends Record<string | number | symbol, unknown> {
+    hidden?: boolean;
+    alwaysShow?: boolean;
+    title?: string;
+    icon?: string;
+    noCache?: boolean;
+    breadcrumb?: boolean;
+    affix?: boolean;
+    activeMenu?: string;
+    noTagsView?: boolean;
+    canTo?: boolean;
+    permission?: string[];
+    requireAuth?: boolean;
+    roles?: string[];
+  }
   declare interface AppRouteRecordRaw
     extends Omit<RouteRecordRaw, 'meta' | 'children'> {
     name: string;

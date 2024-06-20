@@ -5,6 +5,13 @@
         <el-form class="login_form">
           <h1>Hello</h1>
           <h2>vue-admin-template</h2>
+          <icon-font name="icon-setting" />
+          <icon-font name="icon-watch" />
+          <icon-font
+            name="icon-fullscreen"
+            color="var(--el-color-primary)"
+            style="color: var(--el-color-primary)"
+          />
           <el-form-item>
             <el-input
               placeholder="登录账号"
@@ -39,16 +46,26 @@
 
 <script setup lang="ts">
 import { User, Lock } from '@element-plus/icons-vue';
-import { reactive, ref } from 'vue';
+import { reactive, ref, watch } from 'vue';
+import type { RouteLocationNormalizedLoaded } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { ElNotification } from 'element-plus';
 import { loginApi } from '@/api/user';
 import { useUserStore } from '@/store/modules/user';
-import { useStorage } from '@/hooks/useStorage';
+import { UserState } from '@/interface';
 
-const router = useRouter();
 const userStore = useUserStore();
-const { setStorage } = useStorage();
+const { currentRoute, push } = useRouter();
+const redirect = ref<string>('');
+watch(
+  () => currentRoute.value,
+  (route: RouteLocationNormalizedLoaded) => {
+    redirect.value = route?.query?.redirect as string;
+  },
+  {
+    immediate: true,
+  },
+);
 
 let loginForm = reactive({
   username: 'admin',
@@ -58,13 +75,11 @@ const loading = ref<boolean>(false);
 const onSubmit = async () => {
   try {
     loading.value = true;
-    const res: IResponse = await loginApi(loginForm);
-    console.log('res: ', res);
-    setStorage('TOKEN', res.data.token);
-    setStorage('USERINFO', res.data);
-    userStore.setToken(res.data.token);
-    userStore.setUserInfo(res.data);
-    router.push('/');
+    const res: IResponse<UserState> = await loginApi(loginForm);
+    if (res) {
+      onSetStore(res as unknown as UserState);
+    }
+    push('/');
   } catch (err) {
     ElNotification({
       type: 'error',
@@ -73,6 +88,13 @@ const onSubmit = async () => {
   } finally {
     loading.value = false;
   }
+};
+// 登录成功设置store
+const onSetStore = (info: UserState): void => {
+  userStore.setRoleIDs(info.roleIDs);
+  userStore.setPermission(info.permission);
+  userStore.setToken(info.token);
+  userStore.setUserName(info.username);
 };
 </script>
 

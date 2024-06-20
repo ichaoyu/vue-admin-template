@@ -1,11 +1,11 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 import type {
   Router,
   RouteLocationNormalized,
   RouteRecordNormalized,
   RouteRecordRaw,
 } from 'vue-router';
-import { isUrl } from '@/utils/is';
+import { isUrl } from './is';
 import { omit, cloneDeep } from 'lodash-es';
 
 const modules = import.meta.glob('../views/**/*.{vue,tsx}');
@@ -114,7 +114,8 @@ export const generateRoutesByServer = (
     if (route.component) {
       const comModule =
         modules[`../${route.component}.vue`] ||
-        modules[`../${route.component}.tsx`];
+        modules[`../${route.component}.tsx`] ||
+        modules[`../${route.component}.ts`];
       const component = route.component as string;
       if (!comModule && !component.includes('#')) {
         console.error(
@@ -182,7 +183,7 @@ const isMultipleRoute = (route: AppRouteRecordRaw) => {
 const promoteRouteLevel = (route: AppRouteRecordRaw) => {
   let router: Router | null = createRouter({
     routes: [route as RouteRecordRaw],
-    history: createWebHashHistory(),
+    history: createWebHistory(),
   });
 
   const routes = router.getRoutes();

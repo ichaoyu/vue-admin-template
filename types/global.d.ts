@@ -12,7 +12,11 @@ declare global {
     T
   >;
 
+  declare type ComponentRef<T> = InstanceType<T>;
+
   declare type LayoutType = 'classic' | 'topLeft' | 'top' | 'cutMenu';
+
+  declare type ElementSize = 'default' | 'mini' | 'large';
 
   declare type AxiosMethod = 'get' | 'post' | 'delete' | 'put';
   declare type AxiosResponseType =

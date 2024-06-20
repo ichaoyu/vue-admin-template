@@ -1,10 +1,7 @@
-import router from '@/router';
-import type { RouteRecordRaw } from 'vue-router';
+import router from './index';
 
 import { useNProgress } from '@/hooks/useNProgress';
 import { useUserStoreOut } from '@/store/modules/user';
-import { useAppStoreOut } from '@/store/modules/app';
-import { usePermissionStoreOut } from '@/store/modules/permission';
 
 const { start, done } = useNProgress();
 
@@ -13,48 +10,28 @@ const NO_REDIRECT_WHITE_LIST = ['/login'];
 //全局前置守卫
 router.beforeEach(async (to: any, from: any, next: any) => {
   start();
-  const { getUserInfo, getRoleRouters } = useUserStoreOut();
-  const permissionStore = usePermissionStoreOut();
-  const appStore = useAppStoreOut();
-  console.log('userStore.getUserInfo: ', getUserInfo);
-  if (getUserInfo) {
-    if (to.path === '/login') {
-      next({ path: '/' });
-    } else {
-      if (permissionStore.getIsAddRouters) {
-        next();
-        return;
-      }
-
-      // 开发者可根据实际情况进行修改
-      const roleRouters = getRoleRouters || [];
-
-      // 是否使用动态路由
-      if (appStore.getDynamicRouter) {
-        appStore.serverDynamicRouter
-          ? await permissionStore.generateRoutes(
-              'server',
-              roleRouters as AppCustomRouteRecordRaw[],
-            )
-          : await permissionStore.generateRoutes(
-              'frontEnd',
-              roleRouters as string[],
-            );
-      } else {
-        await permissionStore.generateRoutes('static');
-      }
-
-      permissionStore.getAddRouters.forEach((route) => {
-        router.addRoute(route as unknown as RouteRecordRaw); // 动态添加可访问路由表
-      });
-      const redirectPath = from.query.redirect || to.path;
-      const redirect = decodeURIComponent(redirectPath as string);
-      const nextData =
-        to.path === redirect ? { ...to, replace: true } : { path: redirect };
-      permissionStore.setIsAddRouters(true);
-      next(nextData);
+  const { getRoleIDs, getToken } = useUserStoreOut();
+  const hasPermission = to?.meat?.roles.some((role) =>
+    getRoleIDs?.includes(role),
+  );
+  // 已登录
+  if (getToken) {
+    console.log('!to?.meta?.requireAuth: ', !to?.meta?.requireAuth);
+    // 路由不需要鉴权 或 当前用户有访问路由的权限
+    if (!to?.meta?.requireAuth || hasPermission) {
+      next();
+      return true;
     }
+    // 当前用户没有访问路由的权限
+    const redirectPath = from.query.redirect || to.path;
+    const redirect = decodeURIComponent(redirectPath as string);
+    const nextData =
+      to.path === redirect ? { ...to, replace: true } : { path: redirect };
+    console.log('nextData: ', nextData);
+    next('/403');
   } else {
+    // 未登录
+    // 不需要登录权限
     if (NO_REDIRECT_WHITE_LIST.indexOf(to.path) !== -1) {
       next();
     } else {

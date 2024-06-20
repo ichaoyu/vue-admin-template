@@ -5,9 +5,11 @@ import {
 } from 'vue-router';
 import { constantRoute, asyncRouter } from './routes';
 
+export const routes = [...constantRoute, ...asyncRouter];
+
 const router = createRouter({
   history: createWebHistory(),
-  routes: constantRoute as RouteRecordRaw[],
+  routes: routes as RouteRecordRaw[],
   scrollBehavior() {
     return {
       left: 0,
@@ -15,5 +17,5 @@ const router = createRouter({
     };
   },
 });
+
 export default router;
-export { asyncRouter, constantRoute };

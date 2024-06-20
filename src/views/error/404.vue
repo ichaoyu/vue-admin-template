@@ -1,11 +1,7 @@
 <template>
-  <div class="404">404{{ count }}</div>
+  <div class="404">404</div>
 </template>
 
-<script setup>
-import { ref } from 'vue';
-
-const count = ref(0);
-</script>
+<script setup></script>
 
 <style lang="less" scoped></style>

@@ -1,58 +1,62 @@
 import { defineStore } from 'pinia';
-
-import { UserLoginType, UserState, UserType } from '@/interface';
+import { UserState } from '@/interface';
 import store from '../index';
-import { useStorage } from '@/hooks/useStorage';
-
-const { getStorage } = useStorage();
 
 export const useUserStore = defineStore('User', {
   state: (): UserState => {
     return {
-      userInfo: undefined,
+      username: '',
       tokenKey: 'Authorization',
-      token: getStorage('TOKEN') || '',
-      roleRouters: undefined,
-      // 记住我
+      token: '',
+      roleIDs: [],
+      permission: [],
       rememberMe: true,
-      loginInfo: undefined,
     };
   },
   actions: {
+    setUserName(username: string) {
+      this.username = username;
+    },
     setTokenKey(tokenKey: string) {
       this.tokenKey = tokenKey;
     },
     setToken(token: string) {
       this.token = token;
     },
-    setUserInfo(userInfo?: UserType) {
-      this.userInfo = userInfo;
+    setRoleIDs(ids: string[] | undefined) {
+      this.roleIDs = ids;
     },
-    setRoleRouters(roleRouters: string[] | AppCustomRouteRecordRaw[]) {
-      this.roleRouters = roleRouters;
+    setRememberMe(rememberMe: boolean) {
+      this.rememberMe = rememberMe;
+    },
+    setPermission(ids: string[] | undefined) {
+      this.permission = ids;
     },
   },
   getters: {
-    getTokenKey(): string {
+    getUserName(): string {
+      return this.username;
+    },
+    getTokenKey(): string | undefined {
       return this.tokenKey;
     },
     getToken(): string {
       return this.token;
     },
-    getUserInfo(): UserType | undefined {
-      return this.userInfo;
+    getRoleIDs(): string[] | undefined {
+      return this.roleIDs;
     },
-    getRoleRouters(): string[] | AppCustomRouteRecordRaw[] | undefined {
-      return this.roleRouters;
+    getPermission(): string[] | undefined {
+      return this.permission;
     },
-    getRememberMe(): boolean {
+    getRememberMe(): boolean | undefined {
       return this.rememberMe;
     },
-    getLoginInfo(): UserLoginType | undefined {
-      return this.loginInfo;
-    },
   },
-  persist: true,
+  persist: {
+    key: 'userInfo',
+    storage: sessionStorage,
+  },
 });
 
 export const useUserStoreOut = () => {

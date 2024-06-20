@@ -79,14 +79,18 @@ axiosInstance.interceptors.response.use(
       return response;
     } else if (response?.status === 200) {
       // 成功直接返回data数据
-      return response.data;
+      if (response.data.code === 0) {
+        return response.data.data;
+      } else {
+        ElMessage.error(response?.data?.msg ?? '未知错误');
+      }
     } else {
-      ElMessage.error(response?.data?.msg ?? '未知错误1');
+      ElMessage.error(response.statusText ?? response?.data?.msg ?? '服务故障');
     }
   },
   (error) => {
     //提示错误信息
-    ElMessage.error(error?.message ?? '未知错误');
+    ElMessage.error(error?.message ?? '请求失败');
     return Promise.reject(error);
   },
 );

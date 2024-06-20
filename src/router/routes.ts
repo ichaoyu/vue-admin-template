@@ -1,4 +1,4 @@
-import { Layout } from '@/utils';
+import Layout from '@/layout/index.vue';
 
 //对外暴露配置路由
 export const constantRoute: AppRouteRecordRaw[] = [
@@ -17,11 +17,10 @@ export const constantRoute: AppRouteRecordRaw[] = [
     //登录成功后展示数据路由
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/home/dashboard',
     name: 'layout',
     meta: {
       hidden: true,
-      icon: '',
       title: '',
     },
   },
@@ -33,7 +32,16 @@ export const constantRoute: AppRouteRecordRaw[] = [
     meta: {
       hidden: true,
       title: '404',
-      noTagsView: true,
+    },
+  },
+  {
+    //403路由
+    path: '/403',
+    component: () => import('@/views/error/403.vue'),
+    name: '403',
+    meta: {
+      hidden: true,
+      title: '403',
     },
   },
   {
@@ -47,102 +55,232 @@ export const constantRoute: AppRouteRecordRaw[] = [
       noTagsView: true,
     },
   },
-  {
-    path: '/dashboard',
-    component: Layout,
-    redirect: '/dashboard/analysis',
-    name: 'Dashboard',
-    meta: {
-      title: 'dashboard',
-      icon: 'HomeFilled',
-      alwaysShow: true,
-    },
-    children: [
-      {
-        path: 'analysis',
-        component: () => import('@/views/home'),
-        name: 'Analysis',
-        meta: {
-          title: 'analysis',
-          noCache: true,
-          affix: true,
-        },
-      },
-      {
-        path: 'workplace',
-        component: () => import('@/views/home'),
-        name: 'Workplace',
-        meta: {
-          title: 'Workplace',
-          noCache: true,
-        },
-      },
-    ],
-  },
-  {
-    path: '/onechild',
-    component: Layout,
-    meta: {
-      title: 'onechild-P',
-      icon: 'Grid',
-      alwaysShow: true,
-    },
-    name: 'onechild-P',
-    children: [
-      {
-        path: 'onechild',
-        component: () => import('@/views/home'),
-        name: 'onechild',
-        meta: {
-          title: 'onechild',
-          noCache: true,
-          affix: true,
-        },
-      },
-    ],
-  },
-  {
-    path: '/nochild',
-    component: Layout,
-    meta: {
-      title: 'nochild',
-      noCache: true,
-      affix: true,
-      icon: 'List',
-    },
-    name: 'nochild',
-  },
 ];
 
 export const asyncRouter: AppRouteRecordRaw[] = [
   {
-    path: '/workplace',
+    path: '/home',
+    name: 'SystemHomeIndex',
+    redirect: '/home/dashboard',
     component: Layout,
-    redirect: '/workplace/workplace',
-    name: 'workplaceH',
     meta: {
-      title: 'workplaceH',
-      icon: 'HomeFilled',
+      title: '看板',
+      icon: 'icon-home',
+      sort: 1,
+      hidden: false,
+      noCache: false,
+      alwaysShow: false,
+    },
+    children: [
+      {
+        path: 'dashboard',
+        name: 'home',
+        component: () => import('@/views/demo'),
+        meta: {
+          title: '看板',
+          sort: 1,
+          hidden: false,
+          noCache: true,
+          alwaysShow: false,
+        },
+      },
+    ],
+  },
+  {
+    path: '/system',
+    name: 'system',
+    redirect: '/system/user',
+    component: Layout,
+    meta: {
+      title: '系统管理',
+      icon: 'icon-setting',
+      sort: 3,
+      hidden: true,
+      noCache: false,
       alwaysShow: true,
     },
     children: [
       {
-        path: 'workplace',
-        component: () => import('@/views/home'),
-        name: 'workplace',
+        path: 'user',
+        name: 'SystemUserIndex',
+        component: () => import('@/views/demo'),
         meta: {
-          title: 'workplace',
+          title: '用户管理',
+          sort: 1,
+          hidden: false,
           noCache: true,
-          affix: true,
+          alwaysShow: false,
         },
       },
       {
-        path: 'dashboard',
-        component: () => import('@/views/home'),
-        name: 'Wdashboard',
+        path: 'role',
+        name: 'SystemRoleIndex',
+        component: () => import('@/views/demo'),
         meta: {
-          title: 'Wdashboard',
+          title: '角色管理',
+          sort: 2,
+          hidden: false,
           noCache: true,
+          alwaysShow: false,
+        },
+      },
+      {
+        path: 'menu',
+        name: 'SystemMenuIndex',
+        component: () => import('@/views/demo'),
+        meta: {
+          title: '菜单管理',
+          sort: 3,
+          hidden: true,
+          noCache: true,
+          alwaysShow: false,
+        },
+      },
+      {
+        path: 'dept',
+        name: 'SystemDeptIndex',
+        component: () => import('@/views/demo'),
+        meta: {
+          title: '部门管理',
+          sort: 4,
+          hidden: false,
+          noCache: true,
+          alwaysShow: false,
+        },
+      },
+      {
+        path: 'post',
+        name: 'SystemPostIndex',
+        component: () => import('@/views/demo'),
+        meta: {
+          title: '岗位管理',
+          sort: 5,
+          hidden: false,
+          noCache: true,
+          alwaysShow: false,
+        },
+      },
+      {
+        path: 'dictType',
+        name: 'SystemDictTypeIndex',
+        component: () => import('@/views/demo'),
+        meta: {
+          title: '字典管理',
+          sort: 6,
+          hidden: false,
+          noCache: true,
+          alwaysShow: false,
+        },
+      },
+      {
+        path: 'config',
+        name: 'SystemConfigIndex',
+        component: () => import('@/views/demo'),
+        meta: {
+          title: '参数配置',
+          sort: 7,
+          hidden: false,
+          noCache: true,
+          alwaysShow: false,
+        },
+      },
+      {
+        path: 'roleAuth/:id',
+        name: 'SystemRoleAuthIndex',
+        component: () => import('@/views/demo'),
+        meta: {
+          title: '分配用户',
+          sort: 13,
+          hidden: true,
+          noCache: true,
+          alwaysShow: false,
+        },
+      },
+      {
+        path: 'dictData/:id',
+        name: 'SystemDictDataIndex',
+        component: () => import('@/views/demo'),
+        meta: {
+          title: '字典数据',
+          sort: 14,
+          hidden: true,
+          noCache: true,
+          alwaysShow: false,
+        },
+      },
+    ],
+  },
+  {
+    path: '/monitor',
+    name: '',
+    redirect: '/monitor/loginLog',
+    component: Layout,
+    meta: {
+      title: '系统监控',
+      icon: 'icon-watch',
+      hidden: false,
+      requireAuth: false,
+      roles: ['test'],
+    },
+    children: [
+      {
+        path: 'loginLog',
+        name: 'MonitorLoginLogIndex',
+        component: () => import('@/views/demo'),
+        meta: {
+          title: '登录日志',
+          sort: 7,
+          hidden: false,
+          noCache: true,
+          alwaysShow: false,
+        },
+      },
+      {
+        path: 'online',
+        name: 'MonitorOnlineIndex',
+        component: () => import('@/views/demo'),
+        meta: {
+          title: '在线用户',
+          sort: 8,
+          hidden: false,
+          noCache: true,
+          alwaysShow: false,
+        },
+      },
+      {
+        path: 'operLog',
+        name: 'MonitorOperLogIndex',
+        component: () => import('@/views/demo'),
+        meta: {
+          title: '操作日志',
+          sort: 9,
+          hidden: false,
+          noCache: true,
+          alwaysShow: false,
+        },
+      },
+      {
+        path: 'cacheList',
+        name: 'MonitorCacheListIndex',
+        component: () => import('@/views/demo'),
+        meta: {
+          title: '缓存列表',
+          sort: 12,
+          hidden: false,
+          noCache: true,
+          alwaysShow: false,
+        },
+      },
+      {
+        path: 'server',
+        name: 'MonitorServerIndex',
+        component: () => import('@/views/demo'),
+        meta: {
+          title: '服务监控',
+          sort: 13,
+          hidden: false,
+          noCache: true,
+          alwaysShow: false,
         },
       },
     ],

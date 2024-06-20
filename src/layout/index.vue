@@ -26,7 +26,14 @@
             :inactive-icon="Sunny"
             inline-prompt
             @change="toggleDark"
-          />
+          >
+            <template #active-action>
+              <icon-font name="moon" color="#f00" />
+            </template>
+            <template #inactive-action>
+              <icon-font name="sun" color="#f00" style="color: orange" />
+            </template>
+          </el-switch>
           <el-icon class="icon icon-menufold">
             <component
               :is="collapse ? 'Expand' : 'Fold'"
@@ -49,19 +56,18 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue';
-import { usePermissionStore } from '@/store/modules/permission';
 import { useAppStore } from '@/store/modules/app';
 import { Sunny, Moon } from '@element-plus/icons-vue';
 import Logo from './components/Logo.vue';
 import Menu from './components/Menu.vue';
 // import HeaderBreadcrumb from './components/HeaderBreadcrumb.vue';
 import HeaderSettings from './components/HeaderSettings.vue';
+import { routes } from '@/router';
 
 const appStore = useAppStore();
 const collapse = computed(() => appStore.getCollapse);
 
-const permissionStore = usePermissionStore();
-const menuList = computed(() => permissionStore.getRouters);
+const menuList = routes;
 const title = computed(() => appStore.getTitle);
 const onChangeMenuFold = () => {
   appStore.setCollapse(!collapse.value);
@@ -98,7 +104,7 @@ const toggleDark = () => {
     }
 
     &-opr {
-      @include flex-layout($justify: space-around);
+      @include flex-layout($justify: space-between);
 
       height: $base-menu-opr-height;
       padding: 0 10px;
@@ -111,6 +117,7 @@ const toggleDark = () => {
 
     &-collapse {
       flex-flow: column nowrap;
+      justify-content: space-around;
     }
   }
 
