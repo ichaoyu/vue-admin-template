@@ -22,7 +22,7 @@ const adminList = [
     component: '#',
     meta: {
       title: '看板',
-      icon: 'icon-home',
+      icon: 'home',
       sort: 1,
       hidden: false,
       noCache: false,
@@ -50,7 +50,7 @@ const adminList = [
     component: '#',
     meta: {
       title: '系统管理',
-      icon: 'icon-setting',
+      icon: 'setting',
       sort: 3,
       hidden: false,
       noCache: false,
@@ -174,7 +174,7 @@ const adminList = [
     component: '#',
     meta: {
       title: '系统监控',
-      icon: 'icon-watch',
+      icon: 'watch',
       sort: 2,
       hidden: false,
       noCache: false,
@@ -333,7 +333,7 @@ const menus = [
     component: '#',
     meta: {
       title: '看板',
-      icon: 'icon-home',
+      icon: 'home',
       sort: 1,
       hidden: false,
       noCache: false,
@@ -361,7 +361,7 @@ const menus = [
     component: '#',
     meta: {
       title: '系统管理',
-      icon: 'icon-setting',
+      icon: 'setting',
       sort: 3,
       hidden: false,
       noCache: false,
@@ -485,7 +485,7 @@ const menus = [
     component: '#',
     meta: {
       title: '系统监控',
-      icon: 'icon-watch',
+      icon: 'watch',
       sort: 2,
       hidden: false,
       noCache: false,

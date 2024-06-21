@@ -73,6 +73,7 @@ module.exports = {
         ignore: ['after-comment', 'first-nested'],
       },
     ],
+    'custom-property-empty-line-before': null,
     'unit-no-unknown': [true, { ignoreUnits: ['rpx'] }],
     'order/order': [
       [

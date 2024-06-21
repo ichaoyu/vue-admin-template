@@ -24,7 +24,7 @@ const props = defineProps({
   box-sizing: border-box;
   align-items: center;
   height: $base-menu-logo-height;
-  color: #000;
+  color: var(--el-text-color-primary);
 
   img {
     width: 40px;

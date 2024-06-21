@@ -8,7 +8,7 @@
 defineProps({
   prefix: {
     type: String,
-    default: '#',
+    default: '#icon-',
   },
   name: {
     type: String,

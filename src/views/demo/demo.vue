@@ -1,6 +1,7 @@
 <template>
-  {{ meta.title }}-{{ name }} <icon-font name="icon-fullscreen" />
-  <IconFont name="icon-fullscreen-exit" />
+  {{ meta.title }}-{{ name }} <icon-font name="fullscreen" />
+  <IconFont name="fullscreen-exit" />
+  <icon-font name="moon" color="#ffe794" />
 </template>
 <script setup lang="ts">
 import { useRoute } from 'vue-router';

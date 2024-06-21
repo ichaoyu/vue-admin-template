@@ -22,16 +22,15 @@
         >
           <el-switch
             v-model="isDark"
-            :active-icon="Moon"
-            :inactive-icon="Sunny"
             inline-prompt
+            size="small"
             @change="toggleDark"
           >
             <template #active-action>
-              <icon-font name="moon" color="#f00" />
+              <icon-font name="moon" color="#fde047" />
             </template>
             <template #inactive-action>
-              <icon-font name="sun" color="#f00" style="color: orange" />
+              <icon-font name="sun" color="#fde047" />
             </template>
           </el-switch>
           <el-icon class="icon icon-menufold">
@@ -57,10 +56,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import { useAppStore } from '@/store/modules/app';
-import { Sunny, Moon } from '@element-plus/icons-vue';
 import Logo from './components/Logo.vue';
 import Menu from './components/Menu.vue';
-// import HeaderBreadcrumb from './components/HeaderBreadcrumb.vue';
 import HeaderSettings from './components/HeaderSettings.vue';
 import { routes } from '@/router';
 
@@ -88,10 +85,10 @@ const toggleDark = () => {
   &-aside {
     box-sizing: border-box;
     width: $base-menu-width;
-    // --el-aside-width: $base-menu-width;
     padding-top: 8px;
     overflow: hidden;
     transition: all 0.3s;
+    background-color: var(--bg-main-coloe);
     box-shadow: var(--shadow-length-connected-overlay, 0 2px 8px 0)
       var(--shadow-color, rgb(37 43 58 / 100%));
 
@@ -128,8 +125,10 @@ const toggleDark = () => {
   &-header {
     @include flex-layout($justify: space-between);
 
+    z-index: 2;
     box-sizing: border-box;
     height: $base-tabbar-height;
+    background-color: var(--bg-main-coloe);
     box-shadow: var(--shadow-length-connected-overlay, 0 2px 8px 0)
       var(--shadow-color, rgb(37 43 58 / 10%));
     font-size: 12px;
@@ -151,6 +150,7 @@ const toggleDark = () => {
 
   &-main {
     overflow-y: auto;
+    background-color: var(--bg-global-color);
   }
 }
 

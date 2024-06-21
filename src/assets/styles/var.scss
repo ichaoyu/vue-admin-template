@@ -4,8 +4,10 @@
 $base-menu-background: #001529;
 
 // 左侧菜单宽度
-$base-menu-width: 220px;
-$base-menu-min-width: 65px;
+$base-menu-width: 200px;
+$base-menu-min-width: calc(
+  var(--el-menu-icon-width) + var(--el-menu-base-level-padding) * 2
+);
 
 // 左侧菜单logo高度
 $base-menu-logo-height: 50px;
@@ -18,22 +20,3 @@ $base-tabbar-height: $base-menu-logo-height;
 
 // 左侧菜单logo右侧文字大小
 $base-logo-title-fontsize: 20px;
-
-:root {
-  // menu
-  --el-menu-item-height: 48px;
-  --el-menu-item-font-size: var(--el-font-size-small);
-
-  // old
-  --el-menu-active-color: var(--el-color-primary);
-  --el-menu-bg-color: var(--el-fill-color-blank);
-  --el-menu-hover-bg-color: var(--el-color-primary-light-9);
-  --el-menu-sub-item-height: calc(var(--el-menu-item-height) - 6px);
-  --el-menu-horizontal-height: 60px;
-  --el-menu-horizontal-sub-item-height: 36px;
-  --el-menu-item-hover-fill: var(--el-color-primary-light-9);
-  --el-menu-border-color: var(--el-border-color);
-  --el-menu-base-level-padding: 20px;
-  --el-menu-level-padding: 20px;
-  --el-menu-icon-width: 24px;
-}

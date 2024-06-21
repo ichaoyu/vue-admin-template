@@ -57,6 +57,19 @@
   }
 }
 
+.el-menu--popup {
+  min-width: 160px !important;
+
+  .aside-menu {
+    width: 160px !important;
+  }
+
+  .el-menu-item {
+    height: var(--el-menu-horizontal-sub-item-height);
+    font-size: var(--el-font-size-extra-small);
+  }
+}
+
 :root {
   font-family: HuaweiFont, helvetica, arial, PingFang, 'Microsoft YaHei',
     'Hiragino Sans GB', 'Microsoft JhengHei', sans-serif;

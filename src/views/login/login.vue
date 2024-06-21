@@ -5,13 +5,6 @@
         <el-form class="login_form">
           <h1>Hello</h1>
           <h2>vue-admin-template</h2>
-          <icon-font name="icon-setting" />
-          <icon-font name="icon-watch" />
-          <icon-font
-            name="icon-fullscreen"
-            color="var(--el-color-primary)"
-            style="color: var(--el-color-primary)"
-          />
           <el-form-item>
             <el-input
               placeholder="登录账号"

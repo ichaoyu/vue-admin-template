@@ -109,10 +109,6 @@ const routeList: AppRouteRecordRaw[] = filterRouters(props.menuList);
   width: 100%;
 }
 
-:deep(.el-menu) {
-  background: none;
-}
-
 .aside-menu {
   border-right: none;
   background: none;

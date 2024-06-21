@@ -65,7 +65,7 @@ export const asyncRouter: AppRouteRecordRaw[] = [
     component: Layout,
     meta: {
       title: '看板',
-      icon: 'icon-home',
+      icon: 'home',
       sort: 1,
       hidden: false,
       noCache: false,
@@ -93,7 +93,7 @@ export const asyncRouter: AppRouteRecordRaw[] = [
     component: Layout,
     meta: {
       title: '系统管理',
-      icon: 'icon-setting',
+      icon: 'setting',
       sort: 3,
       hidden: true,
       noCache: false,
@@ -217,7 +217,7 @@ export const asyncRouter: AppRouteRecordRaw[] = [
     component: Layout,
     meta: {
       title: '系统监控',
-      icon: 'icon-watch',
+      icon: 'watch',
       hidden: false,
     },
     children: [
