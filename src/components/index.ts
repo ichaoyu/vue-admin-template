@@ -1,11 +1,11 @@
 //引入项目中全部的全局组件
 import IconFont from './IconFont';
-// import Pagination from './Pagination/index.vue'
-// import Category from './Category/index.vue'
+import PageContent from './PageContent';
+
 //引入element-plus提供全部图标组件
 import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 //全局对象
-const allGloablComponent: any = { IconFont };
+const allGloablComponent: any = { IconFont, PageContent };
 //对外暴露插件对象
 export default {
   //务必叫做install方法

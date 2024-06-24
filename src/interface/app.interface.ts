@@ -3,11 +3,11 @@ export interface AppState {
   /**
    * 面包屑
    */
-  breadcrumb: boolean;
+  // breadcrumb: boolean;
   /**
    * 面包屑图表
    */
-  breadcrumbIcon: boolean;
+  // breadcrumbIcon: boolean;
   /**
    * 折叠菜单
    */
@@ -15,11 +15,11 @@ export interface AppState {
   /**
    * 是否只保持一个子菜单的展开
    */
-  uniqueOpened: boolean;
+  // uniqueOpened: boolean;
   /**
    * 折叠图标
    */
-  hamburger: boolean;
+  // hamburger: boolean;
   /**
    * 全屏图标
    */
@@ -31,11 +31,11 @@ export interface AppState {
   /**
    * 标签页
    */
-  tagsView: boolean;
+  // tagsView: boolean;
   /**
    * 是否显示标签图标
    */
-  tagsViewIcon: boolean;
+  // tagsViewIcon: boolean;
   /**
    * logo
    */
@@ -43,19 +43,19 @@ export interface AppState {
   /**
    * 固定头部
    */
-  fixedHeader: boolean;
+  // fixedHeader: boolean;
   /**
    * 是否开始灰色模式
    */
-  greyMode: boolean;
+  // greyMode: boolean;
   /**
    * 是否动态路由
    */
-  dynamicRouter: boolean;
+  // dynamicRouter: boolean;
   /**
    * 是否服务端渲染动态路由
    */
-  serverDynamicRouter: boolean;
+  // serverDynamicRouter: boolean;
   /**
    * 路由跳转loading
    */
@@ -63,7 +63,7 @@ export interface AppState {
   /**
    * layout布局
    */
-  layout: LayoutType;
+  // layout: LayoutType;
   /**
    * 标题
    */
@@ -83,20 +83,20 @@ export interface AppState {
   /**
    * 是否是移动端
    */
-  mobile: boolean;
+  // mobile: boolean;
   /**
    * 显示页脚
    */
-  footer: boolean;
+  // footer: boolean;
   /**
    * 主题
    */
-  theme: ThemeTypes;
+  // theme: ThemeTypes;
   /**
    * 是否固定菜单
    */
 
-  locale: boolean;
+  // locale: boolean;
 
-  fixedMenu: boolean;
+  // fixedMenu: boolean;
 }

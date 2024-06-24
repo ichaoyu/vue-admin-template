@@ -88,7 +88,7 @@ const toggleDark = () => {
     padding-top: 8px;
     overflow: hidden;
     transition: all 0.3s;
-    background-color: var(--bg-main-coloe);
+    background-color: var(--bg-main-color);
     box-shadow: var(--shadow-length-connected-overlay, 0 2px 8px 0)
       var(--shadow-color, rgb(37 43 58 / 100%));
 
@@ -128,7 +128,7 @@ const toggleDark = () => {
     z-index: 2;
     box-sizing: border-box;
     height: $base-tabbar-height;
-    background-color: var(--bg-main-coloe);
+    background-color: var(--bg-main-color);
     box-shadow: var(--shadow-length-connected-overlay, 0 2px 8px 0)
       var(--shadow-color, rgb(37 43 58 / 10%));
     font-size: 12px;

@@ -4,27 +4,17 @@ html.dark{
   --base-menu-background-image: linear-gradient(179deg, #141721 0%, #1a1e29 100%);
   --show-color: rgba(0, 0, 0, 0.72);
   --bg-global-color: #202124;
-  --bg-main-coloe: #2E2F31;
+  --bg-main-color: #2E2F31;
   --list-hover-bg: #1C1C1E;
-  }
+  --el-bg-color-overlay: #2E2F31;
+}
 
 :root{
   color-scheme: light;
   --base-menu-background-image: linear-gradient(179deg, #e9fbff 0%, #f3f5ff 100%);
   --shadow-length-connected-overlay: 0 2px 8px 0;
-  --shadow-color: rgba(0, 0, 0, 0.2);
+  --shadow-color: rgba(37, 43, 58, 0.12);
   --bg-global-color: #f6f6f8;
-  --bg-main-coloe: #fff;
-  --list-hover-bg: #f2f2f3
-}
-
-:root{
-  --el-color-primary-light-9: var(--list-hover-bg);
-  /* menu */
-  --el-menu-item-height: 46px;
-  --el-menu-item-font-size: var(--el-font-size-small);
-  --el-menu-icon-width: 18px;
-  --el-menu-level-padding: 20px;
-  --el-menu-base-level-padding: 16px;
-  
+  --bg-main-color: #fff;
+  --list-hover-bg: #f2f2f3;
 }
