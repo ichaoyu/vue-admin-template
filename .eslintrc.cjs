@@ -61,5 +61,21 @@ module.exports = {
     'vue/multi-word-component-names': 'off',
     'no-undef': 'off',
     'no-case-declarations': 'off',
+    '@typescript-eslint/ban-types': [
+      'error',
+      {
+        types: {
+          String: false,
+          Boolean: false,
+          Number: false,
+          Symbol: false,
+          '{}': false,
+          Object: false,
+          object: false,
+          Function: false,
+        },
+        extendDefaults: true,
+      },
+    ],
   },
 };

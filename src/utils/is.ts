@@ -10,3 +10,7 @@ export const isUrl = (path: string): boolean => {
     /(((^https?:(?:\/\/)?)(?:[-:&=\\+\\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-:&=\\+\\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\\+~%\\/.\w-_]*)?\??(?:[-\\+=&%@.\w_]*)#?(?:[\w]*))?)$/;
   return reg.test(path);
 };
+
+export const isFunction = (val: unknown): val is Function => {
+  return typeof val === 'function';
+};

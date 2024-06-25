@@ -12,7 +12,7 @@ defineProps({
 </script>
 
 <template>
-  <ElCard shadow="never">
+  <ElCard shadow="never" class="page-container">
     <template v-if="title" #header>
       <div class="content-header">
         <span class="content-header-title">{{ title }}</span>
@@ -27,15 +27,17 @@ defineProps({
         </div>
       </div>
     </template>
-    <div>
+    <div class="content-main">
       <slot></slot>
     </div>
   </ElCard>
 </template>
 
 <style scoped lang="scss">
-:deep(.el-card) {
-  --el-card-padding: 10px !important;
+.page-container {
+  --el-card-padding: 12px;
+
+  border: none;
 }
 
 .content-header {
@@ -59,5 +61,9 @@ defineProps({
 
     padding-left: 20px;
   }
+}
+
+.content-main {
+  width: 100%;
 }
 </style>

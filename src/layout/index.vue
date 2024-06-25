@@ -149,6 +149,8 @@ const toggleDark = () => {
   }
 
   &-main {
+    --el-main-padding: 15px;
+
     overflow-y: auto;
     background-color: var(--bg-global-color);
   }
