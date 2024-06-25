@@ -103,7 +103,7 @@ export const asyncRouter: AppRouteRecordRaw[] = [
       {
         path: 'user',
         name: 'SystemUserIndex',
-        component: () => import('@/views/demo'),
+        component: () => import('@/views/system/user.vue'),
         meta: {
           title: '用户管理',
           sort: 1,
