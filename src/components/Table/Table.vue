@@ -1,14 +1,23 @@
 <template>
   <div class="table">
-    <el-table :data="props.data" v-bind="$attrs">
+    <el-table :data="props.data" :height="props.height" v-bind="$props">
       <!-- 复选框 -->
       <el-table-column
         v-if="props.selection"
         v-bind="{
           type: 'selection',
+          width: 45,
+          fixed: true,
+        }"
+      />
+      <!-- 序号 -->
+      <el-table-column
+        v-if="props.index"
+        v-bind="{
+          type: 'index',
           width: 55,
           fixed: true,
-          align: 'center',
+          label: '序号',
         }"
       />
       <!-- 表格主体内容 -->
@@ -20,51 +29,60 @@
         />
       </template>
       <!-- 操作按钮 -->
-      <el-table-column
-        v-if="props.operator"
-        :fixed="props.operatorConfig && props.operatorConfig.fixed"
-        :label="(props.operatorConfig && props.operatorConfig.label) || '操作'"
-        :min-width="props.operatorConfig && props.operatorConfig.minWidth"
-        :width="props.operatorConfig && props.operatorConfig.width"
-        :align="(props.operatorConfig && props.operatorConfig.align) || align"
-        v-bind="props.operatorConfig && props.operatorConfig.bind"
-        class-name="operator"
-      >
+      <el-table-column v-if="props.action" v-bind="actionCfg">
         <template #default="scope">
-          <div
-            class="operator_btn"
-            :style="props.operatorConfig && props.operatorConfig.style"
-          >
-            <template v-for="(item, index) in props.operator" :key="index">
+          <div class="operator_btn" :style="actionCfg && actionCfg.style">
+            <template v-for="(opr, index) in props.action" :key="index">
               <!-- TODOS: 增加权限判断 -->
               <el-button
                 @click="
-                  item.action &&
-                    item.action(scope.row, scope.$index, props.data)
+                  opr.action && opr.action(scope.row, scope.$index, props.data)
                 "
                 v-bind="{
                   type: 'primary',
                   link: true,
                   text: true,
                   size: 'small',
-                  ...item.btnStyle,
+                  ...opr.btnStyle,
                   ...$attrs,
                 }"
               >
-                <span>{{ item.text }}</span>
+                <span>{{ opr.text }}</span>
               </el-button>
             </template>
           </div>
         </template>
       </el-table-column>
     </el-table>
+    <!-- 分页器 -->
+    <el-pagination
+      v-if="props.pagination"
+      class="pagination"
+      background
+      size="small"
+      v-model:current-page="$props.currentPage"
+      v-model:page-size="$props.pageSize"
+      :page-sizes="[10, 20, 50, 100, 200]"
+      layout="total, sizes, ->, prev, pager, next, jumper"
+      :hide-on-single-page="false"
+      @current-change="onPageChange"
+      @update:page-size="onChangePageSize"
+      v-bind="props.pagination"
+    >
+      <slot name="pagination"></slot>
+    </el-pagination>
   </div>
 </template>
 
 <script setup lang="ts" name="Table">
-import { PropType, CSSProperties } from 'vue';
+import { PropType, CSSProperties, computed } from 'vue';
 import { ComponentSize, ElTooltipProps } from 'element-plus';
-import type { Pagination, TableColumn } from './types';
+import type {
+  Pagination,
+  TableColumn,
+  TableAction,
+  TableActionConfig,
+} from './types';
 const props = defineProps({
   loading: {
     type: Boolean,
@@ -75,19 +93,13 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  operator: {
-    type: Array,
-    default: () => [],
+  // 序号
+  index: {
+    type: Boolean,
+    default: false,
   },
-  operatorConfig: {
-    type: Object,
-    default: () => ({
-      fixed: 'right', // 固定列表右边（left则固定在左边）
-      width: 180,
-      label: '操作',
-    }),
-  },
-  // 分页
+
+  // 每页数量
   pageSize: {
     type: Number,
     default: 10,
@@ -97,20 +109,35 @@ const props = defineProps({
     type: Number,
     default: 1,
   },
+  // 分页配置
+  pagination: {
+    type: Object as PropType<Pagination>,
+    default: (): Pagination | undefined => undefined,
+  },
   // 是否超出隐藏
   showOverflowTooltip: {
     type: Boolean,
     default: true,
   },
-  // 是否展示分页
-  pagination: {
-    type: Object as PropType<Pagination>,
-    default: (): Pagination | undefined => undefined,
-  },
   // 对齐方式
   align: {
     type: String as PropType<'left' | 'center' | 'right'>,
     default: 'left',
+  },
+  // 操作列
+  action: {
+    type: Array as PropType<TableAction[]>,
+    default: () => [],
+  },
+  // 操作列配置
+  actionConfig: {
+    type: Object as PropType<TableActionConfig>,
+    default: () => ({
+      width: 180,
+      fixed: 'right',
+      label: '操作',
+      align: 'center',
+    }),
   },
   // 表头对齐方式
   headerAlign: {
@@ -135,22 +162,24 @@ const props = defineProps({
   // 边框
   border: {
     type: Boolean,
-    default: true,
+    default: false,
   },
   // 高度
   height: {
     type: [Number, String],
-    default: '',
+    // default: 'var(--table-height)',
+    default: '300',
   },
   // 最大高度
   maxHeight: {
     type: [Number, String],
-    default: '',
+    default: '800',
   },
   // 尺寸
   size: {
     type: String as PropType<ComponentSize>,
     validator: (v: ComponentSize) => ['default', 'small', 'large'].includes(v),
+    default: 'small',
   },
   // 列宽是否自动撑开
   fit: {
@@ -170,7 +199,7 @@ const props = defineProps({
   // current-row-key	当前行的 key，只写属性
   currentRowKey: {
     type: [Number, String],
-    default: '',
+    default: 'id',
   },
   // 行的 className 的回调方法或字符串的 className
   rowClassName: {
@@ -390,6 +419,43 @@ const props = defineProps({
     default: '',
   },
 });
+const actionCfg = computed(() =>
+  Object.assign(
+    {
+      width: 180,
+      fixed: 'right',
+      label: '操作',
+      align: 'center',
+    },
+    props.actionConfig,
+  ),
+);
+// 抛出事件
+const emits = defineEmits(['page-change']);
+
+// 页码变更
+const onPageChange = (page: number) => {
+  emits('page-change', { page });
+};
+// 每页显示数量变更
+const onChangePageSize = (size: number) => {
+  emits('page-change', { size });
+};
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.el-table {
+  --el-table-header-text-color: var(--el-text-color-primary);
+  --el-table-header-bg-color: var(--el-bg-color-overlay);
+  --el-table-tr-bg-color: var(--el-bg-color-overlay);
+  --el-table-row-hover-bg-color: var(--bg-global-color);
+}
+
+.table {
+  height: 100%;
+}
+
+.pagination {
+  margin-top: 15px;
+}
+</style>

@@ -36,12 +36,16 @@ defineProps({
 <style scoped lang="scss">
 .page-container {
   --el-card-padding: 12px;
+  --card-header-height: 18px;
 
+  height: 100%;
   border: none;
 }
 
 .content-header {
   @include flex-layout();
+
+  height: var(--card-header-height);
 
   .icon {
     margin-left: 5px;
@@ -65,5 +69,6 @@ defineProps({
 
 .content-main {
   width: 100%;
+  height: 100%;
 }
 </style>

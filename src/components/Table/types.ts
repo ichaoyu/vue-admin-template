@@ -1,4 +1,24 @@
 import { TableProps as ElTableProps } from 'element-plus';
+
+interface btnStyle {
+  type?: string;
+  link?: string | boolean;
+  color?: string;
+  icon?: string;
+}
+export interface TableAction {
+  text: string;
+  action: Function;
+  btnStyle?: btnStyle;
+  icon?: string;
+}
+export interface TableActionConfig {
+  width?: number;
+  fixed?: string;
+  label?: string;
+  align?: 'left' | 'center' | 'right';
+  [key: string]: any;
+}
 export interface Pagination {
   small?: boolean;
   background?: boolean;

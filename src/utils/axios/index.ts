@@ -72,7 +72,7 @@ axiosInstance.interceptors.request.use(defaultRequestInterceptors);
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
     console.log('response: ', response);
-    //成功回调
+    // #region 成功回调
     // return response;
     if (response?.config?.responseType === 'blob') {
       // 文件流直接返回全部
@@ -95,7 +95,7 @@ axiosInstance.interceptors.response.use(
   },
 );
 
-// 封装axios
+// #region 封装axios
 const service = (config: RequestConfig) => {
   return new Promise((resolve, reject) => {
     if (config.interceptors?.requestInterceptors) {
@@ -112,6 +112,8 @@ const service = (config: RequestConfig) => {
       });
   });
 };
+// #endregion 封装axios
+
 const request = (option: AxiosConfig) => {
   const userStore = useUserStoreOut();
   const { url, method, params, data, headers, responseType } = option;
@@ -128,7 +130,7 @@ const request = (option: AxiosConfig) => {
     },
   });
 };
-//对外暴露
+// #region 对外暴露
 export default {
   get: <T = any>(option: AxiosConfig) => {
     return request({ method: 'get', ...option }) as Promise<IResponse<T>>;

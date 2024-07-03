@@ -42,6 +42,9 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0(@types/video.js@7.3.58)(video.js@7.21.6)(vue@3.4.27(typescript@5.4.5))
     devDependencies:
+      '@types/mockjs':
+        specifier: ^1.0.10
+        version: 1.0.10
       '@types/node':
         specifier: ^20.12.12
         version: 20.12.12
@@ -669,6 +672,9 @@ packages:
 
   '@types/lodash@4.17.4':
     resolution: {integrity: sha512-wYCP26ZLxaT3R39kiN2+HcJ4kTd3U1waI/cY7ivWYqFP6pW3ZNpvi6Wd6PHZx7T/t8z0vlkXMg3QYLa7DZ/IJQ==}
+
+  '@types/mockjs@1.0.10':
+    resolution: {integrity: sha512-SXgrhajHG7boLv6oU93CcmdDm0HYRiceuz6b+7z+/2lCJPTWDv0V5YiwFHT2ejE4bQqgSXQiVPQYPWv7LGsK1g==}
 
   '@types/node@20.12.12':
     resolution: {integrity: sha512-eWLDGF/FOSPtAvEqeRAQ4C8LSA7M1I7i0ky1I8U7kD1J5ITyW3AsRhQrKVoWf5pFKZ2kILsEGJhsI9r93PYnOw==}
@@ -2676,6 +2682,8 @@ snapshots:
       '@types/lodash': 4.17.4
 
   '@types/lodash@4.17.4': {}
+
+  '@types/mockjs@1.0.10': {}
 
   '@types/node@20.12.12':
     dependencies:
