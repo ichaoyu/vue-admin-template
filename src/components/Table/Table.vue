@@ -1,5 +1,13 @@
 <template>
   <div class="table">
+    <div class="table-settings">
+      <div class="columns-settings">
+        <ColumnSettings
+          :columns="columnsSettings"
+          @columns-change="onChangeColumns"
+        />
+      </div>
+    </div>
     <el-table :data="props.data" :height="props.height" v-bind="$props">
       <!-- 复选框 -->
       <el-table-column
@@ -21,9 +29,10 @@
         }"
       />
       <!-- 表格主体内容 -->
-      <template v-for="(item, index) in props.columns" :key="item.id || index">
+      <template v-for="(item, idx) in columnsSettings" :key="item.key || idx">
         <el-table-column
-          :prop="item.field"
+          v-if="!item.hidden"
+          :prop="item.key"
           :label="item.label"
           :width="item.width"
         />
@@ -75,8 +84,9 @@
 </template>
 
 <script setup lang="ts" name="Table">
-import { PropType, CSSProperties, computed } from 'vue';
+import { PropType, CSSProperties, computed, ref, reactive } from 'vue';
 import { ComponentSize, ElTooltipProps } from 'element-plus';
+import ColumnSettings from './ColumnSettings.vue';
 import type {
   Pagination,
   TableColumn,
@@ -430,6 +440,7 @@ const actionCfg = computed(() =>
     props.actionConfig,
   ),
 );
+
 // 抛出事件
 const emits = defineEmits(['page-change']);
 
@@ -441,6 +452,10 @@ const onPageChange = (page: number) => {
 const onChangePageSize = (size: number) => {
   emits('page-change', { size });
 };
+const columnsSettings = ref<TableColumn[]>(props.columns);
+const onChangeColumns = (columns: TableColumn[]) => {
+  columnsSettings.value = columns;
+};
 </script>
 
 <style lang="scss" scoped>
@@ -451,8 +466,24 @@ const onChangePageSize = (size: number) => {
   --el-table-row-hover-bg-color: var(--bg-global-color);
 }
 
+.el-pagination {
+  --el-pagination-font-size: 12px;
+}
+
+:deep(.el-select__wrapper) {
+  font-size: 12px;
+}
+
+.el-select {
+  --el-select-input-font-size: 12px;
+}
+
 .table {
   height: 100%;
+
+  &-settings {
+    @include flex-layout($justify: flex-end);
+  }
 }
 
 .pagination {

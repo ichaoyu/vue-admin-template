@@ -46,6 +46,10 @@ export interface TableColumn {
    * 是否隐藏
    */
   hidden?: boolean;
+  /**
+   * 是否可开关显隐
+   */
+  isDisabled?: boolean;
   children?: TableColumn[];
   slots?: {
     default?: (...args: any[]) => JSX.Element | JSX.Element[] | null;

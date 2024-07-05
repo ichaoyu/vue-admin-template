@@ -8,6 +8,12 @@
   outline: none;
 }
 
+.el-select-dropdown__item {
+  height: 28px;
+  font-size: 12px;
+  line-height: 28px;
+}
+
 :root {
   // menu
   --el-menu-item-height: 46px;

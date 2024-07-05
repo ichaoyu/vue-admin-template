@@ -12,7 +12,7 @@ export const useAppStore = defineStore('App', {
       pageLoading: false,
       title: import.meta.env.VITE_GLOB_APP_TITLE,
       isDark: false,
-      currentSize: 'default',
+      currentSize: 'small',
       sizeMap: ['default', 'large', 'small'],
       screenfull: true,
     };

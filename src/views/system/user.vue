@@ -35,16 +35,16 @@ const nullify = (row, index, data) => {
 };
 const columns = [
   {
-    field: 'id',
+    key: 'id',
     label: 'ID',
     align: 'center',
   },
   {
-    field: 'title',
+    key: 'title',
     label: '名称',
   },
   {
-    field: 'author',
+    key: 'author',
     label: '作者',
   },
 ];
