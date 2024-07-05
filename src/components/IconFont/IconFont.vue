@@ -1,5 +1,15 @@
 <template>
-  <svg class="icon" aria-hidden="true" :style="{ width, height }">
+  <!-- ElementPlus图标 -->
+  <el-icon v-if="icon" :style="{ width, height, fontSize }"
+    ><component :is="icon"
+  /></el-icon>
+  <!-- IconFont图标 -->
+  <svg
+    v-else
+    class="icon"
+    aria-hidden="true"
+    :style="{ width, height, fontSize }"
+  >
     <use :xlink:href="prefix + name" :fill="color" />
   </svg>
 </template>
@@ -10,6 +20,12 @@ defineProps({
     type: String,
     default: '#icon-',
   },
+  // element-plus图表名称
+  icon: {
+    type: String,
+    default: '',
+  },
+  // iconfont图表名称
   name: {
     type: String,
     default: '',
@@ -25,6 +41,10 @@ defineProps({
   height: {
     type: String,
     default: '',
+  },
+  fontSize: {
+    type: String,
+    default: '12px',
   },
 });
 </script>
