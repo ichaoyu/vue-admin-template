@@ -1,14 +1,14 @@
 <template>
   <!-- ElementPlus图标 -->
-  <el-icon v-if="icon" :style="{ width, height, fontSize }"
-    ><component :is="icon"
-  /></el-icon>
+  <el-icon v-if="icon" :color="color" :size="size">
+    <component :is="icon" :style="{ width, height }" />
+  </el-icon>
   <!-- IconFont图标 -->
   <svg
     v-else
     class="icon"
     aria-hidden="true"
-    :style="{ width, height, fontSize }"
+    :style="{ width, height, 'font-size': size + 'px' }"
   >
     <use :xlink:href="prefix + name" :fill="color" />
   </svg>
@@ -42,9 +42,9 @@ defineProps({
     type: String,
     default: '',
   },
-  fontSize: {
-    type: String,
-    default: '12px',
+  size: {
+    type: Number,
+    default: 12,
   },
 });
 </script>
@@ -54,6 +54,7 @@ defineProps({
   width: 1em;
   height: 1em;
   overflow: hidden;
+  outline: none;
   fill: currentcolor;
   vertical-align: -0.15em;
 }

@@ -1,14 +1,15 @@
 <template>
   <el-popover
-    class="column-settings"
+    class="tools-column"
     placement="bottom"
     :width="150"
     trigger="click"
   >
     <template #reference>
-      <icon-font class="icon-column-btn" icon="Setting" fontSize="16px" />
+      <icon-font class="icon-column-btn" icon="Tools" :size="16" />
     </template>
     <div class="columns-box">
+      <div>列设置</div>
       <el-checkbox
         v-for="(column, index) in columnsState"
         :checked="!column.hidden"
@@ -37,11 +38,11 @@ const props = defineProps({
 const columnsState = ref<TableColumn[]>(props.columns);
 
 // 抛出事件
-const emits = defineEmits(['columns-change']);
-const checkChanged = (checked, index) => {
+const emits = defineEmits(['change-columns']);
+const checkChanged = (checked: boolean, index: number) => {
   columnsState.value[index].hidden = !checked;
 
-  emits('columns-change', columnsState.value);
+  emits('change-columns', columnsState.value);
 };
 </script>
 
@@ -51,10 +52,6 @@ const checkChanged = (checked, index) => {
 }
 
 .icon-column-btn {
-  cursor: pointer;
-
-  &:hover {
-    color: var(--el-color-primary);
-  }
+  @extend %item-hover;
 }
 </style>

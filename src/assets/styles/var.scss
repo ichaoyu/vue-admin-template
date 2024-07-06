@@ -20,3 +20,12 @@ $base-tabbar-height: $base-menu-logo-height;
 
 // 左侧菜单logo右侧文字大小
 $base-logo-title-fontsize: 20px;
+
+// 元素pointer并且hover时变色 占位符
+%item-hover {
+  cursor: pointer;
+
+  &:hover {
+    color: var(--el-color-primary);
+  }
+}

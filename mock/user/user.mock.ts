@@ -12,6 +12,18 @@ const genertorUserList = (currentPage = 1, pageSize = 10) => {
         id: '@id',
         author: '@first',
         title: '@title(2, 4)',
+        children: [
+          {
+            id: '123',
+            author: 'cece',
+            title: '标题',
+          },
+          {
+            id: '1232',
+            author: 'cece2',
+            title: '标题1',
+          },
+        ],
       }),
     );
   }

@@ -1,5 +1,3 @@
-import { Slots } from 'vue';
-import { isFunction } from './is';
 /**
  * 把对象转为formData
  */
@@ -16,6 +14,7 @@ export const objToFormData = (obj: Recordable) => {
  * @param prop css变量名
  * @param val 变量值
  * @param dom 插入元素 默认root下
+ * @example setCssVar('--el-color-primary', '#000')
  */
 export const setCssVar = (
   prop: string,
@@ -30,6 +29,7 @@ export const setCssVar = (
  * @param prop css变量名
  * @param dom dom元素
  * @returns 返回的颜色值
+ * @example getCssVar('--el-color-primary') --> #000
  */
 export const getCssVar = (prop: string, dom = document.documentElement) => {
   return dom.style.getPropertyValue(prop);
@@ -41,39 +41,4 @@ export const getCssVar = (prop: string, dom = document.documentElement) => {
  */
 export const humpToUnderline = (str: string): string => {
   return str.replace(/([A-Z])/g, '-$1').toLowerCase();
-};
-
-/**
- * 查找数组对象的某个下标
- * @param {Array} ary 查找的数组
- * @param {Functon} fn 判断的方法
- */
-// eslint-disable-next-line
-export const findIndex = <T = Recordable>(ary: Array<T>, fn: Fn): number => {
-  if (ary.findIndex) {
-    return ary.findIndex(fn);
-  }
-  let index = -1;
-  ary.some((item: T, i: number, ary: Array<T>) => {
-    const ret: T = fn(item, i, ary);
-    if (ret) {
-      index = i;
-      return ret;
-    }
-  });
-  return index;
-};
-
-export const getSlot = (slots: Slots, slot = 'default', data?: Recordable) => {
-  // Reflect.has 判断一个对象是否存在某个属性
-  if (!slots || !Reflect.has(slots, slot)) {
-    return null;
-  }
-  if (!isFunction(slots[slot])) {
-    console.error(`${slot} is not a function!`);
-    return null;
-  }
-  const slotFn = slots[slot];
-  if (!slotFn) return null;
-  return slotFn(data);
 };

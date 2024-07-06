@@ -1,14 +1,25 @@
 <template>
   <div class="table">
-    <div class="table-settings">
-      <div class="columns-settings">
-        <ColumnSettings
+    <div class="table-tools">
+      <div class="settings-tablesize">
+        <ToolsTableSize
+          :size="tableSize"
+          @change-table-size="onChangeTableSize"
+        />
+      </div>
+      <div class="settings-columns">
+        <ToolsColumnsToggle
           :columns="columnsSettings"
-          @columns-change="onChangeColumns"
+          @change-columns="onChangeColumns"
         />
       </div>
     </div>
-    <el-table :data="props.data" :height="props.height" v-bind="$props">
+    <el-table
+      :data="props.data"
+      :height="props.height"
+      v-bind="$props"
+      :size="tableSize"
+    >
       <!-- 复选框 -->
       <el-table-column
         v-if="props.selection"
@@ -23,7 +34,7 @@
         v-if="props.index"
         v-bind="{
           type: 'index',
-          width: 55,
+          width: 60,
           fixed: true,
           label: '序号',
         }"
@@ -86,7 +97,8 @@
 <script setup lang="ts" name="Table">
 import { PropType, CSSProperties, computed, ref, reactive } from 'vue';
 import { ComponentSize, ElTooltipProps } from 'element-plus';
-import ColumnSettings from './ColumnSettings.vue';
+import ToolsTableSize from './ToolsTableSize.vue';
+import ToolsColumnsToggle from './ToolsColumnsToggle.vue';
 import type {
   Pagination,
   TableColumn,
@@ -452,6 +464,12 @@ const onPageChange = (page: number) => {
 const onChangePageSize = (size: number) => {
   emits('page-change', { size });
 };
+// table大小
+const tableSize = ref<string>(props.size);
+const onChangeTableSize = (size: string) => {
+  tableSize.value = size;
+};
+// 显隐列
 const columnsSettings = ref<TableColumn[]>(props.columns);
 const onChangeColumns = (columns: TableColumn[]) => {
   columnsSettings.value = columns;
@@ -481,8 +499,10 @@ const onChangeColumns = (columns: TableColumn[]) => {
 .table {
   height: 100%;
 
-  &-settings {
+  &-tools {
     @include flex-layout($justify: flex-end);
+
+    gap: 10px;
   }
 }
 

@@ -38,6 +38,7 @@ const columns = [
     key: 'id',
     label: 'ID',
     align: 'center',
+    isCopy: true,
   },
   {
     key: 'title',
