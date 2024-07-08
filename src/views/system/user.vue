@@ -33,20 +33,27 @@ const edit = (row, index, data) => {
 const nullify = (row, index, data) => {
   console.log('nullify', row, index, data);
 };
+const onCopyItem = (row, index, data) => {
+  console.log('copy: ', row, index, data);
+};
 const columns = [
   {
     key: 'id',
     label: 'ID',
     align: 'center',
-    isCopy: true,
+    copy: onCopyItem,
   },
   {
     key: 'title',
     label: '名称',
+    opr: 'view',
+    oprAction: viewDetail,
+    copy: onCopyItem,
   },
   {
     key: 'author',
     label: '作者',
+    copy: onCopyItem,
   },
 ];
 const data = ref([]);

@@ -43,10 +43,29 @@
       <template v-for="(item, idx) in columnsSettings" :key="item.key || idx">
         <el-table-column
           v-if="!item.hidden"
-          :prop="item.key"
           :label="item.label"
           :width="item.width"
-        />
+        >
+          <template #default="scope">
+            <el-link
+              v-if="item.opr === 'view'"
+              type="primary"
+              @click="
+                item.oprAction &&
+                  item.oprAction(scope.row, scope.$index, props.data)
+              "
+              >{{ scope.row[item.key] }}</el-link
+            >
+            <span v-else>{{ scope.row[item.key] }}</span>
+            <icon-font
+              class="icon-btn-copy"
+              name="copy"
+              :size="14"
+              v-if="item.copy"
+              @click="item.copy(scope.row[item.key], scope.$index, props.data)"
+            />
+          </template>
+        </el-table-column>
       </template>
       <!-- 操作按钮 -->
       <el-table-column v-if="props.action" v-bind="actionCfg">
@@ -79,7 +98,7 @@
       v-if="props.pagination"
       class="pagination"
       background
-      size="small"
+      :small="tableSize === 'small'"
       v-model:current-page="$props.currentPage"
       v-model:page-size="$props.pageSize"
       :page-sizes="[10, 20, 50, 100, 200]"
@@ -496,6 +515,14 @@ const onChangeColumns = (columns: TableColumn[]) => {
   --el-select-input-font-size: 12px;
 }
 
+.el-table__cell {
+  &:hover {
+    .icon-btn-copy {
+      visibility: visible;
+    }
+  }
+}
+
 .table {
   height: 100%;
 
@@ -503,6 +530,16 @@ const onChangeColumns = (columns: TableColumn[]) => {
     @include flex-layout($justify: flex-end);
 
     gap: 10px;
+  }
+
+  .icon-btn-copy {
+    @extend %item-hover;
+
+    visibility: hidden;
+    position: absolute;
+    top: 30%;
+    right: 0;
+    margin-left: 6px;
   }
 }
 

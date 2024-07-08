@@ -47,10 +47,9 @@ const sizeMap = [
 const currentSize = ref<string>(props.size);
 // 抛出事件
 const emits = defineEmits(['change-table-size']);
-const onChangeTableSize = (value: string) => {
-  console.log('value: ', value);
-  currentSize.value = value;
-  emits('change-table-size', value);
+const onChangeTableSize = (val: string) => {
+  currentSize.value = val;
+  emits('change-table-size', val);
 };
 </script>
 
