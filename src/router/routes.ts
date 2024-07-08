@@ -95,7 +95,7 @@ export const asyncRouter: AppRouteRecordRaw[] = [
       title: '系统管理',
       icon: 'setting',
       sort: 3,
-      hidden: true,
+      hidden: false,
       noCache: false,
       alwaysShow: true,
     },
@@ -279,6 +279,36 @@ export const asyncRouter: AppRouteRecordRaw[] = [
           hidden: false,
           noCache: true,
           alwaysShow: false,
+        },
+      },
+    ],
+  },
+  {
+    path: '/personal',
+    name: '',
+    redirect: '/personal/center',
+    component: Layout,
+    meta: {
+      title: '个人中心',
+      hidden: true,
+    },
+    children: [
+      {
+        path: 'center',
+        name: 'PersonalCenter',
+        component: () => import('@/views/demo'),
+        meta: {
+          title: '个人中心',
+          hidden: true,
+        },
+      },
+      {
+        path: 'settings',
+        name: 'PersonalSettings',
+        component: () => import('@/views/demo'),
+        meta: {
+          title: '个人设置',
+          hidden: true,
         },
       },
     ],

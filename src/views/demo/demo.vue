@@ -6,6 +6,7 @@
     {{ meta.title }}-{{ name }} <icon-font name="fullscreen" />
     <IconFont name="fullscreen-exit" />
     <icon-font name="moon" color="#ffe794" />
+    <el-input />
   </page-container>
 </template>
 <script setup lang="ts">

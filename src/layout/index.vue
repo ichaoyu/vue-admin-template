@@ -33,12 +33,11 @@
               <icon-font name="sun" color="#fde047" />
             </template>
           </el-switch>
-          <el-icon class="icon icon-menufold">
-            <component
-              :is="collapse ? 'Expand' : 'Fold'"
-              @click="onChangeMenuFold"
-            />
-          </el-icon>
+          <IconFont
+            :icon="collapse ? 'Expand' : 'Fold'"
+            size="18"
+            @click="onChangeMenuFold"
+          />
         </div>
       </el-aside>
 
@@ -84,7 +83,7 @@ const toggleDark = () => {
 
   &-aside {
     box-sizing: border-box;
-    width: $base-menu-width;
+    width: var(--base-menu-width);
     padding-top: 8px;
     overflow: hidden;
     transition: all 0.3s;
@@ -93,17 +92,19 @@ const toggleDark = () => {
       var(--shadow-color, rgb(37 43 58 / 100%));
 
     .menu-scroll {
-      height: calc(100vh - $base-menu-opr-height - $base-menu-logo-height);
+      height: calc(
+        100vh - var(--base-menu-opr-height) - var(--base-menu-logo-height)
+      );
     }
 
     &.fold {
-      width: $base-menu-min-width;
+      width: var(--base-menu-min-width);
     }
 
     &-opr {
       @include flex-layout($justify: space-between);
 
-      height: $base-menu-opr-height;
+      height: var(--base-menu-opr-height);
       padding: 0 10px;
       cursor: pointer;
 
@@ -127,7 +128,7 @@ const toggleDark = () => {
 
     z-index: 2;
     box-sizing: border-box;
-    height: $base-tabbar-height;
+    height: var(--base-tabbar-height);
     background-color: var(--bg-main-color);
     box-shadow: var(--shadow-length-connected-overlay, 0 2px 8px 0)
       var(--shadow-color, rgb(37 43 58 / 10%));

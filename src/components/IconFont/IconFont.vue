@@ -20,12 +20,12 @@ defineProps({
     type: String,
     default: '#icon-',
   },
-  // element-plus图表名称
+  // element-plus图标名称
   icon: {
     type: String,
     default: '',
   },
-  // iconfont图表名称
+  // iconfont图标名称
   name: {
     type: String,
     default: '',
@@ -56,6 +56,5 @@ defineProps({
   overflow: hidden;
   outline: none;
   fill: currentcolor;
-  vertical-align: -0.15em;
 }
 </style>

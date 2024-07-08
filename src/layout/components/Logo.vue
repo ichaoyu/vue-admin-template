@@ -23,7 +23,7 @@ const props = defineProps({
   display: flex;
   box-sizing: border-box;
   align-items: center;
-  height: $base-menu-logo-height;
+  height: var(--base-menu-logo-height);
   color: var(--el-text-color-primary);
 
   img {
@@ -33,7 +33,7 @@ const props = defineProps({
 
   p {
     margin-left: 10px;
-    font-size: $base-logo-title-fontsize;
+    font-size: var(--base-logo-title-fontsize);
   }
 }
 </style>

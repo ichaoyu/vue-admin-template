@@ -32,7 +32,7 @@
       </template>
       <!-- 有多个子路由 -->
       <el-sub-menu
-        v-if="item.children && item.children.length > 1"
+        v-if="item.children && item.children.length > 1 && !item.meta.hidden"
         :index="pathResolve(parentPath, item.path)"
       >
         <template #title>
@@ -114,7 +114,7 @@ const routeList: AppRouteRecordRaw[] = filterRouters(props.menuList);
   background: none;
 
   &:not(.el-menu--collapse) {
-    width: $base-menu-width;
+    width: var(--base-menu-width);
   }
 
   .menu-icon {

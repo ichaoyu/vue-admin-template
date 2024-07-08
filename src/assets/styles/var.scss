@@ -1,26 +1,26 @@
-@import './mixin';
+.layout {
+  // 左侧菜单宽度
+  --base-menu-width: 180px;
 
-// 左侧菜单背景色
-$base-menu-background: #001529;
+  // 左侧菜单折叠宽度
+  --base-menu-min-width: calc(
+    var(--el-menu-icon-width) + var(--el-menu-base-level-padding) * 2
+  );
 
-// 左侧菜单宽度
-$base-menu-width: 200px;
-$base-menu-min-width: calc(
-  var(--el-menu-icon-width) + var(--el-menu-base-level-padding) * 2
-);
+  // 左侧菜单logo高度
+  --base-menu-logo-height: 50px;
 
-// 左侧菜单logo高度
-$base-menu-logo-height: 50px;
+  // 左侧菜单底部操作区高度
+  --base-menu-opr-height: 90px;
 
-// 左侧菜单底部操作区高度
-$base-menu-opr-height: 90px;
+  // 顶部导航高度
+  --base-tabbar-height: var(--base-menu-logo-height);
 
-// 顶部导航高度
-$base-tabbar-height: $base-menu-logo-height;
+  // 左侧菜单logo右侧文字大小
+  --base-logo-title-fontsize: 20px;
+}
 
-// 左侧菜单logo右侧文字大小
-$base-logo-title-fontsize: 20px;
-
+// ---------------------------------- 占位符
 // 元素pointer并且hover时变色 占位符
 %item-hover {
   cursor: pointer;
@@ -28,4 +28,18 @@ $base-logo-title-fontsize: 20px;
   &:hover {
     color: var(--el-color-primary);
   }
+}
+
+// ---------------------------------- mixin
+// flex布局
+@mixin flex-layout(
+  $justify: flex-start,
+  $align: center,
+  $direction: row,
+  $wrap: nowrap
+) {
+  display: flex;
+  flex-flow: $direction $wrap;
+  align-items: $align;
+  justify-content: $justify;
 }

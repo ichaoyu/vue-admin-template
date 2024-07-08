@@ -14,6 +14,7 @@
       :pagination="{ defaultPageSize: 50, total }"
       @page-change="onPageChange"
       class="user-table"
+      v-loading="loading"
     />
   </page-container>
 </template>
@@ -21,9 +22,13 @@
 <script setup>
 import { ref, onMounted, reactive } from 'vue';
 import { useRoute } from 'vue-router';
+import { ElMessage } from 'element-plus';
 import { getUserListApi } from '@/api/user';
-const { name, meta } = useRoute();
 import Table from '@/components/Table';
+import { useClipboard } from '@/hooks/useClipboard';
+
+const { name, meta } = useRoute();
+
 const viewDetail = (row, index, data) => {
   console.log('viewDetail', row, index, data);
 };
@@ -33,8 +38,15 @@ const edit = (row, index, data) => {
 const nullify = (row, index, data) => {
   console.log('nullify', row, index, data);
 };
-const onCopyItem = (row, index, data) => {
-  console.log('copy: ', row, index, data);
+// 复制
+const { copy, copied, text, isSupported } = useClipboard();
+const onCopyItem = (row) => {
+  if (!isSupported.value) {
+    ElMessage.error('你的浏览器不支持 Clipboard API');
+    return;
+  }
+  copy(row);
+  copied && ElMessage.success('复制成功');
 };
 const columns = [
   {
@@ -92,6 +104,7 @@ const operator = [
 onMounted(() => {
   fetchTableList();
 });
+const loading = ref(false);
 let total = ref(0);
 let currentPage = reactive(1);
 let pageSize = reactive(20);
@@ -103,9 +116,16 @@ const onPageChange = ({ page, size }) => {
 };
 
 const fetchTableList = async () => {
-  const res = await getUserListApi({ currentPage, pageSize });
-  data.value = res.list;
-  total.value = res.total;
+  loading.value = true;
+  try {
+    const res = await getUserListApi({ currentPage, pageSize });
+    data.value = res.list;
+    total.value = res.total;
+  } catch (err) {
+    console.error(err);
+  } finally {
+    loading.value = false;
+  }
 };
 </script>
 
