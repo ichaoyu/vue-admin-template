@@ -41,12 +41,10 @@ const columns = [
     key: 'id',
     label: 'ID',
     align: 'center',
-    copy: onCopyItem,
   },
   {
     key: 'title',
     label: '名称',
-    opr: 'view',
     oprAction: viewDetail,
     copy: onCopyItem,
   },
@@ -114,10 +112,5 @@ const fetchTableList = async () => {
 <style lang="scss" scoped>
 .user-container {
   height: 100%;
-
-  .user-table {
-    // height: 90%;
-    // height: calc(100% - 500px);
-  }
 }
 </style>

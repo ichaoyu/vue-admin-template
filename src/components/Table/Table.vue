@@ -1,18 +1,14 @@
 <template>
   <div class="table">
     <div class="table-tools">
-      <div class="settings-tablesize">
-        <ToolsTableSize
-          :size="tableSize"
-          @change-table-size="onChangeTableSize"
-        />
-      </div>
-      <div class="settings-columns">
-        <ToolsColumnsToggle
-          :columns="columnsSettings"
-          @change-columns="onChangeColumns"
-        />
-      </div>
+      <ToolsTableSize
+        :size="tableSize"
+        @change-table-size="onChangeTableSize"
+      />
+      <ToolsColumnsToggle
+        :columns="columnsSettings"
+        @change-columns="onChangeColumns"
+      />
     </div>
     <el-table
       :data="props.data"
@@ -48,12 +44,9 @@
         >
           <template #default="scope">
             <el-link
-              v-if="item.opr === 'view'"
+              v-if="item.oprAction"
               type="primary"
-              @click="
-                item.oprAction &&
-                  item.oprAction(scope.row, scope.$index, props.data)
-              "
+              @click="item.oprAction(scope.row, scope.$index, props.data)"
               >{{ scope.row[item.key] }}</el-link
             >
             <span v-else>{{ scope.row[item.key] }}</span>
@@ -71,7 +64,7 @@
       <el-table-column v-if="props.action" v-bind="actionCfg">
         <template #default="scope">
           <div class="operator_btn" :style="actionCfg && actionCfg.style">
-            <template v-for="(opr, index) in props.action" :key="index">
+            <template v-for="(opr, opridx) in props.action" :key="opridx">
               <!-- TODOS: 增加权限判断 -->
               <el-button
                 @click="
@@ -114,7 +107,7 @@
 </template>
 
 <script setup lang="ts" name="Table">
-import { PropType, CSSProperties, computed, ref, reactive } from 'vue';
+import { PropType, CSSProperties, computed, ref } from 'vue';
 import { ComponentSize, ElTooltipProps } from 'element-plus';
 import ToolsTableSize from './ToolsTableSize.vue';
 import ToolsColumnsToggle from './ToolsColumnsToggle.vue';
