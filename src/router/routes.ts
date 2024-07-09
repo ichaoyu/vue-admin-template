@@ -302,15 +302,6 @@ export const asyncRouter: AppRouteRecordRaw[] = [
           hidden: true,
         },
       },
-      {
-        path: 'settings',
-        name: 'PersonalSettings',
-        component: () => import('@/views/demo'),
-        meta: {
-          title: '个人设置',
-          hidden: true,
-        },
-      },
     ],
   },
 ];

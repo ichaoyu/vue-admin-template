@@ -43,20 +43,23 @@
           :width="item.width"
         >
           <template #default="scope">
+            <!-- 复制 -->
+            <icon-font
+              class="icon-btn-copy"
+              name="copy"
+              :size="14"
+              v-if="item.copy"
+              @click="item.copy(scope.row[item.key])"
+            />
+            <!-- 查看 -->
             <el-link
               v-if="item.oprAction"
               type="primary"
               @click="item.oprAction(scope.row, scope.$index, props.data)"
               >{{ scope.row[item.key] }}</el-link
             >
+            <!-- 文本 -->
             <span v-else>{{ scope.row[item.key] }}</span>
-            <icon-font
-              class="icon-btn-copy"
-              name="copy"
-              :size="14"
-              v-if="item.copy"
-              @click="item.copy(scope.row[item.key], scope.$index, props.data)"
-            />
           </template>
         </el-table-column>
       </template>

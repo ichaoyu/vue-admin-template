@@ -22,7 +22,7 @@ export function useWatermark(appendEl: HTMLElement | null = document.body) {
     if (cans) {
       cans.rotate((-20 * Math.PI) / 120);
       cans.font = '15px Vedana';
-      cans.fillStyle = 'rgba(0, 0, 0, 0.15)';
+      cans.fillStyle = 'rgba(0, 0, 0, 0.1)';
       cans.textAlign = 'left';
       cans.textBaseline = 'middle';
       cans.fillText(str, can.width / 20, can.height);

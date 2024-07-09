@@ -14,15 +14,15 @@ export const useAppStore = defineStore('App', {
       isDark: false,
       currentSize: 'small',
       sizeMap: ['default', 'large', 'small'],
-      screenfull: true,
+      watermark: false,
     };
   },
   getters: {
     getCollapse(): boolean {
       return this.collapse;
     },
-    getScreenfull(): boolean {
-      return this.screenfull;
+    getWatermark(): boolean {
+      return this.watermark;
     },
     getSize(): boolean {
       return this.size;
@@ -50,8 +50,8 @@ export const useAppStore = defineStore('App', {
     setCollapse(collapse: boolean) {
       this.collapse = collapse;
     },
-    setScreenfull(screenfull: boolean) {
-      this.screenfull = screenfull;
+    setWatermark(state: boolean) {
+      this.watermark = state;
     },
     setSize(size: boolean) {
       this.size = size;

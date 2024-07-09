@@ -23,7 +23,7 @@ export interface AppState {
   /**
    * 全屏图标
    */
-  screenfull: boolean;
+  // screenfull: boolean;
   /**
    * 尺寸图标
    */
@@ -80,6 +80,10 @@ export interface AppState {
    * 组件默认尺寸组合
    */
   sizeMap: ComponentSize[];
+  /**
+   * 是否开启水印
+   */
+  watermark: boolean;
   /**
    * 是否是移动端
    */

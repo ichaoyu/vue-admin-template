@@ -1,21 +1,21 @@
 <template>
-  <el-space>
+  <el-space size="default">
     <el-button size="small" circle @click="onFullScreen">
       <IconFont :name="isFull ? 'fullscreen-exit' : 'fullscreen'"
     /></el-button>
 
-    <el-dropdown @command="handleSettingsCommand" trigger="click">
+    <el-dropdown @command="handleSettingsCommand" trigger="click" size="small">
       <el-button size="small" icon="Setting" circle />
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item command="watermark"
-            >{{ hasWatermark ? '关闭' : '打开' }}水印</el-dropdown-item
+            >{{ watermark ? '关闭' : '打开' }}水印</el-dropdown-item
           >
         </el-dropdown-menu>
       </template>
     </el-dropdown>
 
-    <el-dropdown @command="handlePersonalCommand" trigger="click">
+    <el-dropdown @command="handlePersonalCommand" trigger="click" size="small">
       <span class="avatar-box">
         <el-avatar :icon="UserFilled" size="small" class="icon" />
         admin
@@ -23,7 +23,7 @@
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item command="pcenter">个人中心</el-dropdown-item>
-          <el-dropdown-item command="psettings">个人设置</el-dropdown-item>
+          <el-divider />
           <el-dropdown-item command="logout">退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </template>
@@ -32,12 +32,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { UserFilled } from '@element-plus/icons-vue';
 import { useUserStore } from '@/store/modules/user';
+import { useAppStore } from '@/store/modules/app';
 import { useWatermark } from '@/hooks/useWatermark';
 
+// 全屏
 const isFull = ref<boolean>(false);
 const onFullScreen = () => {
   isFull.value = !isFull.value;
@@ -48,12 +50,13 @@ const onFullScreen = () => {
     document.exitFullscreen();
   }
 };
+
 const userStore = useUserStore();
+const appStore = useAppStore();
+
+// 退出登录
 const onLouOut = () => {
-  userStore.setRoleIDs([]);
-  userStore.setPermission([]);
-  userStore.setToken('');
-  userStore.setUserName('');
+  sessionStorage.clear();
   router.push('/login');
 };
 // 个人中心操作
@@ -63,9 +66,6 @@ const handlePersonalCommand = (command: string) => {
     case 'pcenter':
       router.push('/personal/center');
       break;
-    case 'psettings':
-      router.push('/personal/settings');
-      break;
     case 'logout':
       onLouOut();
       break;
@@ -74,19 +74,28 @@ const handlePersonalCommand = (command: string) => {
   }
 };
 
+onMounted(() => {
+  onToggleWatermark();
+});
 // 设置操作
+// 水印
 const { setWatermark, clear } = useWatermark();
-const hasWatermark = ref(false);
+const watermark = computed(() => appStore.getWatermark);
+const onToggleWatermark = () => {
+  if (!watermark.value) {
+    appStore.setWatermark(false);
+    clear();
+    return;
+  }
+  const username = userStore.getUserName;
+  appStore.setWatermark(true);
+  setWatermark(username);
+};
 const handleSettingsCommand = (command: string) => {
   switch (command) {
     case 'watermark':
-      if (hasWatermark.value) {
-        hasWatermark.value = false;
-        clear();
-        return;
-      }
-      hasWatermark.value = true;
-      setWatermark('haha');
+      appStore.setWatermark(!watermark.value);
+      onToggleWatermark();
       break;
     default:
       break;
@@ -102,6 +111,16 @@ const handleSettingsCommand = (command: string) => {
 
   .icon {
     margin-right: 5px;
+  }
+}
+
+.el-divider--horizontal {
+  margin: 4px 0;
+}
+
+:deep(.el-dropdown-menu__item) {
+  &.active {
+    color: var(--el-color-primary);
   }
 }
 </style>

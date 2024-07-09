@@ -2,6 +2,7 @@ import router from './index';
 
 import { useNProgress } from '@/hooks/useNProgress';
 import { useUserStoreOut } from '@/store/modules/user';
+import { useAppStoreOut } from '@/store/modules/app';
 
 const { start, done } = useNProgress();
 
@@ -45,6 +46,7 @@ router.beforeEach(async (to: any, from: any, next: any) => {
 });
 //全局后置守卫
 router.afterEach((to) => {
-  document.title = to?.meta?.title as string;
+  const { getTitle } = useAppStoreOut();
+  document.title = (to?.meta?.title as string) + '-' + getTitle;
   done();
 });
