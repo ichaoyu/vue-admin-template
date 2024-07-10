@@ -20,8 +20,6 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive } from 'vue';
-import { useRoute } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { getUserListApi } from '@/api/user';
 import Table from '@/components/Table';

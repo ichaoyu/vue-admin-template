@@ -110,7 +110,7 @@
 </template>
 
 <script setup lang="ts" name="Table">
-import { PropType, CSSProperties, computed, ref } from 'vue';
+import { CSSProperties } from 'vue';
 import { ComponentSize, ElTooltipProps } from 'element-plus';
 import ToolsTableSize from './ToolsTableSize.vue';
 import ToolsColumnsToggle from './ToolsColumnsToggle.vue';

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import { useAppStore } from '@/store/modules/app';
 const appStore = useAppStore();
 const currentSize = computed(() => appStore.getCurrentSize);

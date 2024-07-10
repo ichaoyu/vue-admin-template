@@ -39,9 +39,7 @@
 
 <script setup lang="ts">
 import { User, Lock } from '@element-plus/icons-vue';
-import { reactive, ref, watch } from 'vue';
 import type { RouteLocationNormalizedLoaded } from 'vue-router';
-import { useRouter } from 'vue-router';
 import { ElNotification } from 'element-plus';
 import { loginApi } from '@/api/user';
 import { useUserStore } from '@/store/modules/user';

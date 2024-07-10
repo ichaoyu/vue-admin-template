@@ -4,6 +4,7 @@ import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import VueJsx from '@vitejs/plugin-vue-jsx';
 import { viteMockServe } from 'vite-plugin-mock';
+import AutoImport from 'unplugin-auto-import/vite';
 import ElementPlus from 'unplugin-element-plus/vite';
 
 const root = process.cwd();
@@ -24,6 +25,11 @@ export default defineConfig(({ command, mode }) => {
       // 使用element主题scss变量
       ElementPlus({
         useSource: true,
+      }),
+      // 自动引入vue等依赖
+      AutoImport({
+        dts: 'types/auto-imports.d.ts',
+        imports: ['vue', 'vue-router'],
       }),
     ],
     resolve: {

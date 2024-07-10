@@ -53,7 +53,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
 import { useAppStore } from '@/store/modules/app';
 import Logo from './components/Logo.vue';
 import Menu from './components/Menu.vue';

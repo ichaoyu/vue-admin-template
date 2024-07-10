@@ -25,7 +25,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, PropType } from 'vue';
 import type { TableColumn } from './types';
 
 const props = defineProps({

@@ -32,8 +32,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
 import { UserFilled } from '@element-plus/icons-vue';
 import { useUserStore } from '@/store/modules/user';
 import { useAppStore } from '@/store/modules/app';

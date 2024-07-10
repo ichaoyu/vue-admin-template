@@ -53,8 +53,6 @@ export default {
 };
 </script>
 <script lang="ts" setup>
-import { computed, type PropType } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
 import { pathResolve } from '@/utils';
 import { useUserStore } from '@/store/modules/user';
 

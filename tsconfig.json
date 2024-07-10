@@ -30,6 +30,6 @@
       "element-plus/global",
     ]
   },
-  "include": ["src", "types/**/*.d.ts", "mock/**/*.ts", "**/*/iconfont.js"],
+  "include": ["src", "types/**/*.d.ts", "mock/**/*.ts", "**/*/iconfont.js", "types/auto-imports.d.ts"],
   // "exclude": ["dist", "node_modules", "**/*/iconfont.js"]
 }
