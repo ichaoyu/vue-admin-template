@@ -11,13 +11,13 @@ import {
 import { useUserStoreOut } from '@/store/modules/user';
 
 const isMock = import.meta.env.VITE_USE_MOCK === 'true';
-const PATH_URL = import.meta.env.VITE_APP_BASE_API;
+// const PATH_URL = import.meta.env.VITE_APP_BASE_API;
 /**
  * 创建axios实例
  */
 const axiosInstance: AxiosInstance = axios.create({
   timeout: 5000,
-  baseURL: PATH_URL,
+  // baseURL: PATH_URL,
 });
 
 /**
@@ -57,7 +57,6 @@ axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const url = config.url || '';
   if (isMock) {
     // 使用mock时更换url 用于区分
-    console.log('config.url: ', config.url);
     config.url = url.replace('/api', '/mock');
   }
   console.log('config: ', config);
@@ -77,20 +76,26 @@ axiosInstance.interceptors.response.use(
     if (response?.config?.responseType === 'blob') {
       // 文件流直接返回全部
       return response;
-    } else if (response?.status === 200) {
+    } else if (response?.status === 200 || response?.status === 201) {
       // 成功直接返回data数据
-      if (response.data.code === 0) {
+      if (response.data.code === 200) {
         return response.data.data;
       } else {
         ElMessage.error(response?.data?.msg ?? '未知错误');
       }
     } else {
-      ElMessage.error(response.statusText ?? response?.data?.msg ?? '服务故障');
+      ElMessage.error(response?.data?.msg ?? response.statusText ?? '服务故障');
     }
   },
   (error) => {
+    console.log('error: ', error?.response?.data?.msg, error?.message);
+    const errorMsg =
+      error?.response?.data?.msg ??
+      error?.message ??
+      error?.statusText ??
+      '请求失败';
     //提示错误信息
-    ElMessage.error(error?.message ?? '请求失败');
+    ElMessage.error(errorMsg);
     return Promise.reject(error);
   },
 );
@@ -125,7 +130,8 @@ const request = (option: AxiosConfig) => {
     responseType,
     headers: {
       'Content-Type': 'application/json',
-      [userStore.getTokenKey ?? 'Authorization']: userStore.getToken ?? '',
+      [userStore.getTokenKey ?? 'Authorization']:
+        `Bearer ${userStore.getToken}` ?? '',
       ...headers,
     },
   });

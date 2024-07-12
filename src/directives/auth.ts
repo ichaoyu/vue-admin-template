@@ -7,9 +7,9 @@ import type { App, Directive, DirectiveBinding } from 'vue';
 import { useUserStore } from '@/store/modules/user';
 
 const hasAuth = (value: string[]): boolean => {
-  const { getRoleIDs } = useUserStore();
-  if (!getRoleIDs || !value) return true;
-  const hasInclude = value.some((item) => getRoleIDs?.includes(item));
+  const { getRoles } = useUserStore();
+  if (!getRoles || !value) return true;
+  const hasInclude = value.some((item) => getRoles?.includes(item));
   return hasInclude;
 };
 function isAuth(el: Element, binding: DirectiveBinding) {

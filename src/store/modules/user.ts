@@ -1,21 +1,25 @@
 import { defineStore } from 'pinia';
-import { UserState } from '@/interface';
+import { UserState, userInfo } from '@/interface';
 import store from '../index';
 
 export const useUserStore = defineStore('User', {
   state: (): UserState => {
     return {
-      username: '',
-      tokenKey: 'Authorization',
+      userName: '',
+      tokenKey: 'authorization',
+      user: null,
       token: '',
-      roleIDs: [],
-      permission: [],
+      roles: [],
+      permissions: [],
       rememberMe: true,
     };
   },
   actions: {
+    setUserInfo(user: userInfo | null) {
+      this.user = user;
+    },
     setUserName(username: string) {
-      this.username = username;
+      this.userName = username;
     },
     setTokenKey(tokenKey: string) {
       this.tokenKey = tokenKey;
@@ -23,31 +27,31 @@ export const useUserStore = defineStore('User', {
     setToken(token: string) {
       this.token = token;
     },
-    setRoleIDs(ids: string[] | undefined) {
-      this.roleIDs = ids;
+    setRoles(keys: string[]) {
+      this.roles = keys;
     },
     setRememberMe(rememberMe: boolean) {
       this.rememberMe = rememberMe;
     },
-    setPermission(ids: string[] | undefined) {
-      this.permission = ids;
+    setPermissions(keys: string[]) {
+      this.permissions = keys;
     },
   },
   getters: {
-    getUserName(): string {
-      return this.username;
+    getUserinfo(): userInfo | null {
+      return this.user;
     },
     getTokenKey(): string | undefined {
       return this.tokenKey;
     },
-    getToken(): string {
-      return this.token;
+    getToken(): string | null {
+      return this.token || null;
     },
-    getRoleIDs(): string[] | undefined {
-      return this.roleIDs;
+    getRoles(): string[] | undefined {
+      return this.roles;
     },
-    getPermission(): string[] | undefined {
-      return this.permission;
+    getPermissions(): string[] | undefined {
+      return this.permissions;
     },
     getRememberMe(): boolean | undefined {
       return this.rememberMe;

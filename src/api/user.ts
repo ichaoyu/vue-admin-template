@@ -3,15 +3,24 @@ import {
   UserLoginType,
   RoleParams,
   UserState,
+  Captcha,
 } from '@/interface/user.interface';
 
-export const loginApi = (
-  data: UserLoginType,
-): Promise<IResponse<UserState>> => {
-  return request.post({ url: '/api/user/login', data });
+// 验证码
+export const verifyCodeApi = (): Promise<IResponse<Captcha>> => {
+  return request.get({ url: '/api/auth/captcha' });
 };
-export const loginOutApi = (): Promise<IResponse> => {
-  return request.get({ url: '/api/user/loginOut' });
+// 登录
+export const loginApi = (data: UserLoginType): Promise<IResponse<string>> => {
+  return request.post({ url: '/api/auth/login', data });
+};
+// 退出登录
+export const loginOutApi = (): Promise<IResponse<null>> => {
+  return request.post({ url: '/api/auth/logout' });
+};
+// 当前用户信息
+export const getUserInfoApi = (): Promise<IResponse<UserState>> => {
+  return request.get({ url: '/api/current-user/getInfo' });
 };
 
 export const getAdminRoleApi = (

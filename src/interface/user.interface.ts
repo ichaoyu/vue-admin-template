@@ -5,11 +5,19 @@ export interface UserLoginType {
   /**
    * 登录用户名
    */
-  username: string;
+  userName: string;
   /**
    * 登录密码
    */
   password: string;
+  /**
+   * 验证码
+   */
+  captchaValue: string;
+  /**
+   * 验证码ID
+   */
+  captchaId: string;
 }
 
 /**
@@ -19,7 +27,7 @@ export interface UserState {
   /**
    * 用户名
    */
-  username: string;
+  userName?: string;
   /**
    * token key值
    */
@@ -27,15 +35,19 @@ export interface UserState {
   /**
    * token
    */
-  token: string;
+  token?: string;
   /**
    * 角色
    */
-  roleIDs?: string[];
+  roles: string[];
   /**
    * 权限
    */
-  permission?: string[];
+  permissions: string[];
+  /**
+   * 用户信息
+   */
+  user: userInfo | null;
   /**
    * 记住我
    */
@@ -50,4 +62,56 @@ export interface RoleParams {
    * 用户角色名称
    */
   roleName: string;
+}
+
+/**
+ * 验证码
+ */
+export interface Captcha {
+  /**
+   * 验证码ID
+   */
+  id: string;
+  /**
+   * 验证码图片base64
+   */
+  imageBase64: string;
+}
+
+/**
+ * 用户信息
+ */
+export interface userInfo {
+  id?: string;
+  userName: string;
+  nickName?: string;
+  email?: string;
+  phone?: string;
+  sex: string;
+  avatar?: string;
+  status: string;
+  delFlag: string;
+  loginIp?: string;
+  loginDate: string;
+  remark?: string;
+  createBy?: string;
+  createTime: string;
+  updateBy?: string;
+  updateTime?: string | null;
+  dept?: {
+    id?: string;
+    parentId?: string;
+    ancestors?: string;
+    deptName?: string;
+    orderNum?: number;
+    leader?: string;
+    phone?: string;
+    email?: string;
+    status: string;
+    delFlag: string;
+    createBy?: string;
+    createTime?: string;
+    updateBy?: string;
+    updateTime?: string;
+  };
 }

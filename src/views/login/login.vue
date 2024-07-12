@@ -1,15 +1,15 @@
 <template>
   <div class="login_container">
     <el-row>
-      <el-col :span="12" :xs="24" :offset="12">
-        <el-form class="login_form">
+      <el-col :sm="{ span: 12, offset: 11 }" :xs="{ span: 22, offset: 1 }">
+        <el-form class="login_form" size="default" @keyup.enter="onSubmit">
           <h1>Hello</h1>
           <h2>vue-admin-template</h2>
           <el-form-item>
             <el-input
               placeholder="登录账号"
               :prefix-icon="User"
-              v-model="loginForm.username"
+              v-model="loginForm.userName"
             />
           </el-form-item>
           <el-form-item>
@@ -21,6 +21,16 @@
               show-password
             />
           </el-form-item>
+          <el-form-item class="item-verifycode">
+            <el-input
+              placeholder="验证码"
+              :prefix-icon="CreditCard"
+              v-model="loginForm.captchaValue" />
+            <el-image
+              :src="verifyCodeData"
+              class="verify-code-image"
+              @click="onChangeCode"
+          /></el-form-item>
           <el-form-item>
             <el-button
               class="login_btn"
@@ -38,12 +48,12 @@
 </template>
 
 <script setup lang="ts">
-import { User, Lock } from '@element-plus/icons-vue';
+import { User, Lock, CreditCard } from '@element-plus/icons-vue';
 import type { RouteLocationNormalizedLoaded } from 'vue-router';
-import { ElNotification } from 'element-plus';
-import { loginApi } from '@/api/user';
+import { ElMessage } from 'element-plus';
+import { loginApi, verifyCodeApi, getUserInfoApi } from '@/api/user';
 import { useUserStore } from '@/store/modules/user';
-import { UserState } from '@/interface';
+import { UserState, Captcha } from '@/interface';
 
 const userStore = useUserStore();
 const { currentRoute, push } = useRouter();
@@ -59,34 +69,66 @@ watch(
 );
 
 let loginForm = reactive({
-  username: 'admin',
-  password: '123456',
+  userName: '',
+  password: '',
+  captchaValue: '',
+  captchaId: '',
 });
+onMounted(() => {
+  getVerifyCode();
+});
+// 验证码
+const verifyCodeData = ref<string | undefined>('');
+// 点击获取
+const onChangeCode = () => {
+  getVerifyCode();
+};
+// api获取验证码
+const getVerifyCode = async () => {
+  try {
+    const res: IResponse<Captcha> = await verifyCodeApi();
+    verifyCodeData.value = res?.imageBase64;
+    loginForm.captchaId = res?.id;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 const loading = ref<boolean>(false);
 const onSubmit = async () => {
   try {
     loading.value = true;
-    const res: IResponse<UserState> = await loginApi(loginForm);
+    if (
+      loginForm.userName === '' ||
+      loginForm.password === '' ||
+      loginForm.captchaValue === ''
+    ) {
+      ElMessage.error('请输入完整登录信息');
+      return;
+    }
+    const res: IResponse<string> = await loginApi(loginForm);
     if (res) {
-      onSetStore(res as unknown as UserState);
+      userStore.setToken(res);
+      await fetchUserInfo();
     }
     push({ path: redirect.value || '/' });
     // push('/');
   } catch (err) {
-    ElNotification({
-      type: 'error',
-      message: (err as Error).message,
-    });
+    console.log('err: ', err);
   } finally {
     loading.value = false;
   }
 };
+// 获取用户信息
+const fetchUserInfo = async () => {
+  const res = await getUserInfoApi();
+  onSetStore(res);
+};
 // 登录成功设置store
 const onSetStore = (info: UserState): void => {
-  userStore.setRoleIDs(info.roleIDs);
-  userStore.setPermission(info.permission);
-  userStore.setToken(info.token);
-  userStore.setUserName(info.username);
+  userStore.setRoles(info.roles);
+  userStore.setPermissions(info.permissions);
+  userStore.setUserInfo(info?.user);
 };
 </script>
 
@@ -97,10 +139,10 @@ const onSetStore = (info: UserState): void => {
   background: '#ccc';
 
   .login_form {
-    position: relative;
-    top: 30vh;
-    width: 100%;
-    padding: 40px;
+    // position: relative;
+    // top: 30vh;
+    // width: 100%;
+    // padding: 40px;
 
     h1 {
       color: white;
@@ -111,6 +153,16 @@ const onSetStore = (info: UserState): void => {
       margin: 20px 0;
       color: w hite;
       font-size: 20px;
+    }
+
+    .item-verifycode {
+      :deep(.el-form-item__content) {
+        @include flex-layout();
+      }
+    }
+
+    .verify-code-image {
+      cursor: pointer;
     }
   }
 }

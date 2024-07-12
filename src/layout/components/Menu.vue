@@ -86,17 +86,17 @@ const goRoute = (vc: any) => {
   router.push(vc.index);
 };
 
-const { getRoleIDs } = useUserStore();
+const { getRoles } = useUserStore();
 // 过滤路由权限，也可以通过v-auth在template中实现
 const filterRouters = (routers: AppRouteRecordRaw[]) => {
-  if (!getRoleIDs) return routers;
+  if (!getRoles) return routers;
   return routers.filter((router) => {
     if (!router.meta.roles) return true;
     const roles = [...router.meta.roles];
     if (router.children) {
       filterRouters(router.children);
     }
-    return roles.some((role) => getRoleIDs.includes(role));
+    return roles.some((role) => getRoles.includes(role));
   });
 };
 const routeList: AppRouteRecordRaw[] = filterRouters(props.menuList);

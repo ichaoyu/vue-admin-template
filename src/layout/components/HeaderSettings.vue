@@ -36,6 +36,7 @@ import { UserFilled } from '@element-plus/icons-vue';
 import { useUserStore } from '@/store/modules/user';
 import { useAppStore } from '@/store/modules/app';
 import { useWatermark } from '@/hooks/useWatermark';
+import { loginOutApi } from '@/api/user';
 
 // 全屏
 const isFull = ref<boolean>(false);
@@ -53,9 +54,14 @@ const userStore = useUserStore();
 const appStore = useAppStore();
 
 // 退出登录
-const onLouOut = () => {
-  sessionStorage.clear();
-  router.push('/login');
+const onLouOut = async () => {
+  try {
+    await loginOutApi();
+    sessionStorage.clear();
+    router.push('/login');
+  } catch (err) {
+    console.error(err);
+  }
 };
 // 个人中心操作
 const router = useRouter();
@@ -85,7 +91,7 @@ const onToggleWatermark = () => {
     clear();
     return;
   }
-  const username = userStore.getUserName;
+  const username = userStore.getUserinfo?.userName ?? 'vue-admin-template';
   appStore.setWatermark(true);
   setWatermark(username);
 };
