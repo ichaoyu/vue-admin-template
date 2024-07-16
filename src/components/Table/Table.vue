@@ -38,30 +38,47 @@
       <!-- 表格主体内容 -->
       <template v-for="(item, idx) in columnsSettings" :key="item.key || idx">
         <el-table-column
-          v-if="!item.hidden"
-          :label="item.label"
-          :width="item.width"
+          v-if="item.render"
+          :column="item"
+          :render="item.render"
         >
+          <template #header>{{ item.label }}</template>
           <template #default="scope">
-            <!-- 复制 -->
-            <icon-font
-              class="icon-btn-copy"
-              name="copy"
-              :size="14"
-              v-if="item.copy"
-              @click="item.copy(scope.row[item.key])"
+            <render
+              :column="item"
+              :row="scope.row"
+              :render="item.render"
+              :index="scope.$index"
             />
-            <!-- 查看 -->
-            <el-link
-              v-if="item.oprAction"
-              type="primary"
-              @click="item.oprAction(scope.row, scope.$index, props.data)"
-              >{{ scope.row[item.key] }}</el-link
-            >
-            <!-- 文本 -->
-            <span v-else>{{ scope.row[item.key] }}</span>
           </template>
         </el-table-column>
+        <template v-else>
+          <el-table-column
+            v-if="!item.hidden"
+            :label="item.label"
+            :width="item.width"
+          >
+            <template #default="scope">
+              <!-- 复制 -->
+              <icon-font
+                class="icon-btn-copy"
+                name="copy"
+                :size="14"
+                v-if="item.copy"
+                @click="item.copy(scope.row[item.key])"
+              />
+              <!-- 查看 -->
+              <el-link
+                v-if="item.oprAction"
+                type="primary"
+                @click="item.oprAction(scope.row, scope.$index, props.data)"
+                >{{ scope.row[item.key] }}</el-link
+              >
+              <!-- 文本 -->
+              <span v-else>{{ scope.row[item.key] }}</span>
+            </template>
+          </el-table-column>
+        </template>
       </template>
       <!-- 操作按钮 -->
       <el-table-column v-if="props.action" v-bind="actionCfg">
@@ -114,6 +131,7 @@ import { CSSProperties } from 'vue';
 import { ComponentSize, ElTooltipProps } from 'element-plus';
 import ToolsTableSize from './ToolsTableSize.vue';
 import ToolsColumnsToggle from './ToolsColumnsToggle.vue';
+import render from './render.vue';
 import type {
   Pagination,
   TableColumn,
