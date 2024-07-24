@@ -29,8 +29,9 @@ export const getAdminRoleApi = (
   return request.get({ url: '/api/role/list', params });
 };
 
+// 用户列表
 export const getUserListApi = (
   data: any,
 ): Promise<IResponse<AppCustomRouteRecordRaw[]>> => {
-  return request.post({ url: '/api/user/list', data });
+  return request.post({ url: '/api/system/user/page', data });
 };
