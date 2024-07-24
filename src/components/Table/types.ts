@@ -42,6 +42,10 @@ export interface TableColumn {
   field: string;
   label?: string;
   type?: string;
+  dictMap?: object;
+  render?: (...args: any[]) => any;
+  copy?: (...args: any[]) => any;
+  oprAction?: (...args: any[]) => any;
   /**
    * 是否隐藏
    */

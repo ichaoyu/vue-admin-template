@@ -36,52 +36,58 @@
         }"
       />
       <!-- 表格主体内容 -->
-      <template v-for="(item, idx) in columnsSettings" :key="item.key || idx">
-        <el-table-column
-          v-if="item.render"
-          :column="item"
-          :render="item.render"
-        >
+      <template v-for="item in columnsSettings" :key="item.key">
+        <el-table-column :column="item" :label="item.label" :width="item.width">
           <template #header>{{ item.label }}</template>
           <template #default="scope">
-            <render
-              :column="item"
-              :row="scope.row"
-              :render="item.render"
-              :index="scope.$index"
+            <!-- 自定义渲染 -->
+            <template v-if="item.render">
+              <render
+                :column="item"
+                :row="scope.row"
+                :render="item.render"
+                :index="scope.$index"
+              />
+            </template>
+            <!-- 自定义插槽 -->
+            <template v-if="item.slotName">
+              <slot :name="item.slotName" :scope="scope"></slot>
+            </template>
+            <!-- 字典map -->
+            <template v-if="item.dictMap">
+              {{ item.dictMap[scope.row[item.key]] }}
+            </template>
+            <!-- 复制 -->
+            <icon-font
+              v-if="item.copy"
+              class="icon-btn-copy"
+              name="copy"
+              :size="14"
+              @click="item.copy(scope.row[item.key])"
             />
+            <!-- 链接查看 -->
+            <el-link
+              v-if="item.oprAction"
+              class="view-link"
+              type="primary"
+              @click="item.oprAction(scope.row, scope.$index, props.data)"
+              >{{ scope.row[item.key] }}</el-link
+            >
+            <!-- 文本 -->
+            <template
+              v-if="
+                !item.render &&
+                !item.slotName &&
+                !item.dictMap &&
+                !item.oprAction
+              "
+              >{{ scope.row[item.key] }}</template
+            >
           </template>
         </el-table-column>
-        <template v-else>
-          <el-table-column
-            v-if="!item.hidden"
-            :label="item.label"
-            :width="item.width"
-          >
-            <template #default="scope">
-              <!-- 复制 -->
-              <icon-font
-                class="icon-btn-copy"
-                name="copy"
-                :size="14"
-                v-if="item.copy"
-                @click="item.copy(scope.row[item.key])"
-              />
-              <!-- 查看 -->
-              <el-link
-                v-if="item.oprAction"
-                type="primary"
-                @click="item.oprAction(scope.row, scope.$index, props.data)"
-                >{{ scope.row[item.key] }}</el-link
-              >
-              <!-- 文本 -->
-              <span v-else>{{ scope.row[item.key] }}</span>
-            </template>
-          </el-table-column>
-        </template>
       </template>
       <!-- 操作按钮 -->
-      <el-table-column v-if="props.action" v-bind="actionCfg">
+      <el-table-column v-if="props.action.length > 0" v-bind="actionCfg">
         <template #default="scope">
           <div class="operator_btn" :style="actionCfg && actionCfg.style">
             <template v-for="(opr, opridx) in props.action" :key="opridx">
@@ -522,6 +528,10 @@ const onChangeColumns = (columns: TableColumn[]) => {
 }
 
 :deep(.el-select__wrapper) {
+  font-size: 12px;
+}
+
+.view-link {
   font-size: 12px;
 }
 
