@@ -37,7 +37,7 @@ router.beforeEach(async (to: any, from: any, next: any) => {
       next();
     } else {
       // 重定向到登录页
-      const path = !['/404', '/403'].includes(to.path)
+      const path = !['/401', '/403', '/404'].includes(to.path)
         ? `/login?redirect=${to.path}`
         : '/login';
       next(path);

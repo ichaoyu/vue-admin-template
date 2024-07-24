@@ -87,6 +87,79 @@ export const asyncRouter: AppRouteRecordRaw[] = [
     ],
   },
   {
+    // 基本设置 SEO设置 应用配置 七牛云配置 微信配置
+    path: '/website',
+    name: 'Website',
+    redirect: '/website/settings',
+    component: Layout,
+    meta: {
+      title: '站点管理',
+      icon: 'site',
+    },
+    children: [
+      {
+        path: 'settings',
+        name: 'WebsiteSettings',
+        component: () => import('@/views/site/config'),
+        meta: {
+          title: '站点设置',
+        },
+      },
+      {
+        path: 'friendlink',
+        name: 'WebsiteFriendLink',
+        component: () => import('@/views/demo'),
+        meta: {
+          title: '友情链接',
+        },
+      },
+      {
+        path: 'message',
+        name: 'WebsiteMessage',
+        component: () => import('@/views/demo'),
+        meta: {
+          title: '消息管理',
+        },
+      },
+    ],
+  },
+  {
+    path: '/article',
+    name: 'Article',
+    redirect: '/article/category',
+    component: Layout,
+    meta: {
+      title: '内容管理',
+      icon: 'article',
+    },
+    children: [
+      {
+        path: 'category',
+        name: 'ArticleCategory',
+        component: () => import('@/views/demo'),
+        meta: {
+          title: '栏目管理',
+        },
+      },
+      {
+        path: 'article',
+        name: 'ArticleList',
+        component: () => import('@/views/demo'),
+        meta: {
+          title: '文章管理',
+        },
+      },
+      {
+        path: 'tag',
+        name: 'WebsiteTag',
+        component: () => import('@/views/demo'),
+        meta: {
+          title: '标签管理',
+        },
+      },
+    ],
+  },
+  {
     path: '/system',
     name: 'system',
     redirect: '/system/user',
@@ -103,7 +176,7 @@ export const asyncRouter: AppRouteRecordRaw[] = [
       {
         path: 'user',
         name: 'SystemUserIndex',
-        component: () => import('@/views/system/user.vue'),
+        component: () => import('@/views/system/user'),
         meta: {
           title: '用户管理',
           sort: 1,
@@ -163,7 +236,7 @@ export const asyncRouter: AppRouteRecordRaw[] = [
       {
         path: 'dictType',
         name: 'SystemDictTypeIndex',
-        component: () => import('@/views/demo'),
+        component: () => import('@/views/system/dict'),
         meta: {
           title: '字典管理',
           sort: 6,
@@ -175,7 +248,7 @@ export const asyncRouter: AppRouteRecordRaw[] = [
       {
         path: 'config',
         name: 'SystemConfigIndex',
-        component: () => import('@/views/demo'),
+        component: () => import('@/views/system/config'),
         meta: {
           title: '参数配置',
           sort: 7,
