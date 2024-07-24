@@ -88,7 +88,6 @@ axiosInstance.interceptors.response.use(
     }
   },
   (error) => {
-    console.log('error: ', error?.response?.data?.msg, error?.message);
     const errorMsg =
       error?.response?.data?.msg ??
       error?.message ??
@@ -96,6 +95,10 @@ axiosInstance.interceptors.response.use(
       '请求失败';
     //提示错误信息
     ElMessage.error(errorMsg);
+    // 无权限 阻断操作 跳转到登录页
+    if (error?.response?.status === 401) {
+      return false;
+    }
     return Promise.reject(error);
   },
 );
@@ -122,6 +125,8 @@ const service = (config: RequestConfig) => {
 const request = (option: AxiosConfig) => {
   const userStore = useUserStoreOut();
   const { url, method, params, data, headers, responseType } = option;
+  console.log('data: ', data);
+  console.log('params: ', params);
   return service({
     url,
     method,
