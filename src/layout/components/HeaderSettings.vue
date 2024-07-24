@@ -36,7 +36,7 @@ import { UserFilled } from '@element-plus/icons-vue';
 import { useUserStore } from '@/store/modules/user';
 import { useAppStore } from '@/store/modules/app';
 import { useWatermark } from '@/hooks/useWatermark';
-import { loginOutApi } from '@/api/user';
+import { loginOutApi } from '@/api/user.api';
 
 // 全屏
 const isFull = ref<boolean>(false);

@@ -51,7 +51,7 @@
 import { User, Lock, CreditCard } from '@element-plus/icons-vue';
 import type { RouteLocationNormalizedLoaded } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import { loginApi, verifyCodeApi, getUserInfoApi } from '@/api/user';
+import { loginApi, verifyCodeApi, getUserInfoApi } from '@/api/user.api';
 import { useUserStore } from '@/store/modules/user';
 import { UserState, Captcha } from '@/interface';
 

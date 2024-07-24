@@ -21,7 +21,7 @@
 
 <script setup>
 import { ElMessage } from 'element-plus';
-import { getUserListApi } from '@/api/user';
+import { getUserListApi } from '@/api/user.api';
 import Table from '@/components/Table';
 import { useClipboard } from '@/hooks/useClipboard';
 
