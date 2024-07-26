@@ -108,7 +108,7 @@ export const asyncRouter: AppRouteRecordRaw[] = [
       {
         path: 'friendlink',
         name: 'WebsiteFriendLink',
-        component: () => import('@/views/demo'),
+        component: () => import('@/views/site/flink'),
         meta: {
           title: '友情链接',
         },

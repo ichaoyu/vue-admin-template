@@ -13,7 +13,6 @@ export default defineComponent({
     },
   },
   render(ctx: TableColumn) {
-    console.log('ctx: ', ctx);
     const params: any = {
       row: ctx.row,
       index: ctx.index,

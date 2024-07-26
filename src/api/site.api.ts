@@ -1,6 +1,6 @@
 import { request } from '@/utils';
 
-import { siteInfoType } from '@/interface';
+import { siteInfoType, flinkType } from '@/interface';
 
 // 获取网站配置
 export const getSiteInfoApi = (
@@ -17,4 +17,9 @@ export const updateSiteInfoApi = (
     url: `/api/website/info/update?id=${data.id}`,
     data,
   });
+};
+
+// 获取友链列表
+export const getFlinkListApi = (data: any): Promise<IResponse<flinkType>> => {
+  return request.post({ url: '/api/website/flink/list', data });
 };
