@@ -3,3 +3,7 @@ export * from './settings.interface';
 export * from './app.interface';
 export * from './site-info.interface';
 export * from './flink.interface';
+export * from './login-log.interface';
+export * from './oper-log.interface';
+export * from './online.interface';
+export * from './cache.interface';
