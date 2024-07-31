@@ -84,3 +84,19 @@
   text-rendering: optimizelegibility;
   font-synthesis: none;
 }
+
+.common-table {
+  .search-box {
+    @include flex-layout;
+
+    gap: 10px;
+
+    .el-input {
+      border-bottom: 1px solid var(--el-border-color);
+
+      &__wrapper {
+        box-shadow: none;
+      }
+    }
+  }
+}

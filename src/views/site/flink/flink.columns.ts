@@ -1,24 +1,13 @@
-import { dayjs, ElMessage } from 'element-plus';
-import { useClipboard } from '@/hooks/useClipboard';
+import { dayjs } from 'element-plus';
 import { flinkType } from '@/interface';
-
-// 复制
-const { copy, copied, isSupported } = useClipboard();
-const onCopyItem = (row: string) => {
-  if (!isSupported.value) {
-    ElMessage.error('你的浏览器不支持 Clipboard API');
-    return;
-  }
-  copy(row);
-  copied && ElMessage.success('复制成功');
-};
+import type { TableColumn } from '@/components/Table/types';
 
 // 查看
 const onView = (row: flinkType) => {
   window.open(row.link + '?from=vue', '_blank');
 };
 
-const Columns = [
+const Columns: TableColumn[] = [
   {
     key: 'id',
     label: 'ID',
@@ -32,11 +21,12 @@ const Columns = [
   {
     key: 'link',
     label: '链接',
-    copy: onCopyItem,
+    copy: true,
   },
   {
     key: 'remark',
     label: '备注',
+    slotName: 'remark',
   },
   {
     key: 'updateTime',
