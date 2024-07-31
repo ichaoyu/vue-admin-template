@@ -39,13 +39,15 @@ export interface Pagination {
 }
 
 export interface TableColumn {
-  field: string;
+  key: string;
   label?: string;
   type?: string;
   dictMap?: object;
   render?: (...args: any[]) => any;
-  copy?: (...args: any[]) => any;
+  copyFN?: (...args: any[]) => any;
   oprAction?: (...args: any[]) => any;
+  copy?: boolean;
+
   /**
    * 是否隐藏
    */

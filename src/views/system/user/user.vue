@@ -12,7 +12,7 @@
       :pageSize="pageSize"
       :pagination="{ defaultPageSize: 50, total }"
       @page-change="onPageChange"
-      class="user-table"
+      class="common-table"
       v-loading="loading"
     />
   </page-container>
@@ -99,14 +99,6 @@ const onPageChange = ({ page, size }) => {
 };
 
 const fetchTableList = async () => {
-  // "pageNum": 1,
-  // "pageSize": 15,
-  // "deptId": "string",
-  // "userName": "string",
-  // "phone": "string",
-  // "status": "0",
-  // "beginDate": "2024-07-15T08:33:31.076Z",
-  // "endDate": "2024-07-15T08:33:31.076Z"
   loading.value = true;
   try {
     const res = await getUserListApi({

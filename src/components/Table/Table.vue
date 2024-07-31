@@ -1,14 +1,22 @@
 <template>
   <div class="table">
     <div class="table-tools">
-      <ToolsTableSize
-        :size="tableSize"
-        @change-table-size="onChangeTableSize"
-      />
-      <ToolsColumnsToggle
-        :columns="columnsSettings"
-        @change-columns="onChangeColumns"
-      />
+      <div class="tools-bar">
+        <!-- 表格外操作 -->
+        <slot name="toolbar"></slot>
+      </div>
+      <div class="tools-column">
+        <!-- 表格大小 -->
+        <ToolsTableSize
+          :size="tableSize"
+          @change-table-size="onChangeTableSize"
+        />
+        <!-- 列设置 -->
+        <ToolsColumnsToggle
+          :columns="columnsSettings"
+          @change-columns="onChangeColumns"
+        />
+      </div>
     </div>
     <el-table
       :data="props.data"
@@ -40,6 +48,10 @@
         <el-table-column :column="item" :label="item.label" :width="item.width">
           <template #header>{{ item.label }}</template>
           <template #default="scope">
+            <!-- 自定义插槽 -->
+            <template v-if="item.slotName">
+              <slot :name="item.slotName" :scope="scope"></slot>
+            </template>
             <!-- 自定义渲染 -->
             <template v-if="item.render">
               <render
@@ -49,22 +61,11 @@
                 :index="scope.$index"
               />
             </template>
-            <!-- 自定义插槽 -->
-            <template v-if="item.slotName">
-              <slot :name="item.slotName" :scope="scope"></slot>
-            </template>
             <!-- 字典map -->
             <template v-if="item.dictMap">
               {{ item.dictMap[scope.row[item.key]] }}
             </template>
-            <!-- 复制 -->
-            <icon-font
-              v-if="item.copy"
-              class="icon-btn-copy"
-              name="copy"
-              :size="14"
-              @click="item.copy(scope.row[item.key])"
-            />
+
             <!-- 链接查看 -->
             <el-link
               v-if="item.oprAction"
@@ -81,8 +82,20 @@
                 !item.dictMap &&
                 !item.oprAction
               "
-              >{{ scope.row[item.key] }}</template
+              ><span>{{ scope.row[item.key] }}</span></template
             >
+            <!-- 复制 -->
+            <icon-font
+              v-if="item.copy"
+              class="icon-btn-copy"
+              name="copy"
+              :size="14"
+              @click="
+                item.copyFun
+                  ? item.copyFun(scope.row[item.key], item.key, scope.row)
+                  : onCopyItem(scope.row[item.key])
+              "
+            />
           </template>
         </el-table-column>
       </template>
@@ -134,11 +147,12 @@
 
 <script setup lang="ts" name="Table">
 import { CSSProperties } from 'vue';
-import { ComponentSize, ElTooltipProps } from 'element-plus';
+import { ComponentSize, ElTooltipProps, ElMessage } from 'element-plus';
+import { useClipboard } from '@/hooks/useClipboard';
 import ToolsTableSize from './ToolsTableSize.vue';
 import ToolsColumnsToggle from './ToolsColumnsToggle.vue';
 import render from './render.vue';
-import type {
+import {
   Pagination,
   TableColumn,
   TableAction,
@@ -513,6 +527,18 @@ const columnsSettings = ref<TableColumn[]>(props.columns);
 const onChangeColumns = (columns: TableColumn[]) => {
   columnsSettings.value = columns;
 };
+
+// 复制
+// 复制
+const { copy, copied, isSupported } = useClipboard();
+const onCopyItem = (row: string) => {
+  if (!isSupported.value) {
+    ElMessage.error('你的浏览器不支持 Clipboard API');
+    return;
+  }
+  copy(row);
+  copied && ElMessage.success('复制成功');
+};
 </script>
 
 <style lang="scss" scoped>
@@ -551,9 +577,14 @@ const onChangeColumns = (columns: TableColumn[]) => {
   height: 100%;
 
   &-tools {
-    @include flex-layout($justify: flex-end);
+    @include flex-layout($direction: column, $align: flex-start);
 
-    gap: 10px;
+    .tools-column {
+      @include flex-layout();
+
+      align-self: flex-end;
+      gap: 10px;
+    }
   }
 
   .icon-btn-copy {
@@ -561,6 +592,7 @@ const onChangeColumns = (columns: TableColumn[]) => {
 
     visibility: hidden;
     position: absolute;
+    z-index: 999;
     top: 30%;
     right: 0;
     margin-left: 6px;

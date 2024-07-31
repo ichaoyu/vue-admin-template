@@ -7,7 +7,7 @@
       :pageSize="pageSize"
       :pagination="{ defaultPageSize: 50, total }"
       @page-change="onPageChange"
-      class="user-table"
+      class="common-table"
       v-loading="loading"
     />
   </page-container>
