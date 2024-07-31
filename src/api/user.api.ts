@@ -4,6 +4,7 @@ import {
   RoleParams,
   UserState,
   Captcha,
+  type userInfo,
 } from '@/interface/user.interface';
 
 // #region 验证接口
@@ -40,15 +41,13 @@ export const updateUserPwdApi = (): Promise<IResponse<UserState>> => {
 };
 //#endregion 当前用户信息接口
 
+// 用户列表
+export const getUserListApi = (data: any): Promise<PageVO<userInfo>> => {
+  return request.post({ url: '/api/system/user/page', data });
+};
+
 export const getAdminRoleApi = (
   params: RoleParams,
 ): Promise<IResponse<AppCustomRouteRecordRaw[]>> => {
   return request.get({ url: '/api/role/list', params });
-};
-
-// 用户列表
-export const getUserListApi = (
-  data: any,
-): Promise<IResponse<AppCustomRouteRecordRaw[]>> => {
-  return request.post({ url: '/api/system/user/page', data });
 };

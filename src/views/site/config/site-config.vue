@@ -113,8 +113,8 @@ const info = computed(() => {
 const getSiteInfo = async () => {
   try {
     loading.value = true;
-    const site = await getSiteInfoApi({ id: 1 });
-    siteInfo.value = site;
+    const res = await getSiteInfoApi({ id: 1 });
+    siteInfo.value = res;
   } catch (err) {
     console.error(err);
   } finally {

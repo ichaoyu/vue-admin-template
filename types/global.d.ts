@@ -40,13 +40,27 @@ declare global {
     responseType?: AxiosResponseType;
   }
 
-  // declare interface IResponse<T = any> {
-  //   code: number;
-  //   data: T extends any ? T : T & any;
-  //   msg: string;
-  // }
+  declare interface IResponse<T = any> {
+    code: number;
+    data: T extends any ? T : T & any;
+    msg: string;
+    timestamp: number;
+  }
 
-  declare type IResponse<T> = T;
+  declare interface PageVO<T = any> {
+    pageNum: number;
+    pageSize: number;
+    total: number;
+    list: T[];
+  }
+
+  declare interface PageDTO {
+    pageNum: number;
+    pageSize: number;
+    [key: string]: any;
+  }
+
+  // declare type IResponse<T> = T;
 
   declare interface ThemeTypes {
     /**

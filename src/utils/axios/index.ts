@@ -69,14 +69,14 @@ axiosInstance.interceptors.request.use(defaultRequestInterceptors);
  * 响应拦截器
  */
 axiosInstance.interceptors.response.use(
-  (response: AxiosResponse) => {
+  (response: AxiosResponse<IResponse>) => {
     console.log('response: ', response);
     // #region 成功回调
     // return response;
     if (response?.config?.responseType === 'blob') {
       // 文件流直接返回全部
       return response;
-    } else if (response?.status === 200 || response?.status === 201) {
+    } else if (response?.status === 200) {
       // 成功直接返回data数据
       if (response.data.code === 200) {
         return response.data.data;
@@ -125,8 +125,6 @@ const service = (config: RequestConfig) => {
 const request = (option: AxiosConfig) => {
   const userStore = useUserStoreOut();
   const { url, method, params, data, headers, responseType } = option;
-  console.log('data: ', data);
-  console.log('params: ', params);
   return service({
     url,
     method,
@@ -144,15 +142,15 @@ const request = (option: AxiosConfig) => {
 // #region 对外暴露
 export default {
   get: <T = any>(option: AxiosConfig) => {
-    return request({ method: 'get', ...option }) as Promise<IResponse<T>>;
+    return request({ method: 'get', ...option }) as Promise<T>;
   },
   post: <T = any>(option: AxiosConfig) => {
-    return request({ method: 'post', ...option }) as Promise<IResponse<T>>;
+    return request({ method: 'post', ...option }) as Promise<T>;
   },
   delete: <T = any>(option: AxiosConfig) => {
-    return request({ method: 'delete', ...option }) as Promise<IResponse<T>>;
+    return request({ method: 'delete', ...option }) as Promise<T>;
   },
   put: <T = any>(option: AxiosConfig) => {
-    return request({ method: 'put', ...option }) as Promise<IResponse<T>>;
+    return request({ method: 'put', ...option }) as Promise<T>;
   },
 };

@@ -35,21 +35,17 @@ export const delLoginLogApi = (
 
 // #region 操作日志接口
 // 操作日志分页
-export const getOperLogApi = (params: any): Promise<IResponse<operLogType>> => {
+export const getOperLogApi = (params: any): Promise<PageVO<operLogType>> => {
   return request.post({ url: '/api/monitor/operLog/page', params });
 };
 // 导出日志分页
-export const exportOperLogApi = (
-  params: any,
-): Promise<IResponse<operLogType>> => {
+export const exportOperLogApi = (params: any): Promise<PageVO<operLogType>> => {
   return request.post({ url: '/api/monitor/operLog/export', params });
 };
 
 // 删除操作日志
 // 无参数则是清空日志
-export const delOperLogApi = (
-  params: string[] | null,
-): Promise<IResponse<string>> => {
+export const delOperLogApi = (params: string[] | null): Promise<any> => {
   return request.delete({ url: '/api/monitor/operLog/delete', params });
 };
 // #endregion 登录日志接口
@@ -58,42 +54,34 @@ export const delOperLogApi = (
 // 获取在线用户分页
 export const getOnlineApi = (
   params: string[] | null,
-): Promise<IResponse<OnlineInfoType>> => {
+): Promise<PageVO<OnlineInfoType>> => {
   return request.post({ url: '/api/monitor/online/page', params });
 };
 // 用户下线
-export const delOnlineApi = (
-  params: string[] | null,
-): Promise<IResponse<any>> => {
+export const delOnlineApi = (params: string[] | null): Promise<any> => {
   return request.delete({ url: '/api/monitor/online', params });
 };
 //#endregion 在线用户接口
 
 // #region 缓存接口
 // 获取缓存名称列表
-export const getCacheListApi = (): Promise<IResponse<CacheModelType>> => {
+export const getCacheListApi = (): Promise<CacheModelType> => {
   return request.get({ url: '/api/monitor/cache/getNames' });
 };
 // 通过名称获取获取缓存键名列表
-export const getCacheKeyApi = (
-  params: NameType,
-): Promise<IResponse<CacheModelType>> => {
+export const getCacheKeyApi = (params: NameType): Promise<CacheModelType> => {
   return request.get({ url: '/api/monitor/cache/getKeys', params });
 };
 // 通过名称清除缓存
-export const delCacheByNameApi = (
-  params: NameType,
-): Promise<IResponse<any>> => {
+export const delCacheByNameApi = (params: NameType): Promise<any> => {
   return request.delete({ url: '/api/monitor/cache/clearName', params });
 };
 // 通过键名获取缓存值
-export const getCacheValueApi = (
-  params: KeyType,
-): Promise<IResponse<CacheModelType>> => {
+export const getCacheValueApi = (params: KeyType): Promise<CacheModelType> => {
   return request.get({ url: '/api/monitor/cache/value', params });
 };
 // 通过键名清除缓存
-export const delCacheByKeyApi = (params: KeyType): Promise<IResponse<any>> => {
+export const delCacheByKeyApi = (params: KeyType): Promise<any> => {
   return request.delete({ url: '/api/monitor/cache/clearKey', params });
 };
 // #endregion 缓存接口
