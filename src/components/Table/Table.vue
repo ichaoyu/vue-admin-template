@@ -6,23 +6,40 @@
         <slot name="toolbar"></slot>
       </div>
       <div class="tools-column">
-        <!-- 表格大小 -->
-        <ToolsTableSize
-          :size="tableSize"
-          @change-table-size="onChangeTableSize"
-        />
-        <!-- 列设置 -->
-        <ToolsColumnsToggle
-          :columns="columnsSettings"
-          @change-columns="onChangeColumns"
-        />
+        <div class="tools-column-selection">
+          <template v-if="selections.length > 0">
+            <div class="select-num">
+              已选择 {{ selections.length }}/{{ props.data.length }}
+            </div>
+            <slot name="selections"></slot>
+            <el-button @click="onCancelSelection">取消选择</el-button>
+            <el-button type="danger" @click="onBatchDelete">批量删除</el-button>
+          </template>
+        </div>
+        <div class="tools-column-opr">
+          <!-- 表格大小 -->
+          <ToolsTableSize
+            :size="tableSize"
+            @change-table-size="onChangeTableSize"
+          />
+          <!-- 列设置 -->
+          <ToolsColumnsToggle
+            :columns="columnsSettings"
+            @change-columns="onChangeColumns"
+          />
+        </div>
       </div>
     </div>
     <el-table
+      ref="commonTableRef"
       :data="props.data"
       :height="props.height"
-      v-bind="$props"
+      v-bind="$attrs"
       :size="tableSize"
+      :highlight-current-row="props.highlightCurrentRow"
+      :empty-text="props.emptyText"
+      :show-overflow-tooltip="props.showOverflowTooltip"
+      @selection-change="handleSelectionChange"
     >
       <!-- 复选框 -->
       <el-table-column
@@ -146,8 +163,7 @@
 </template>
 
 <script setup lang="ts" name="Table">
-import { CSSProperties } from 'vue';
-import { ComponentSize, ElTooltipProps, ElMessage } from 'element-plus';
+import { ElTooltipProps, ElMessage, ElTable } from 'element-plus';
 import { useClipboard } from '@/hooks/useClipboard';
 import ToolsTableSize from './ToolsTableSize.vue';
 import ToolsColumnsToggle from './ToolsColumnsToggle.vue';
@@ -252,8 +268,7 @@ const props = defineProps({
   },
   // 尺寸
   size: {
-    type: String as PropType<ComponentSize>,
-    validator: (v: ComponentSize) => ['default', 'small', 'large'].includes(v),
+    type: String as PropType<ElementSize>,
     default: 'small',
   },
   // 列宽是否自动撑开
@@ -283,13 +298,7 @@ const props = defineProps({
     >,
     default: '',
   },
-  // 行的 style 的回调方法或Object的Style
-  rowStyle: {
-    type: [Function, Object] as PropType<
-      (row: Recordable, rowIndex: number) => Recordable | CSSProperties
-    >,
-    default: undefined,
-  },
+
   // 单元格的 className 的回调方法或字符串的 className
   cellClassName: {
     type: [Function, String] as PropType<
@@ -297,17 +306,7 @@ const props = defineProps({
     >,
     default: '',
   },
-  // 单元格的 style 的回调方法或Object的Style
-  cellStyle: {
-    type: [Function, Object] as PropType<
-      (
-        row: Recordable,
-        column: any,
-        rowIndex: number,
-      ) => Recordable | CSSProperties
-    >,
-    default: undefined,
-  },
+
   // 表头行的 className 的回调方法或字符串的 className
   headerRowClassName: {
     type: [Function, String] as PropType<
@@ -315,13 +314,7 @@ const props = defineProps({
     >,
     default: '',
   },
-  // 表头行的 style 的回调方法或Object的Style
-  headerRowStyle: {
-    type: [Function, Object] as PropType<
-      (row: Recordable, rowIndex: number) => Recordable | CSSProperties
-    >,
-    default: undefined,
-  },
+
   // 表头单元格的 className 的回调方法或字符串的 className
   headerCellClassName: {
     type: [Function, String] as PropType<
@@ -329,17 +322,7 @@ const props = defineProps({
     >,
     default: '',
   },
-  // 表头单元格的 style 的回调方法或Object的Style
-  headerCellStyle: {
-    type: [Function, Object] as PropType<
-      (
-        row: Recordable,
-        column: any,
-        rowIndex: number,
-      ) => Recordable | CSSProperties
-    >,
-    default: undefined,
-  },
+
   // 行数据的 Key，用来优化 Table 的渲染
   rowKey: {
     type: String,
@@ -477,18 +460,12 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  cardBodyStyle: {
-    type: Object as PropType<CSSProperties>,
-    default: () => ({}),
-  },
+
   cardBodyClass: {
     type: String as PropType<string>,
     default: '',
   },
-  cardWrapStyle: {
-    type: Object as PropType<CSSProperties>,
-    default: () => ({}),
-  },
+
   cardWrapClass: {
     type: String as PropType<string>,
     default: '',
@@ -497,7 +474,7 @@ const props = defineProps({
 const actionCfg = computed(() =>
   Object.assign(
     {
-      width: 180,
+      width: 150,
       fixed: 'right',
       label: '操作',
       align: 'center',
@@ -507,7 +484,7 @@ const actionCfg = computed(() =>
 );
 
 // 抛出事件
-const emits = defineEmits(['page-change']);
+const emits = defineEmits(['page-change', 'batch-delete', 'selections-change']);
 
 // 页码变更
 const onPageChange = (page: number) => {
@@ -518,8 +495,8 @@ const onChangePageSize = (size: number) => {
   emits('page-change', { size });
 };
 // table大小
-const tableSize = ref<string>(props.size);
-const onChangeTableSize = (size: string) => {
+const tableSize = ref<ElementSize>(props.size);
+const onChangeTableSize = (size: ElementSize) => {
   tableSize.value = size;
 };
 // 显隐列
@@ -538,6 +515,23 @@ const onCopyItem = (row: string) => {
   }
   copy(row);
   copied && ElMessage.success('复制成功');
+};
+// 批量
+const selections = ref<any[]>([]);
+// 删除
+const onBatchDelete = () => {
+  emits('batch-delete', selections.value);
+};
+// 选项变动
+const handleSelectionChange = (val: any[]) => {
+  selections.value = val;
+  emits('selections-change', val);
+};
+// 取消选择
+const commonTableRef = ref<InstanceType<typeof ElTable>>();
+const onCancelSelection = () => {
+  commonTableRef.value!.clearSelection();
+  emits('selections-change', []);
 };
 </script>
 
@@ -577,13 +571,28 @@ const onCopyItem = (row: string) => {
   height: 100%;
 
   &-tools {
-    @include flex-layout($direction: column, $align: flex-start);
-
     .tools-column {
-      @include flex-layout();
+      @include flex-layout($justify: space-between);
 
-      align-self: flex-end;
+      min-height: 30px;
+      margin-top: 10px;
       gap: 10px;
+
+      &-selection {
+        @include flex-layout();
+
+        gap: 10px;
+
+        .select-num {
+          margin-right: 20px;
+          color: var(--el-text-color-regular);
+          font-size: 12px;
+        }
+      }
+
+      &-opr {
+        align-self: flex-end;
+      }
     }
   }
 

@@ -16,7 +16,7 @@ declare global {
 
   declare type LayoutType = 'classic' | 'topLeft' | 'top' | 'cutMenu';
 
-  declare type ElementSize = 'default' | 'mini' | 'large';
+  declare type ElementSize = 'default' | 'small' | 'large';
 
   declare type AxiosMethod = 'get' | 'post' | 'delete' | 'put';
   declare type AxiosResponseType =

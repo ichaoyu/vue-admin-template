@@ -24,7 +24,7 @@
 <script lang="ts" setup>
 const props = defineProps({
   size: {
-    type: String,
+    type: String as PropType<ElementSize>,
     default: 'small',
   },
 });
