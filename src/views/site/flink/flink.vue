@@ -1,9 +1,9 @@
-<!-- eslint-disable vue/no-deprecated-slot-scope-attribute -->
 <template>
   <page-container :title="meta.title" class="table-container">
     <Table
       class="common-table"
       v-loading="loading"
+      selection
       :columns="columns"
       :data="data"
       :currentPage="currentPage"
@@ -14,23 +14,31 @@
         // width: 250,
       }"
       @page-change="onPageChange"
+      @batch-delete="onBatchDelete"
+      @selections-change="onSelection"
     >
       <template #toolbar>
-        <div class="search-box">
-          <div class="search-form">
-            <el-input
-              placeholder="请输入名称或链接"
-              clearable
-              v-model="keywords"
-              @clear="onReset"
-            />
+        <div class="toolbar-box">
+          <div class="search-box">
+            <div class="search-form">
+              <el-input
+                placeholder="请输入名称或链接"
+                clearable
+                v-model="keywords"
+                @clear="onReset"
+              />
+            </div>
+            <div class="search-btn">
+              <el-button type="primary" @click="onSearch">搜索</el-button>
+              <el-button @click="onReset">重置</el-button>
+            </div>
           </div>
-          <div class="search-btn">
-            <el-button type="primary" @click="onSearch">搜索</el-button>
-            <el-button @click="onReset">重置</el-button>
+          <div class="add-btn">
+            <el-button type="primary" @click="onAddOne">新增</el-button>
           </div>
         </div>
       </template>
+      <template #selections><el-button>demo</el-button></template>
       <template #remark="{ scope }">
         {{ scope.row.remark }}
       </template>
@@ -39,19 +47,44 @@
 </template>
 
 <script setup lang="ts">
-import { getFlinkListApi } from '@/api/site.api';
+import { getFlinkListApi, delFlinkApi } from '@/api/site.api';
 import Table from '@/components/Table';
 
 import Columns from './flink.columns';
 import { flinkType } from '@/interface';
+import { ElMessage } from 'element-plus';
 
 const { meta } = useRoute();
 
-const edit = (row, index: number, data) => {
+const edit = (row: flinkType, index: number, data: flinkType[]) => {
   console.log('edit', row, index, data);
 };
-const nullify = (row, index: number, data) => {
-  console.log('nullify', row, index, data);
+// #region 删除
+const onDelete = async (row: flinkType) => {
+  const ids = [row.id!];
+  handleDelete(ids);
+};
+// 批量删除
+const onBatchDelete = (data: flinkType[]) => {
+  const ids = data.map((item) => item.id!);
+  handleDelete(ids);
+};
+// 删除操作
+const handleDelete = async (ids: string[] | number[]) => {
+  try {
+    await delFlinkApi({ ids });
+    ElMessage.success('删除成功');
+  } catch (err) {
+    console.error(err);
+  } finally {
+    await fetchTableList();
+  }
+};
+//#endregion 删除
+
+// 新增
+const onAddOne = () => {
+  console.log(1);
 };
 
 const data = ref<flinkType[]>([]);
@@ -103,6 +136,11 @@ const fetchTableList = async () => {
     loading.value = false;
   }
 };
+// #region 多选
+const selectData = ref<any[]>([]);
+const onSelection = (data: flinkType[]) => {
+  selectData.value = data;
+};
 
 const operator = [
   {
@@ -118,7 +156,7 @@ const operator = [
   },
   {
     text: '删除',
-    action: nullify,
+    action: onDelete,
     btnStyle: {
       type: 'danger',
       // text: false,
@@ -129,10 +167,4 @@ const operator = [
 ];
 </script>
 
-<style lang="scss" scoped>
-.search-box {
-  .el-input {
-    width: 200px;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

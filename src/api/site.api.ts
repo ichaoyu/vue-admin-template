@@ -1,6 +1,6 @@
 import { request } from '@/utils';
 
-import { siteInfoType, flinkType } from '@/interface';
+import { siteInfoType, flinkType, DelType } from '@/interface';
 
 // 获取网站配置
 export const getSiteInfoApi = (params: any): Promise<siteInfoType> => {
@@ -18,4 +18,9 @@ export const updateSiteInfoApi = (data: siteInfoType): Promise<any> => {
 // 获取友链列表
 export const getFlinkListApi = (data: any): Promise<PageVO<flinkType>> => {
   return request.post({ url: '/api/website/flink/list', data });
+};
+
+// 删除友链列表
+export const delFlinkApi = (data: DelType): Promise<any> => {
+  return request.delete({ url: '/api/website/flink/delete', data });
 };

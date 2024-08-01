@@ -86,16 +86,21 @@
 }
 
 .common-table {
-  .search-box {
-    @include flex-layout;
+  .toolbar-box {
+    @include flex-layout($justify: space-between);
 
-    gap: 10px;
+    .search-box {
+      @include flex-layout;
 
-    .el-input {
-      border-bottom: 1px solid var(--el-border-color);
+      gap: 10px;
 
-      &__wrapper {
-        box-shadow: none;
+      .el-input {
+        width: 200px;
+        border-bottom: 1px solid var(--el-border-color);
+
+        &__wrapper {
+          box-shadow: none;
+        }
       }
     }
   }

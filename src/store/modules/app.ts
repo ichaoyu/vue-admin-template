@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-import { ComponentSize } from 'element-plus';
 import { AppState } from '@/interface';
 import store from '../index';
 
@@ -39,10 +38,10 @@ export const useAppStore = defineStore('App', {
     getIsDark(): boolean {
       return this.isDark;
     },
-    getCurrentSize(): ComponentSize {
+    getCurrentSize(): ElementSize {
       return this.currentSize;
     },
-    getSizeMap(): ComponentSize[] {
+    getSizeMap(): ElementSize[] {
       return this.sizeMap;
     },
   },
@@ -75,7 +74,7 @@ export const useAppStore = defineStore('App', {
         document.documentElement.classList.remove('dark');
       }
     },
-    setCurrentSize(currentSize: ComponentSize) {
+    setCurrentSize(currentSize: ElementSize) {
       this.currentSize = currentSize;
     },
     initTheme() {

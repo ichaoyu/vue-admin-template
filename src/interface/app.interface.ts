@@ -1,4 +1,3 @@
-import { ComponentSize } from 'element-plus';
 export interface AppState {
   /**
    * 面包屑
@@ -75,11 +74,11 @@ export interface AppState {
   /**
    * 组件尺寸
    */
-  currentSize: ComponentSize;
+  currentSize: ElementSize;
   /**
    * 组件默认尺寸组合
    */
-  sizeMap: ComponentSize[];
+  sizeMap: ElementSize[];
   /**
    * 是否开启水印
    */
