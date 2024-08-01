@@ -82,7 +82,7 @@ export interface Captcha {
  * 用户信息
  */
 export interface userInfo {
-  id?: string;
+  id?: number;
   userName: string;
   nickName?: string;
   email?: string;
@@ -99,7 +99,7 @@ export interface userInfo {
   updateBy?: string;
   updateTime?: string | null;
   dept?: {
-    id?: string;
+    id?: number;
     parentId?: string;
     ancestors?: string;
     deptName?: string;

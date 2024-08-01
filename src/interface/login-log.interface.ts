@@ -2,7 +2,7 @@ export interface LoginLogType {
   /**
    * 主键
    */
-  id?: string;
+  id?: number;
 
   /**
    * 用户账号

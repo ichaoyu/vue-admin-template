@@ -2,7 +2,7 @@ export interface operLogType {
   /**
    * 主键
    */
-  id?: string;
+  id?: number;
 
   /**
    * 操作模块

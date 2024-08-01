@@ -2,7 +2,7 @@ export interface flinkType {
   /**
    * ID
    */
-  id?: string;
+  id?: number;
   /**
    * 友链名称
    */

@@ -1,5 +1,5 @@
 export interface siteInfoType {
-  id?: string;
+  id?: number;
   /**
    * 网站名称
    */
