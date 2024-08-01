@@ -14,7 +14,7 @@ export interface flinkType {
   /**
    * 排序
    */
-  sort: string;
+  sort: number;
   /**
    * 备注
    */
