@@ -9,10 +9,18 @@
         <div class="tools-column-selection">
           <template v-if="selections.length > 0">
             <div class="select-num">
-              已选择 {{ selections.length }}/{{ props.data.length }}
+              <span
+                >已选择 {{ selections.length }}/{{ props.data.length }}</span
+              >
+              <el-tooltip placement="top" content="取消选择">
+                <IconFont
+                  class="icon-close"
+                  icon="CircleCloseFilled"
+                  @click="onCancelSelection"
+                />
+              </el-tooltip>
             </div>
             <slot name="selections"></slot>
-            <el-button @click="onCancelSelection">取消选择</el-button>
             <el-button type="danger" @click="onBatchDelete">批量删除</el-button>
           </template>
         </div>
@@ -584,9 +592,16 @@ const onCancelSelection = () => {
         gap: 10px;
 
         .select-num {
+          @include flex-layout();
+
+          gap: 10px;
           margin-right: 20px;
           color: var(--el-text-color-regular);
           font-size: 12px;
+
+          .icon-close {
+            @extend %item-hover;
+          }
         }
       }
 
