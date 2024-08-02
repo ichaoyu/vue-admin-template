@@ -182,4 +182,8 @@ const operator = [
 ];
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.toolbar-box {
+  margin-bottom: 10px;
+}
+</style>

@@ -40,6 +40,7 @@
     </div>
     <el-table
       ref="commonTableRef"
+      class="table-body"
       :data="props.data"
       :height="props.height"
       v-bind="$attrs"
@@ -150,10 +151,9 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- 分页器 -->
     <el-pagination
       v-if="props.pagination"
-      class="pagination"
+      class="table-pagination"
       background
       :small="tableSize === 'small'"
       v-model:current-page="$props.currentPage"
@@ -267,7 +267,7 @@ const props = defineProps({
   height: {
     type: [Number, String],
     // default: 'var(--table-height)',
-    default: '300',
+    default: '100%',
   },
   // 最大高度
   maxHeight: {
@@ -576,14 +576,17 @@ const onCancelSelection = () => {
 }
 
 .table {
+  @include flex-layout($direction: column, $align: flex-start);
+
   height: 100%;
 
   &-tools {
+    width: 100%;
+
     .tools-column {
       @include flex-layout($justify: space-between);
 
       min-height: 30px;
-      margin-top: 10px;
       gap: 10px;
 
       &-selection {
@@ -614,6 +617,16 @@ const onCancelSelection = () => {
     }
   }
 
+  &-body {
+    flex: 1;
+    width: 100%;
+  }
+
+  &-pagination {
+    align-self: flex-end;
+    margin-top: 15px;
+  }
+
   .icon-btn-copy {
     @extend %item-hover;
 
@@ -624,9 +637,5 @@ const onCancelSelection = () => {
     right: 0;
     margin-left: 6px;
   }
-}
-
-.pagination {
-  margin-top: 15px;
 }
 </style>

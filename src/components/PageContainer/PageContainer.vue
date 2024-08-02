@@ -40,6 +40,10 @@ defineProps({
 
   height: 100%;
   border: none;
+
+  :deep(.el-card__body) {
+    height: calc(100% - var(--el-card-padding) * 4 - var(--card-header-height));
+  }
 }
 
 .content-header {
