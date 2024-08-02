@@ -20,6 +20,19 @@ export const getFlinkListApi = (data: any): Promise<PageVO<flinkType>> => {
   return request.post({ url: '/api/website/flink/list', data });
 };
 
+// 新增友情链接
+export const addFlinkApi = (data: flinkType): Promise<any> => {
+  return request.post({ url: '/api/website/flink/add', data });
+};
+
+// 更新友情链接
+export const updateFlinkApi = (data: flinkType): Promise<any> => {
+  return request.put({
+    url: `/api/website/flink/update?id=${data.id}`,
+    data,
+  });
+};
+
 // 删除友链列表
 export const delFlinkApi = (data: DelType): Promise<any> => {
   return request.delete({ url: '/api/website/flink/delete', data });

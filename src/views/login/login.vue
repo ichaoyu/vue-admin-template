@@ -86,7 +86,7 @@ const onChangeCode = () => {
 // api获取验证码
 const getVerifyCode = async () => {
   try {
-    const res: IResponse<Captcha> = await verifyCodeApi();
+    const res: Captcha = await verifyCodeApi();
     verifyCodeData.value = res?.imageBase64;
     loginForm.captchaId = res?.id;
   } catch (err) {
@@ -106,7 +106,7 @@ const onSubmit = async () => {
       ElMessage.error('请输入完整登录信息');
       return;
     }
-    const res: IResponse<string> = await loginApi(loginForm);
+    const res: string = await loginApi(loginForm);
     if (res) {
       userStore.setToken(res);
       await fetchUserInfo();

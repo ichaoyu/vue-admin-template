@@ -44,11 +44,19 @@
       </template>
     </Table>
   </page-container>
+  <!-- 抽屉弹窗 -->
+  <create-draw
+    :visible="isShowDraw"
+    :record="currentRecord"
+    @update:visible="toggleShowDraw"
+    @refresh-table="fetchTableList"
+  />
 </template>
 
 <script setup lang="ts">
 import { getFlinkListApi, delFlinkApi } from '@/api/site.api';
 import Table from '@/components/Table';
+import createDraw from './flink.create.vue';
 
 import Columns from './flink.columns';
 import { flinkType } from '@/interface';
@@ -56,8 +64,20 @@ import { ElMessage } from 'element-plus';
 
 const { meta } = useRoute();
 
-const edit = (row: flinkType, index: number, data: flinkType[]) => {
-  console.log('edit', row, index, data);
+// 新增
+const isShowDraw = ref<boolean>(false);
+const toggleShowDraw = (v: boolean) => {
+  isShowDraw.value = v;
+};
+const onAddOne = () => {
+  currentRecord.value = null;
+  toggleShowDraw(true);
+};
+// 编辑
+const currentRecord = ref<flinkType | null>(null);
+const edit = (row: flinkType) => {
+  currentRecord.value = row;
+  toggleShowDraw(true);
 };
 // #region 删除
 const onDelete = async (row: flinkType) => {
@@ -81,11 +101,6 @@ const handleDelete = async (ids: string[] | number[]) => {
   }
 };
 //#endregion 删除
-
-// 新增
-const onAddOne = () => {
-  console.log(1);
-};
 
 const data = ref<flinkType[]>([]);
 const columns = Columns;

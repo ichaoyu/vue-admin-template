@@ -591,6 +591,9 @@ const onCancelSelection = () => {
       }
 
       &-opr {
+        @include flex-layout();
+
+        gap: 10px;
         align-self: flex-end;
       }
     }
