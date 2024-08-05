@@ -23,25 +23,10 @@
         status-icon
       >
         <el-form-item label="名称" prop="title">
-          <el-input v-model="ruleForm.title" placeholder="请输入名称" />
+          <el-input v-model="ruleForm.name" placeholder="请输入名称" />
         </el-form-item>
-        <el-form-item label="排序" prop="sort">
-          <el-input-number
-            v-model="ruleForm.sort"
-            :min="0"
-            :max="999"
-            controls-position="right"
-          />
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input
-            v-model="ruleForm.remark"
-            placeholder="请输入备注"
-            maxlength="100"
-            :autosize="{ minRows: 3 }"
-            show-word-limit
-            type="textarea"
-          />
+        <el-form-item label="路径">
+          <el-input v-model="ruleForm.path" placeholder="请输入路径" />
         </el-form-item>
         <div class="opr-btns">
           <el-button
@@ -94,33 +79,20 @@ const updateVisible = (newValue: boolean) => {
 const onCancelVisible = () => {
   updateVisible(false);
   ruleForm.value = {
-    title: '',
-    remark: '',
-    sort: 0,
+    name: '',
+    path: '',
   };
 };
 
-const ruleForm = ref<flinkType>({
-  title: '',
-  remark: '',
-  sort: 0,
+const ruleForm = ref<tagType>({
+  name: '',
+  path: '',
 });
 // 校验
-const checkLink = (_: any, value: any, callback: any) => {
-  if (!isUrl(value)) {
-    callback(new Error('请输入正确的链接格式'));
-  } else {
-    callback();
-  }
-};
-const rules = reactive<FormRules<flinkType>>({
-  title: [
+const rules = reactive<FormRules<tagType>>({
+  name: [
     { required: true, message: '请输入名称', trigger: 'blur' },
-    { min: 2, max: 20, message: '名称长度应在2~20范围内', trigger: 'blur' },
-  ],
-  link: [
-    { required: true, message: '请输入链接', trigger: 'blur' },
-    { validator: checkLink, trigger: 'blur' },
+    { min: 1, max: 15, message: '名称长度应在1~15范围内', trigger: 'blur' },
   ],
 });
 

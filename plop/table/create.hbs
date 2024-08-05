@@ -100,7 +100,7 @@ const onCancelVisible = () => {
   };
 };
 
-const ruleForm = ref<flinkType>({
+const ruleForm = ref<{{name}}Type>({
   title: '',
   remark: '',
   sort: 0,
@@ -113,7 +113,7 @@ const checkLink = (_: any, value: any, callback: any) => {
     callback();
   }
 };
-const rules = reactive<FormRules<flinkType>>({
+const rules = reactive<FormRules<{{name}}Type>>({
   title: [
     { required: true, message: '请输入名称', trigger: 'blur' },
     { min: 2, max: 20, message: '名称长度应在2~20范围内', trigger: 'blur' },

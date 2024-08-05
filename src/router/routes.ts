@@ -152,7 +152,7 @@ export const asyncRouter: AppRouteRecordRaw[] = [
       {
         path: 'tag',
         name: 'WebsiteTag',
-        component: () => import('@/views/demo'),
+        component: () => import('@/views/site/tag'),
         meta: {
           title: '标签管理',
         },

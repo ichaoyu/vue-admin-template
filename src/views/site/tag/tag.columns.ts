@@ -1,11 +1,5 @@
 import { dayjs } from 'element-plus';
-import { tagType } from '@/interface';
 import { TableColumn } from '@/components/Table/types';
-
-// 查看
-const onView = (row: tagType, index: number, data: tagType[]) => {
-  console.log(row, index, data);
-};
 
 const Columns: TableColumn[] = [
   {
@@ -14,19 +8,12 @@ const Columns: TableColumn[] = [
     width: 50,
   },
   {
-    key: 'title',
+    key: 'name',
     label: '名称',
-    oprAction: onView,
   },
   {
-    key: 'link',
-    label: '链接',
-    copy: true,
-  },
-  {
-    key: 'remark',
-    label: '备注',
-    slotName: 'remark',
+    key: 'path',
+    label: '路径',
   },
   {
     key: 'updateTime',

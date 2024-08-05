@@ -52,7 +52,7 @@ import Table from '@/components/Table';
 import createDraw from './tag.create.vue';
 
 import Columns from './tag.columns';
-import { flinkType } from '@/interface';
+import { tagType } from '@/interface';
 import { ElMessage } from 'element-plus';
 
 const { meta } = useRoute();
@@ -67,18 +67,18 @@ const onAddOne = () => {
   toggleShowDraw(true);
 };
 // 编辑
-const currentRecord = ref<flinkType | null>(null);
-const edit = (row: flinkType) => {
+const currentRecord = ref<tagType | null>(null);
+const edit = (row: tagType) => {
   currentRecord.value = row;
   toggleShowDraw(true);
 };
 // #region 删除
-const onDelete = async (row: flinkType) => {
+const onDelete = async (row: tagType) => {
   const ids = [row.id!];
   handleDelete(ids);
 };
 // 批量删除
-const onBatchDelete = (data: flinkType[]) => {
+const onBatchDelete = (data: tagType[]) => {
   const ids = data.map((item) => item.id!);
   handleDelete(ids);
 };
@@ -95,7 +95,7 @@ const handleDelete = async (ids: string[] | number[]) => {
 };
 //#endregion 删除
 
-const data = ref<flinkType[]>([]);
+const data = ref<tagType[]>([]);
 const columns = Columns;
 
 onMounted(() => {
