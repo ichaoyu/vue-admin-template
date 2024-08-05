@@ -1,10 +1,10 @@
 import { dayjs } from 'element-plus';
-import { flinkType } from '@/interface';
+import { tagType } from '@/interface';
 import { TableColumn } from '@/components/Table/types';
 
 // 查看
-const onView = (row: flinkType) => {
-  window.open(row.link + '?from=vue', '_blank');
+const onView = (row: tagType, index: number, data: tagType[]) => {
+  console.log(row, index, data);
 };
 
 const Columns: TableColumn[] = [
