@@ -33,7 +33,7 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
-    '@typescript-eslint/no-var-requires': 'warn',
+    '@typescript-eslint/no-var-requires': 'off',
     'vue/script-setup-uses-vars': 'error',
     'vue/no-reserved-component-names': 'off',
     'vue/custom-event-name-casing': 'off',
