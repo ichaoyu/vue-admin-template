@@ -1,49 +1,53 @@
 <template>
   <div class="login_container">
-    <el-row>
-      <el-col :sm="{ span: 12, offset: 11 }" :xs="{ span: 22, offset: 1 }">
-        <el-form class="login_form" size="default" @keyup.enter="onSubmit">
-          <h1>Hello</h1>
-          <h2>vue-admin-template</h2>
-          <el-form-item>
-            <el-input
-              placeholder="登录账号"
-              :prefix-icon="User"
-              v-model="loginForm.userName"
-            />
-          </el-form-item>
-          <el-form-item>
-            <el-input
-              placeholder="登录密码"
-              type="password"
-              :prefix-icon="Lock"
-              v-model="loginForm.password"
-              show-password
-            />
-          </el-form-item>
-          <el-form-item class="item-verifycode">
-            <el-input
-              placeholder="验证码"
-              :prefix-icon="CreditCard"
-              v-model="loginForm.captchaValue" />
-            <el-image
-              :src="verifyCodeData"
-              class="verify-code-image"
-              @click="onChangeCode"
-          /></el-form-item>
-          <el-form-item>
-            <el-button
-              class="login_btn"
-              type="primary"
-              size="default"
-              :loading="loading"
-              @click="onSubmit"
-              >登录</el-button
-            >
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
+    <div class="login-box">
+      <div class="header"></div>
+      <el-form class="login_form" size="default" @keyup.enter="onSubmit">
+        <h1>Hello</h1>
+        <h2>vue-admin-template</h2>
+        <el-form-item>
+          <el-input
+            placeholder="登录账号"
+            :prefix-icon="User"
+            v-model="loginForm.userName"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-input
+            placeholder="登录密码"
+            type="password"
+            :prefix-icon="Lock"
+            v-model="loginForm.password"
+            show-password
+          />
+        </el-form-item>
+        <el-form-item class="item-verifycode">
+          <el-input
+            placeholder="验证码"
+            :prefix-icon="CreditCard"
+            v-model="loginForm.captchaValue" />
+          <el-image
+            :src="verifyCodeData"
+            class="verify-code-image"
+            @click="onChangeCode"
+        /></el-form-item>
+        <el-form-item>
+          <el-button
+            class="login_btn"
+            type="primary"
+            size="default"
+            :loading="loading"
+            @click="onSubmit"
+            >登录</el-button
+          >
+        </el-form-item>
+        <div class="login-extra">
+          <div class="btn-forgetPwd">忘记密码？</div>
+          <div class="btn-reg">注册</div>
+        </div>
+      </el-form>
+      <div class="footer">Design By chaoyu</div>
+    </div>
   </div>
 </template>
 
@@ -106,13 +110,14 @@ const onSubmit = async () => {
       ElMessage.error('请输入完整登录信息');
       return;
     }
+    ElMessage.success('登录中...');
     const res: string = await loginApi(loginForm);
     if (res) {
       userStore.setToken(res);
       await fetchUserInfo();
+      ElMessage.closeAll();
+      push({ path: redirect.value || '/' });
     }
-    push({ path: redirect.value || '/' });
-    // push('/');
   } catch (err) {
     console.log('err: ', err);
   } finally {
@@ -134,24 +139,27 @@ const onSetStore = (info: UserState): void => {
 
 <style scoped lang="scss">
 .login_container {
-  widows: 100%; //宽度跟浏览器一样宽
-  height: 100vh; //1vh 屏幕可见高度的1%
-  background: '#ccc';
+  width: 100%;
+  height: 100vh;
+  background-image: url('@/assets/images/login-bg.png');
+  background-repeat: no-repeat;
+  background-position: center;
+
+  .login-box {
+    @include flex-layout($direction: column, $justify: space-between);
+
+    height: 100%;
+  }
 
   .login_form {
-    // position: relative;
-    // top: 30vh;
-    // width: 100%;
-    // padding: 40px;
+    text-align: center;
 
     h1 {
-      color: white;
       font-size: 40px;
     }
 
     h2 {
-      margin: 20px 0;
-      color: w hite;
+      margin-bottom: 20px;
       font-size: 20px;
     }
 
@@ -164,6 +172,29 @@ const onSetStore = (info: UserState): void => {
     .verify-code-image {
       cursor: pointer;
     }
+
+    .login_btn {
+      width: 100%;
+    }
+
+    .login-extra {
+      @include flex-layout($justify: space-between);
+
+      color: var(--el-color-primary);
+
+      .btn-forgetPwd {
+        @extend %item-hover;
+      }
+
+      .btn-reg {
+        @extend %item-hover;
+      }
+    }
+  }
+
+  .footer {
+    height: 50px;
+    line-height: 50px;
   }
 }
 </style>
