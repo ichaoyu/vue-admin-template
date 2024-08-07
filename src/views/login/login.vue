@@ -2,7 +2,7 @@
   <div class="login_container">
     <div class="login-box">
       <div class="header"></div>
-      <el-form class="login_form" size="default" @keyup.enter="onSubmit">
+      <el-form class="login_form" size="large" @keyup.enter="onSubmit">
         <h1>Hello</h1>
         <h2>vue-admin-template</h2>
         <el-form-item>
@@ -32,6 +32,11 @@
             @click="onChangeCode"
         /></el-form-item>
         <el-form-item>
+          <div class="btn-forgetPwd">
+            <el-checkbox v-model="remember" label="记住密码" />
+          </div>
+        </el-form-item>
+        <el-form-item>
           <el-button
             class="login_btn"
             type="primary"
@@ -58,8 +63,10 @@ import { ElMessage } from 'element-plus';
 import { loginApi, verifyCodeApi, getUserInfoApi } from '@/api/user.api';
 import { useUserStore } from '@/store/modules/user';
 import { UserState, Captcha } from '@/interface';
+import { useStorage } from '@/hooks/useStorage';
 
 const userStore = useUserStore();
+const { getStorage, setStorage } = useStorage('localStorage');
 const { currentRoute, push } = useRouter();
 const redirect = ref<string>('');
 watch(
@@ -79,8 +86,21 @@ let loginForm = reactive({
   captchaId: '',
 });
 onMounted(() => {
-  getVerifyCode();
+  initLogin();
 });
+
+// 记住密码
+const remember = ref<boolean>(userStore.getRememberMe);
+// 初始
+const initLogin = () => {
+  // 获取验证码
+  getVerifyCode();
+  const loginInfo = getStorage('loginInfo');
+  if (remember.value && loginInfo) {
+    loginForm.userName = loginInfo.userName;
+    loginForm.password = loginInfo.password;
+  }
+};
 // 验证码
 const verifyCodeData = ref<string | undefined>('');
 // 点击获取
@@ -113,13 +133,17 @@ const onSubmit = async () => {
     ElMessage.success('登录中...');
     const res: string = await loginApi(loginForm);
     if (res) {
+      if (remember.value) {
+        setStorage('loginInfo', {
+          userName: loginForm.userName,
+          password: loginForm.password,
+        });
+      }
       userStore.setToken(res);
       await fetchUserInfo();
       ElMessage.closeAll();
       push({ path: redirect.value || '/' });
     }
-  } catch (err) {
-    console.log('err: ', err);
   } finally {
     loading.value = false;
   }
@@ -163,9 +187,15 @@ const onSetStore = (info: UserState): void => {
       font-size: 20px;
     }
 
+    :deep(.el-input__wrapper) {
+      background: none;
+    }
+
     .item-verifycode {
       :deep(.el-form-item__content) {
-        @include flex-layout();
+        @include flex-layout($justify: space-between);
+
+        gap: 10px;
       }
     }
 

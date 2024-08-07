@@ -53,7 +53,7 @@ export const useUserStore = defineStore('User', {
     getPermissions(): string[] | undefined {
       return this.permissions;
     },
-    getRememberMe(): boolean | undefined {
+    getRememberMe(): boolean {
       return this.rememberMe;
     },
   },

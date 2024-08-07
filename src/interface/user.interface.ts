@@ -51,7 +51,7 @@ export interface UserState {
   /**
    * 记住我
    */
-  rememberMe?: boolean;
+  rememberMe: boolean;
 }
 
 /**
