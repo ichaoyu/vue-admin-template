@@ -624,7 +624,8 @@ const onCancelSelection = () => {
 
   &-pagination {
     align-self: flex-end;
-    margin-top: 15px;
+    height: var(--pagination-height);
+    margin-top: 10px;
   }
 
   .icon-btn-copy {
