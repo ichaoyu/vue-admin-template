@@ -130,8 +130,8 @@ const onSubmit = async () => {
       ElMessage.error('请输入完整登录信息');
       return;
     }
-    ElMessage.success('登录中...');
     const res: string = await loginApi(loginForm);
+    ElMessage.success('登录中...');
     if (res) {
       if (remember.value) {
         setStorage('loginInfo', {
