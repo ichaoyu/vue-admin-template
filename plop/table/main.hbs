@@ -52,7 +52,7 @@ import Table from '@/components/Table';
 import createDraw from './{{name}}.create.vue';
 
 import Columns from './{{name}}.columns';
-import { {{name}}Type } from '@/interface';
+import { {{UpperCaseName}}Type } from '@/interface';
 import { ElMessage } from 'element-plus';
 
 const { meta } = useRoute();
@@ -67,25 +67,25 @@ const onAddOne = () => {
   toggleShowDraw(true);
 };
 // 编辑
-const currentRecord = ref<{{name}}Type | null>(null);
-const edit = (row: {{name}}Type) => {
+const currentRecord = ref<{{UpperCaseName}}Type | null>(null);
+const edit = (row: {{UpperCaseName}}Type) => {
   currentRecord.value = row;
   toggleShowDraw(true);
 };
 // #region 删除
-const onDelete = async (row: {{name}}Type) => {
+const onDelete = async (row: {{UpperCaseName}}Type) => {
   const ids = [row.id!];
   handleDelete(ids);
 };
 // 批量删除
-const onBatchDelete = (data: {{name}}Type[]) => {
+const onBatchDelete = (data: {{UpperCaseName}}Type[]) => {
   const ids = data.map((item) => item.id!);
   handleDelete(ids);
 };
 // 删除操作
 const handleDelete = async (ids: string[] | number[]) => {
   try {
-    await del{{UpperCaseName}}Api({ ids });
+    await del{{FirstUpperCase}}Api({ ids });
     ElMessage.success('删除成功');
   } catch (err) {
     console.error(err);
@@ -95,7 +95,7 @@ const handleDelete = async (ids: string[] | number[]) => {
 };
 //#endregion 删除
 
-const data = ref<{{name}}Type[]>([]);
+const data = ref<{{UpperCaseName}}Type[]>([]);
 const columns = Columns;
 
 onMounted(() => {
@@ -135,7 +135,7 @@ const fetchTableList = async () => {
       pageSize: pageSize.value,
       keywords: keywords.value,
     };
-    const res = await get{{UpperCaseName}}ListApi(params);
+    const res = await get{{FirstUpperCase}}ListApi(params);
     data.value = res.list;
     total.value = res.total;
   } catch (err) {
@@ -146,7 +146,7 @@ const fetchTableList = async () => {
 };
 // #region 多选
 const selectData = ref<any[]>([]);
-const onSelection = (data: {{name}}Type[]) => {
+const onSelection = (data: {{UpperCaseName}}Type[]) => {
   selectData.value = data;
 };
 

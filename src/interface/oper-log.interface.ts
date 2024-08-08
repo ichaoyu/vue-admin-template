@@ -1,4 +1,4 @@
-export interface operLogType {
+export interface OperLogType {
   /**
    * 主键
    */

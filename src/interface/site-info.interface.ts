@@ -1,4 +1,4 @@
-export interface siteInfoType {
+export interface SiteInfoType {
   id?: number;
   /**
    * 网站名称

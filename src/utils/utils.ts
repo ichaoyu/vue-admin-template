@@ -42,3 +42,23 @@ export const getCssVar = (prop: string, dom = document.documentElement) => {
 export const humpToUnderline = (str: string): string => {
   return str.replace(/([A-Z])/g, '-$1').toLowerCase();
 };
+/**
+ * 首字母大写
+ */
+export const firstUpperCase = (str: string) => {
+  return str.toLowerCase().replace(/( |^)[a-z]/g, (L) => L.toUpperCase());
+};
+
+/**
+ * 字符转换为大写字母
+ * @param str 需要转换的字符串
+ * @param line 需要转换的符合，默认下划线
+ * @returns xxx_xxx -> XxxXxx
+ */
+export const line2Upper = (str: string, line: string = '_') => {
+  const Str = firstUpperCase(str);
+  const search = new RegExp(`${line}([a-z])`, 'g');
+  return Str.replace(search, (_, i) => {
+    return i.toUpperCase();
+  });
+};

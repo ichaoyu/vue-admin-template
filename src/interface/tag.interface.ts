@@ -1,4 +1,4 @@
-export interface tagType {
+export interface TagType {
   /**
    * ID
    */

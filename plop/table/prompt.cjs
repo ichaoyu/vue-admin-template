@@ -1,4 +1,5 @@
-const toUpperCase = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+// const toUpperCase = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+import { firstUpperCase, line2UpperCase } from '@/utils';
 module.exports = {
   description: 'Create nest Module',
   prompts: [
@@ -21,7 +22,8 @@ module.exports = {
   ],
   actions: (data) => {
     const { name, path, title } = data;
-    const UpperCaseName = toUpperCase(name);
+    const FirstUpperCase = firstUpperCase(name);
+    const UpperCaseName = line2UpperCase(name, '-');
 
     const actions = [];
     if (name && path && title) {
@@ -32,6 +34,7 @@ module.exports = {
           templateFile: './plop/table/index.hbs',
           data: {
             name,
+            FirstUpperCase,
             UpperCaseName,
           },
         },
@@ -44,6 +47,7 @@ module.exports = {
             path,
             name,
             title,
+            FirstUpperCase,
             UpperCaseName,
           },
         },
@@ -56,6 +60,7 @@ module.exports = {
             path,
             name,
             title,
+            FirstUpperCase,
             UpperCaseName,
           },
         },
@@ -68,6 +73,7 @@ module.exports = {
             path,
             name,
             title,
+            FirstUpperCase,
             UpperCaseName,
           },
         },

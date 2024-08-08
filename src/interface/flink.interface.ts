@@ -1,4 +1,4 @@
-export interface flinkType {
+export interface FlinkType {
   /**
    * ID
    */

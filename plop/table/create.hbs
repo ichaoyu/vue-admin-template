@@ -59,9 +59,9 @@
 </template>
 
 <script setup lang="ts">
-import { {{name}}Type } from '@/interface';
+import { {{UpperCaseName}}Type } from '@/interface';
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus';
-import { add{{UpperCaseName}}Api, update{{UpperCaseName}}Api } from '@/api/site.api';
+import { add{{FirstUpperCase}}Api, update{{FirstUpperCase}}Api } from '@/api/site.api';
 
 const props = defineProps({
   visible: {
@@ -69,7 +69,7 @@ const props = defineProps({
     default: false,
   },
   record: {
-    type: Object as PropType<{{name}}Type | null>,
+    type: Object as PropType<{{UpperCaseName}}Type | null>,
     default: () => null,
   },
 });
@@ -100,7 +100,7 @@ const onCancelVisible = () => {
   };
 };
 
-const ruleForm = ref<{{name}}Type>({
+const ruleForm = ref<{{UpperCaseName}}Type>({
   title: '',
   remark: '',
   sort: 0,
@@ -113,7 +113,7 @@ const checkLink = (_: any, value: any, callback: any) => {
     callback();
   }
 };
-const rules = reactive<FormRules<{{name}}Type>>({
+const rules = reactive<FormRules<{{UpperCaseName}}Type>>({
   title: [
     { required: true, message: '请输入名称', trigger: 'blur' },
     { min: 2, max: 20, message: '名称长度应在2~20范围内', trigger: 'blur' },
@@ -132,7 +132,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     if (valid) {
       try {
         loading.value = true;
-        const saveApi = props.record ? update{{UpperCaseName}}Api : add{{UpperCaseName}}Api;
+        const saveApi = props.record ? update{{FirstUpperCase}}Api : add{{FirstUpperCase}}Api;
         await saveApi(ruleForm.value);
         ElMessage.success('操作成功');
         onCancelVisible();
