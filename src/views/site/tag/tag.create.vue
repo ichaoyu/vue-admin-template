@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { tagType } from '@/interface';
+import { TagType } from '@/interface';
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus';
 import { addTagApi, updateTagApi } from '@/api/site.api';
 
@@ -54,7 +54,7 @@ const props = defineProps({
     default: false,
   },
   record: {
-    type: Object as PropType<tagType | null>,
+    type: Object as PropType<TagType | null>,
     default: () => null,
   },
 });
@@ -84,12 +84,12 @@ const onCancelVisible = () => {
   };
 };
 
-const ruleForm = ref<tagType>({
+const ruleForm = ref<TagType>({
   name: '',
   path: '',
 });
 // 校验
-const rules = reactive<FormRules<tagType>>({
+const rules = reactive<FormRules<TagType>>({
   name: [
     { required: true, message: '请输入名称', trigger: 'blur' },
     { min: 1, max: 15, message: '名称长度应在1~15范围内', trigger: 'blur' },

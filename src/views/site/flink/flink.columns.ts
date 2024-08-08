@@ -1,9 +1,9 @@
 import { dayjs } from 'element-plus';
-import { flinkType } from '@/interface';
+import { FlinkType } from '@/interface';
 import { TableColumn } from '@/components/Table/types';
 
 // 查看
-const onView = (row: flinkType) => {
+const onView = (row: FlinkType) => {
   window.open(row.link + '?from=vue', '_blank');
 };
 

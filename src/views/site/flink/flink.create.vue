@@ -62,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import { flinkType } from '@/interface';
+import { FlinkType } from '@/interface';
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus';
 import { isUrl } from '@/utils';
 import { addFlinkApi, updateFlinkApi } from '@/api/site.api';
@@ -73,7 +73,7 @@ const props = defineProps({
     default: false,
   },
   record: {
-    type: Object as PropType<flinkType | null>,
+    type: Object as PropType<FlinkType | null>,
     default: () => null,
   },
 });
@@ -105,7 +105,7 @@ const onCancelVisible = () => {
   };
 };
 
-const ruleForm = ref<flinkType>({
+const ruleForm = ref<FlinkType>({
   title: '',
   link: '',
   remark: '',
@@ -119,7 +119,7 @@ const checkLink = (_: any, value: any, callback: any) => {
     callback();
   }
 };
-const rules = reactive<FormRules<flinkType>>({
+const rules = reactive<FormRules<FlinkType>>({
   title: [
     { required: true, message: '请输入名称', trigger: 'blur' },
     { min: 2, max: 20, message: '名称长度应在2~20范围内', trigger: 'blur' },

@@ -59,7 +59,7 @@ import Table from '@/components/Table';
 import createDraw from './flink.create.vue';
 
 import Columns from './flink.columns';
-import { flinkType } from '@/interface';
+import { FlinkType } from '@/interface';
 import { ElMessage } from 'element-plus';
 
 const { meta } = useRoute();
@@ -74,18 +74,18 @@ const onAddOne = () => {
   toggleShowDraw(true);
 };
 // 编辑
-const currentRecord = ref<flinkType | null>(null);
-const edit = (row: flinkType) => {
+const currentRecord = ref<FlinkType | null>(null);
+const edit = (row: FlinkType) => {
   currentRecord.value = row;
   toggleShowDraw(true);
 };
 // #region 删除
-const onDelete = async (row: flinkType) => {
+const onDelete = async (row: FlinkType) => {
   const ids = [row.id!];
   handleDelete(ids);
 };
 // 批量删除
-const onBatchDelete = (data: flinkType[]) => {
+const onBatchDelete = (data: FlinkType[]) => {
   const ids = data.map((item) => item.id!);
   handleDelete(ids);
 };
@@ -102,7 +102,7 @@ const handleDelete = async (ids: string[] | number[]) => {
 };
 //#endregion 删除
 
-const data = ref<flinkType[]>([]);
+const data = ref<FlinkType[]>([]);
 const columns = Columns;
 
 onMounted(() => {
@@ -153,7 +153,7 @@ const fetchTableList = async () => {
 };
 // #region 多选
 const selectData = ref<any[]>([]);
-const onSelection = (data: flinkType[]) => {
+const onSelection = (data: FlinkType[]) => {
   selectData.value = data;
 };
 

@@ -79,14 +79,14 @@
 <script setup lang="ts" name="SiteConfig">
 import { ElMessage, type TabsPaneContext } from 'element-plus';
 import { getSiteInfoApi, updateSiteInfoApi } from '@/api/site.api';
-import { siteInfoType } from '@/interface';
+import { SiteInfoType } from '@/interface';
 const { meta } = useRoute();
 
 onMounted(async () => {
   await getSiteInfo();
 });
 
-const siteInfo = ref<siteInfoType>({
+const siteInfo = ref<SiteInfoType>({
   name: '',
   domain: '',
   email: '',

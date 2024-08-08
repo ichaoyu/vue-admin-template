@@ -52,7 +52,7 @@ import Table from '@/components/Table';
 import createDraw from './tag.create.vue';
 
 import Columns from './tag.columns';
-import { tagType } from '@/interface';
+import { TagType } from '@/interface';
 import { ElMessage } from 'element-plus';
 
 const { meta } = useRoute();
@@ -67,18 +67,18 @@ const onAddOne = () => {
   toggleShowDraw(true);
 };
 // 编辑
-const currentRecord = ref<tagType | null>(null);
-const edit = (row: tagType) => {
+const currentRecord = ref<TagType | null>(null);
+const edit = (row: TagType) => {
   currentRecord.value = row;
   toggleShowDraw(true);
 };
 // #region 删除
-const onDelete = async (row: tagType) => {
+const onDelete = async (row: TagType) => {
   const ids = [row.id!];
   handleDelete(ids);
 };
 // 批量删除
-const onBatchDelete = (data: tagType[]) => {
+const onBatchDelete = (data: TagType[]) => {
   const ids = data.map((item) => item.id!);
   handleDelete(ids);
 };
@@ -95,7 +95,7 @@ const handleDelete = async (ids: string[] | number[]) => {
 };
 //#endregion 删除
 
-const data = ref<tagType[]>([]);
+const data = ref<TagType[]>([]);
 const columns = Columns;
 
 onMounted(() => {
@@ -146,7 +146,7 @@ const fetchTableList = async () => {
 };
 // #region 多选
 const selectData = ref<any[]>([]);
-const onSelection = (data: tagType[]) => {
+const onSelection = (data: TagType[]) => {
   selectData.value = data;
 };
 
