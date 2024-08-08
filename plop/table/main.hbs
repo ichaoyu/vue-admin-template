@@ -85,7 +85,7 @@ const onBatchDelete = (data: {{UpperCaseName}}Type[]) => {
 // 删除操作
 const handleDelete = async (ids: string[] | number[]) => {
   try {
-    await del{{FirstUpperCase}}Api({ ids });
+    await del{{UpperCaseName}}Api({ ids });
     ElMessage.success('删除成功');
   } catch (err) {
     console.error(err);
@@ -135,7 +135,7 @@ const fetchTableList = async () => {
       pageSize: pageSize.value,
       keywords: keywords.value,
     };
-    const res = await get{{FirstUpperCase}}ListApi(params);
+    const res = await get{{UpperCaseName}}ListApi(params);
     data.value = res.list;
     total.value = res.total;
   } catch (err) {

@@ -1,5 +1,13 @@
-// const toUpperCase = (str) => str.charAt(0).toUpperCase() + str.slice(1);
-import { firstUpperCase, line2UpperCase } from '@/utils';
+const firstUpperCase = (str) => {
+  return str.toLowerCase().replace(/( |^)[a-z]/g, (L) => L.toUpperCase());
+};
+const line2UpperCase = (str, line = '-') => {
+  const Str = firstUpperCase(str);
+  const search = new RegExp(`${line}([a-z])`, 'g');
+  return Str.replace(search, (_, i) => {
+    return i.toUpperCase();
+  });
+};
 module.exports = {
   description: 'Create nest Module',
   prompts: [
@@ -23,7 +31,7 @@ module.exports = {
   actions: (data) => {
     const { name, path, title } = data;
     const FirstUpperCase = firstUpperCase(name);
-    const UpperCaseName = line2UpperCase(name, '-');
+    const UpperCaseName = line2UpperCase(name);
 
     const actions = [];
     if (name && path && title) {
