@@ -36,8 +36,10 @@ const Columns = [
     key: 'configType',
     label: '系统内置',
     dictMap: {
-      Y: '是',
-      N: '否',
+      value: {
+        Y: '是',
+        N: '否',
+      },
     },
   },
   {

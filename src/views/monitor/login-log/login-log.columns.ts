@@ -23,8 +23,14 @@ const Columns: TableColumn[] = [
     key: 'status',
     label: '登录状态',
     dictMap: {
-      0: '成功',
-      1: '失败',
+      value: {
+        0: '成功',
+        1: '失败',
+      },
+      color: {
+        0: 'var(--el-color-primary)',
+        1: 'var(--el-color-danger)',
+      },
     },
   },
   {
