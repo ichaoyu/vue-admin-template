@@ -122,8 +122,8 @@ let currentPage = ref<number>(1);
 let pageSize = ref<number>(20);
 // 分页
 const onPageChange = ({ page, size }) => {
-  currentPage = page ?? currentPage.value;
-  pageSize = size ?? pageSize.value;
+  currentPage.value = page ?? currentPage.value;
+  pageSize.value = size ?? pageSize.value;
   fetchTableList();
 };
 
