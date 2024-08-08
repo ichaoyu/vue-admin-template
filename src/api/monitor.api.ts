@@ -1,9 +1,10 @@
 import { request } from '@/utils';
 import {
   LoginLogType,
-  operLogType,
+  OperLogType,
   OnlineInfoType,
   CacheModelType,
+  DelType,
 } from '@/interface';
 interface KeyType {
   key: string;
@@ -13,33 +14,31 @@ interface NameType {
 }
 // #region 登录日志接口
 // 登录日志分页
-export const getLoginLogApi = (
-  params: any,
-): Promise<IResponse<LoginLogType>> => {
-  return request.post({ url: '/api/monitor/loginLog/page', params });
+export const getLoginLogApi = (data: any): Promise<PageVO<LoginLogType>> => {
+  return request.post({ url: '/api/monitor/loginLog/page', data });
 };
 // 导出登录日志分页
-export const exportLoginLogApi = (
-  params: any,
-): Promise<IResponse<LoginLogType>> => {
-  return request.post({ url: '/api/monitor/loginLog/export', params });
+export const exportLoginLogApi = (data: any): Promise<PageVO<LoginLogType>> => {
+  return request.post({ url: '/api/monitor/loginLog/export', data });
 };
 // 删除登录日志
 // 无参数则是清空日志
-export const delLoginLogApi = (
-  params: any,
-): Promise<IResponse<LoginLogType>> => {
-  return request.post({ url: '/api/monitor/loginLog/delete', params });
+export const delLoginLogApi = (data: DelType): Promise<any> => {
+  return request.delete({ url: '/api/monitor/loginLog/delete', data });
+};
+// 清空登录日志
+export const clearLoginLogApi = (): Promise<any> => {
+  return request.delete({ url: '/api/monitor/loginLog/clear' });
 };
 // #endregion 登录日志接口
 
 // #region 操作日志接口
 // 操作日志分页
-export const getOperLogApi = (params: any): Promise<PageVO<operLogType>> => {
+export const getOperLogApi = (params: any): Promise<PageVO<OperLogType>> => {
   return request.post({ url: '/api/monitor/operLog/page', params });
 };
 // 导出日志分页
-export const exportOperLogApi = (params: any): Promise<PageVO<operLogType>> => {
+export const exportOperLogApi = (params: any): Promise<PageVO<OperLogType>> => {
   return request.post({ url: '/api/monitor/operLog/export', params });
 };
 

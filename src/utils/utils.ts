@@ -62,3 +62,24 @@ export const line2Upper = (str: string, line: string = '_') => {
     return i.toUpperCase();
   });
 };
+
+/**
+ * 下载文件流
+ */
+export const downloadFile = (res: any, filename = '') => {
+  const data = res.body;
+  const name =
+    filename ||
+    decodeURIComponent(res.headers['content-disposition'].split('=')[1]);
+
+  const unit8array = new Uint8Array(data.data);
+  const blob = new Blob([unit8array], { type: 'application/octet-stream' });
+
+  const href = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.style.display = 'none';
+  a.href = href;
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
