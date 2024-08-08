@@ -42,7 +42,10 @@ export interface TableColumn {
   key: string;
   label?: string;
   type?: string;
-  dictMap?: object;
+  dictMap?: {
+    value: object;
+    color?: object;
+  };
   render?: (...args: any[]) => any;
   copyFN?: (...args: any[]) => any;
   oprAction?: (...args: any[]) => any;

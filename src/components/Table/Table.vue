@@ -89,7 +89,14 @@
             </template>
             <!-- 字典map -->
             <template v-if="item.dictMap">
-              {{ item.dictMap[scope.row[item.key]] }}
+              <span
+                v-if="item.dictMap.color"
+                :style="{ color: item.dictMap.color[scope.row[item.key]] }"
+                >{{ item.dictMap.value[scope.row[item.key]] }}</span
+              >
+              <template v-else>{{
+                item.dictMap.value[scope.row[item.key]]
+              }}</template>
             </template>
 
             <!-- 链接查看 -->
