@@ -71,7 +71,16 @@
       />
       <!-- 表格主体内容 -->
       <template v-for="item in columnsSettings" :key="item.key">
-        <el-table-column :column="item" :label="item.label" :width="item.width">
+        <el-table-column
+          :label="item.label"
+          :width="item.width"
+          :type="item.type"
+          :prop="item.key"
+          :min-width="item['min-width'] || item.minWidth"
+          :sortable="item.sortable"
+          :align="item.align"
+          :fixed="item.fixed"
+        >
           <template #header>{{ item.label }}</template>
           <template #default="scope">
             <!-- 自定义插槽 -->

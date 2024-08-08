@@ -63,6 +63,7 @@ const Columns: TableColumn[] = [
   {
     key: 'status',
     label: '状态',
+    sortable: true,
     dictMap: {
       value: {
         0: '正常',
@@ -81,12 +82,16 @@ const Columns: TableColumn[] = [
   {
     key: 'operTime',
     label: '操作时间',
+    sortable: true,
+    minWidth: 90,
     render: (value: Date | null) =>
       value ? dayjs(value).format('YYYY-MM-DD HH:mm:ss') : '',
   },
   {
     key: 'costTime',
     label: '消耗时间',
+    sortable: true,
+    minWidth: 90,
     render: (value: Date | null) => (value ? value + 'ms' : ''),
   },
 ];
