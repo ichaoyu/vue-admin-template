@@ -89,14 +89,14 @@
             </template>
             <!-- 字典map -->
             <template v-if="item.dictMap">
-              <span
+              <i
                 v-if="item.dictMap.color"
-                :style="{ color: item.dictMap.color[scope.row[item.key]] }"
-                >{{ item.dictMap.value[scope.row[item.key]] }}</span
-              >
-              <template v-else>{{
-                item.dictMap.value[scope.row[item.key]]
-              }}</template>
+                class="dict-dot"
+                :style="{
+                  backgroundColor: item.dictMap.color[scope.row[item.key]],
+                }"
+              ></i
+              >{{ item.dictMap.value[scope.row[item.key]] }}
             </template>
 
             <!-- 链接查看 -->
@@ -644,6 +644,14 @@ const onCancelSelection = () => {
     top: 30%;
     right: 0;
     margin-left: 6px;
+  }
+
+  .dict-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-right: 4px;
+    border-radius: 100%;
   }
 }
 </style>
