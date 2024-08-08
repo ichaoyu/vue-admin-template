@@ -297,7 +297,7 @@ export const asyncRouter: AppRouteRecordRaw[] = [
       {
         path: 'loginLog',
         name: 'MonitorLoginLogIndex',
-        component: () => import('@/views/demo'),
+        component: () => import('@/views/monitor/login-log'),
         meta: {
           title: '登录日志',
           sort: 7,
@@ -321,7 +321,7 @@ export const asyncRouter: AppRouteRecordRaw[] = [
       {
         path: 'operLog',
         name: 'MonitorOperLogIndex',
-        component: () => import('@/views/demo'),
+        component: () => import('@/views/monitor/oper-log'),
         meta: {
           title: '操作日志',
           sort: 9,

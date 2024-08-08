@@ -22,7 +22,6 @@ export const exportLoginLogApi = (data: any): Promise<PageVO<LoginLogType>> => {
   return request.post({ url: '/api/monitor/loginLog/export', data });
 };
 // 删除登录日志
-// 无参数则是清空日志
 export const delLoginLogApi = (data: DelType): Promise<any> => {
   return request.delete({ url: '/api/monitor/loginLog/delete', data });
 };
@@ -34,18 +33,21 @@ export const clearLoginLogApi = (): Promise<any> => {
 
 // #region 操作日志接口
 // 操作日志分页
-export const getOperLogApi = (params: any): Promise<PageVO<OperLogType>> => {
-  return request.post({ url: '/api/monitor/operLog/page', params });
+export const getOperLogListApi = (data: any): Promise<PageVO<OperLogType>> => {
+  return request.post({ url: '/api/monitor/operLog/page', data });
 };
 // 导出日志分页
-export const exportOperLogApi = (params: any): Promise<PageVO<OperLogType>> => {
-  return request.post({ url: '/api/monitor/operLog/export', params });
+export const exportOperLogApi = (data: any): Promise<PageVO<OperLogType>> => {
+  return request.post({ url: '/api/monitor/operLog/export', data });
 };
 
 // 删除操作日志
-// 无参数则是清空日志
-export const delOperLogApi = (params: string[] | null): Promise<any> => {
-  return request.delete({ url: '/api/monitor/operLog/delete', params });
+export const delOperLogApi = (data: DelType): Promise<any> => {
+  return request.delete({ url: '/api/monitor/operLog/delete', data });
+};
+// 清空登录日志
+export const clearOperLogApi = (): Promise<any> => {
+  return request.delete({ url: '/api/monitor/operLog/clear' });
 };
 // #endregion 登录日志接口
 
