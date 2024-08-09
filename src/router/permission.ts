@@ -10,7 +10,6 @@ const NO_REDIRECT_WHITE_LIST = ['/login'];
 
 //全局前置守卫
 router.beforeEach(async (to: any, from: any, next: any) => {
-  console.log('to: ', to);
   start();
   const { getRoles, getToken } = useUserStoreOut();
   let hasPermission = true;

@@ -1,10 +1,13 @@
 <template>
-  <page-container :title="meta.title" class="table-container">
+  <page-container :title="typeRecord.dictName" class="table-container">
+    <template #header>
+      <el-button text @click="onBack">返回</el-button>
+    </template>
     <Table
       class="common-table"
       v-loading="loading"
       selection
-      :columns="TypeColumns"
+      :columns="DataColumns"
       :data="data"
       :currentPage="currentPage"
       :pageSize="pageSize"
@@ -19,9 +22,9 @@
           <div class="search-box">
             <div class="search-form">
               <el-input
-                placeholder="请输入名称或链接"
+                placeholder="请输入字典标签"
                 clearable
-                v-model="dictName"
+                v-model="dictLabel"
                 @clear="onReset"
               />
             </div>
@@ -35,7 +38,7 @@
           </div>
         </div>
       </template>
-      <template #dictName="{ scope }">{{ scope.row.dictName }}</template>
+      <template #dictName="{ scope }">{{ scope.row.dictLabel }}</template>
       <template #status="{ scope }">
         <el-switch
           v-model="scope.row.status"
@@ -58,19 +61,24 @@
 
 <script setup lang="ts">
 import {
-  getDictTypeListApi,
-  delDictTypeApi,
-  updateDictTypeApi,
+  getDictDataListApi,
+  delDictDataApi,
+  updateDictDataApi,
+  getDictTypeApi,
 } from '@/api/dict.api';
 import Table from '@/components/Table';
-import createDraw from './dict.create.vue';
+import createDraw from './dict-data.create.vue';
 
-import { TypeColumns } from './dict.columns';
-import { DictTypeType } from '@/interface';
+import { DataColumns } from './dict.columns';
+import { DictDataType, DictTypeType } from '@/interface';
 import { ElMessage } from 'element-plus';
 
-const { meta } = useRoute();
-
+// const { meta } = useRoute();
+// 返回
+const router = useRouter();
+const onBack = () => {
+  router.push('/system/dictType');
+};
 // 新增
 const isShowDraw = ref<boolean>(false);
 const toggleShowDraw = (v: boolean) => {
@@ -81,36 +89,36 @@ const onAddOne = () => {
   toggleShowDraw(true);
 };
 // 编辑
-const currentRecord = ref<DictTypeType | null>(null);
-const edit = (row: DictTypeType) => {
+const currentRecord = ref<DictDataType | null>(null);
+const edit = (row: DictDataType) => {
   currentRecord.value = row;
   toggleShowDraw(true);
 };
 // 修改状态
 const statusLoading = ref<boolean>(false);
-const onChangeStatus = async (row: DictTypeType) => {
+const onChangeStatus = async (row: DictDataType) => {
   try {
     statusLoading.value = true;
-    await updateDictTypeApi(row);
+    await updateDictDataApi(row);
   } finally {
     statusLoading.value = false;
     fetchTableList();
   }
 };
 // #region 删除
-const onDelete = async (row: DictTypeType) => {
+const onDelete = async (row: DictDataType) => {
   const ids = [row.id!];
   handleDelete(ids);
 };
 // 批量删除
-const onBatchDelete = (data: DictTypeType[]) => {
+const onBatchDelete = (data: DictDataType[]) => {
   const ids = data.map((item) => item.id!);
   handleDelete(ids);
 };
 // 删除操作
 const handleDelete = async (ids: string[] | number[]) => {
   try {
-    await delDictTypeApi({ ids });
+    await delDictDataApi({ ids });
     ElMessage.success('删除成功');
   } catch (err) {
     console.error(err);
@@ -120,13 +128,27 @@ const handleDelete = async (ids: string[] | number[]) => {
 };
 //#endregion 删除
 
-const data = ref<DictTypeType[]>([]);
+const typeRecord = ref<DictTypeType>({});
+const data = ref<DictDataType[]>([]);
 
 onMounted(() => {
-  fetchTableList();
+  getDictTypeRecord();
 });
+// 根据id获取字典类型
+const getDictTypeRecord = async () => {
+  try {
+    loading.value = true;
+    const { params } = useRoute();
+    const { id } = params;
+    const res = await getDictTypeApi(id);
+    typeRecord.value = res;
+    fetchTableList();
+  } finally {
+    loading.value = false;
+  }
+};
 // 搜索
-const dictName = ref<string>('');
+const dictLabel = ref<string>('');
 const onSearch = () => {
   currentPage.value = 1;
   pageSize.value = 20;
@@ -134,7 +156,7 @@ const onSearch = () => {
 };
 // 重置
 const onReset = () => {
-  dictName.value = '';
+  dictLabel.value = '';
   currentPage.value = 1;
   pageSize.value = 20;
   fetchTableList();
@@ -157,9 +179,10 @@ const fetchTableList = async () => {
     const params: PageDTO = {
       pageNum: currentPage.value,
       pageSize: pageSize.value,
-      dictName: dictName.value,
+      dictType: typeRecord.value.dictType,
+      dictLabel: dictLabel.value ? dictLabel.value : null,
     };
-    const res = await getDictTypeListApi(params);
+    const res = await getDictDataListApi(params);
     data.value = res.list;
     total.value = res.total;
   } catch (err) {
@@ -170,7 +193,7 @@ const fetchTableList = async () => {
 };
 // #region 多选
 const selectData = ref<any[]>([]);
-const onSelection = (data: DictTypeType[]) => {
+const onSelection = (data: DictDataType[]) => {
   selectData.value = data;
 };
 

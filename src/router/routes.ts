@@ -246,6 +246,18 @@ export const asyncRouter: AppRouteRecordRaw[] = [
         },
       },
       {
+        path: 'dictData/:id',
+        name: 'SystemDictDataIndex',
+        component: () => import('@/views/system/dict/dict-data.vue'),
+        meta: {
+          title: '字典数据',
+          sort: 14,
+          hidden: true,
+          noCache: true,
+          alwaysShow: false,
+        },
+      },
+      {
         path: 'config',
         name: 'SystemConfigIndex',
         component: () => import('@/views/system/config'),
@@ -264,18 +276,6 @@ export const asyncRouter: AppRouteRecordRaw[] = [
         meta: {
           title: '分配用户',
           sort: 13,
-          hidden: true,
-          noCache: true,
-          alwaysShow: false,
-        },
-      },
-      {
-        path: 'dictData/:id',
-        name: 'SystemDictDataIndex',
-        component: () => import('@/views/demo'),
-        meta: {
-          title: '字典数据',
-          sort: 14,
           hidden: true,
           noCache: true,
           alwaysShow: false,

@@ -1,40 +1,65 @@
-import { dayjs, ElMessage } from 'element-plus';
-import { useClipboard } from '@/hooks/useClipboard';
+import { dayjs } from 'element-plus';
+import { TableColumn } from '@/components/Table/types';
+import { DictTypeType } from '@/interface';
+import router from '@/router';
 
-// 复制
-const { copy, copied, isSupported } = useClipboard();
-const onCopyItem = (row: string) => {
-  if (!isSupported.value) {
-    ElMessage.error('你的浏览器不支持 Clipboard API');
-    return;
-  }
-  copy(row);
-  copied && ElMessage.success('复制成功');
+const onView = (row: DictTypeType) => {
+  router.push({ path: `/system/dictData/${row.id}` });
 };
 
-const Columns = [
+export const TypeColumns: TableColumn[] = [
   {
     key: 'id',
     label: 'ID',
     width: 50,
   },
   {
-    key: 'configName',
-    label: '参数名称',
-    oprAction: 'onView',
+    key: 'dictName',
+    label: '字典名称',
+    alotName: 'dictName',
+    oprAction: onView,
   },
   {
-    key: 'configKey',
-    label: '参数键名',
-    copy: onCopyItem,
+    key: 'dictType',
+    label: '字典类型',
   },
   {
-    key: 'configValue',
-    label: '参数键值',
+    key: 'status',
+    label: '状态',
+    slotName: 'status',
   },
   {
-    key: 'configType',
-    label: '系统内置',
+    key: 'remark',
+    label: '备注',
+  },
+  {
+    key: 'updateTime',
+    label: '更新时间',
+    render: (value: Date | null) =>
+      value ? dayjs(value).format('YYYY-MM-DD HH:mm:ss') : '',
+  },
+];
+
+export const DataColumns: TableColumn[] = [
+  {
+    key: 'id',
+    label: 'ID',
+  },
+  {
+    key: 'dictLabel',
+    label: '字典标签',
+  },
+  {
+    key: 'dictValue',
+    label: '字典键值',
+  },
+  {
+    key: 'dictType',
+    label: '字典类型',
+  },
+  {
+    key: 'isDefault',
+    label: '是否默认',
     dictMap: {
       value: {
         Y: '是',
@@ -43,14 +68,23 @@ const Columns = [
     },
   },
   {
-    key: 'createTime',
-    label: '创建时间',
-    render: (value: Date) => dayjs(value).format('YYYY-MM-DD HH:mm:ss'),
+    key: 'status',
+    label: '状态',
+    dictMap: {
+      value: {
+        0: '正常',
+        1: '停用',
+      },
+    },
   },
   {
     key: 'remark',
     label: '备注',
   },
+  {
+    key: 'updateTime',
+    label: '更新时间',
+    render: (value: Date | null) =>
+      value ? dayjs(value).format('YYYY-MM-DD HH:mm:ss') : '',
+  },
 ];
-
-export default Columns;
