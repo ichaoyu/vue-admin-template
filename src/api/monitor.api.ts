@@ -2,7 +2,7 @@ import { request } from '@/utils';
 import {
   LoginLogType,
   OperLogType,
-  OnlineInfoType,
+  OnlineType,
   CacheModelType,
   DelType,
 } from '@/interface';
@@ -53,14 +53,12 @@ export const clearOperLogApi = (): Promise<any> => {
 
 //#region 在线用户接口
 // 获取在线用户分页
-export const getOnlineApi = (
-  params: string[] | null,
-): Promise<PageVO<OnlineInfoType>> => {
-  return request.post({ url: '/api/monitor/online/page', params });
+export const getOnlineListApi = (data: any): Promise<PageVO<OnlineType>> => {
+  return request.post({ url: '/api/monitor/online/page', data });
 };
 // 用户下线
-export const delOnlineApi = (params: string[] | null): Promise<any> => {
-  return request.delete({ url: '/api/monitor/online', params });
+export const delOnlineApi = (id: string): Promise<any> => {
+  return request.delete({ url: `/api/monitor/online`, params: { id } });
 };
 //#endregion 在线用户接口
 

@@ -1,38 +1,38 @@
-export interface OnlineInfoType {
+export interface OnlineType {
   /**
    * 会话编号
    */
-  tokenId: string;
+  tokenId?: string;
   /**
    * 用户编号
    */
-  userId: string;
+  userId?: string;
   /**
    * 用户账号
    */
-  userName: string;
+  userName?: string;
   /**
    * 部门名称
    */
-  deptName: string;
+  deptName?: string;
   /**
    * 登录IP
    */
-  loginIp: string;
+  loginIp?: string;
   /**
    * 登录地点
    */
-  loginLocation: string;
+  loginLocation?: string;
   /**
    * 操作系统
    */
-  os: string;
+  os?: string;
   /**
    * 浏览器
    */
-  browser: string;
+  browser?: string;
   /**
    * 登录时间
    */
-  loginDate: Date;
+  loginDate?: Date;
 }

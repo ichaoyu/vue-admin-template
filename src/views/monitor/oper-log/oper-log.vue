@@ -117,7 +117,7 @@ const onPageChange = ({ page, size }) => {
 const fetchTableList = async () => {
   loading.value = true;
   try {
-    const params: PageDTO = {
+    const params: PageDTO<OperLogType> = {
       pageNum: currentPage.value,
       pageSize: pageSize.value,
       title: title.value,

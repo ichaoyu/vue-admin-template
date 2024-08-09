@@ -309,7 +309,7 @@ export const asyncRouter: AppRouteRecordRaw[] = [
       {
         path: 'online',
         name: 'MonitorOnlineIndex',
-        component: () => import('@/views/demo'),
+        component: () => import('@/views/monitor/online'),
         meta: {
           title: '在线用户',
           sort: 8,

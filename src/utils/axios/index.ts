@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElNotification } from 'element-plus';
 import qs from 'qs';
 import { objToFormData } from '@/utils';
 import {
@@ -93,11 +93,15 @@ axiosInstance.interceptors.response.use(
       error?.message ??
       error?.statusText ??
       '请求失败';
-    //提示错误信息
-    ElMessage.error(errorMsg);
+
     // 无权限 阻断操作 跳转到登录页
     if (error?.response?.status === 401) {
+      ElNotification.error('登录已过期，请重新登录！');
+      sessionStorage.clear();
       return false;
+    } else {
+      //提示错误信息
+      ElMessage.error(errorMsg);
     }
     return Promise.reject(error);
   },

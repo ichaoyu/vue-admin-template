@@ -54,7 +54,7 @@ declare global {
     list: T[];
   }
 
-  declare interface PageDTO {
+  declare interface PageDTO<T = any> {
     pageNum: number;
     pageSize: number;
     [key: string]: any;
