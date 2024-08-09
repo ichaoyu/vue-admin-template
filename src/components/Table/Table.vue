@@ -50,6 +50,10 @@
       :show-overflow-tooltip="props.showOverflowTooltip"
       @selection-change="handleSelectionChange"
     >
+      <!-- 折叠 -->
+      <el-table-column v-if="props.expand" type="expand" fixed>
+        <slot name="expand"></slot>
+      </el-table-column>
       <!-- 复选框 -->
       <el-table-column
         v-if="props.selection"
@@ -57,16 +61,6 @@
           type: 'selection',
           width: 45,
           fixed: true,
-        }"
-      />
-      <!-- 序号 -->
-      <el-table-column
-        v-if="props.index"
-        v-bind="{
-          type: 'index',
-          width: 60,
-          fixed: true,
-          label: '序号',
         }"
       />
       <!-- 表格主体内容 -->
@@ -200,6 +194,11 @@ import {
 } from './types';
 const props = defineProps({
   loading: {
+    type: Boolean,
+    default: false,
+  },
+  // 折叠
+  expand: {
     type: Boolean,
     default: false,
   },

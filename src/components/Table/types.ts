@@ -50,6 +50,7 @@ export interface TableColumn {
   copyFN?: (...args: any[]) => any;
   oprAction?: (...args: any[]) => any;
   copy?: boolean;
+  slotName?: string;
 
   /**
    * 是否隐藏
