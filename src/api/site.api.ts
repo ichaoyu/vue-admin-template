@@ -6,6 +6,7 @@ import {
   DelType,
   TagType,
   MessageType,
+  type ArticleType,
 } from '@/interface';
 
 //#region 网站配置
@@ -85,3 +86,22 @@ export const delMessageApi = (data: DelType): Promise<any> => {
 };
 
 //#endregion消息管理
+
+//#region 文章管理
+// 获取文章列表分页
+export const getArticleListApi = (data: any): Promise<PageVO<ArticleType>> => {
+  return request.post({ url: '/api/website/article/list', data });
+};
+// 删除文章
+export const delArticleApi = (data: DelType): Promise<any> => {
+  return request.delete({ url: '/api/website/article/delete', data });
+};
+// 新建文章
+export const addArticleApi = (data: ArticleType): Promise<any> => {
+  return request.post({ url: '/api/website/article/add', data });
+};
+// 更新文章
+export const updateArticleApi = (data: ArticleType): Promise<any> => {
+  return request.put({ url: '/api/website/article/update', data });
+};
+//#endregion文章管理

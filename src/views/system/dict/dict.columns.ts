@@ -75,6 +75,10 @@ export const DataColumns: TableColumn[] = [
         0: '正常',
         1: '停用',
       },
+      color: {
+        0: 'var(--el-color-primary)',
+        1: 'var(--el-color-danger)',
+      },
     },
   },
   {

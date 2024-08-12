@@ -144,7 +144,7 @@ export const asyncRouter: AppRouteRecordRaw[] = [
       {
         path: 'article',
         name: 'ArticleList',
-        component: () => import('@/views/demo'),
+        component: () => import('@/views/site/article'),
         meta: {
           title: '文章管理',
         },
