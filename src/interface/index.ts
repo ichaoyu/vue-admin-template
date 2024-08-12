@@ -10,3 +10,4 @@ export * from './online.interface';
 export * from './cache.interface';
 export * from './tag.interface';
 export * from './dict.interface';
+export * from './message.interface';

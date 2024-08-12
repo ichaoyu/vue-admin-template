@@ -1,6 +1,12 @@
 import { request } from '@/utils';
 
-import { SiteInfoType, FlinkType, DelType, TagType } from '@/interface';
+import {
+  SiteInfoType,
+  FlinkType,
+  DelType,
+  TagType,
+  MessageType,
+} from '@/interface';
 
 //#region 网站配置
 // 获取网站配置
@@ -66,3 +72,16 @@ export const delTagApi = (data: DelType): Promise<any> => {
   return request.delete({ url: '/api/website/tag/delete', data });
 };
 //#endregion标签管理
+
+//#region 消息管理
+// 获取消息列表分页
+export const getMessageListApi = (data: any): Promise<PageVO<MessageType>> => {
+  return request.post({ url: '/api/website/message/list', data });
+};
+
+// 删除消息
+export const delMessageApi = (data: DelType): Promise<any> => {
+  return request.delete({ url: '/api/website/message/delete', data });
+};
+
+//#endregion消息管理

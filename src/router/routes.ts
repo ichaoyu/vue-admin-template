@@ -116,7 +116,7 @@ export const asyncRouter: AppRouteRecordRaw[] = [
       {
         path: 'message',
         name: 'WebsiteMessage',
-        component: () => import('@/views/demo'),
+        component: () => import('@/views/site/message'),
         meta: {
           title: '消息管理',
         },
