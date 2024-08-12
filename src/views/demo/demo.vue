@@ -11,4 +11,13 @@
 </template>
 <script setup lang="ts">
 const { name, meta } = useRoute();
+import { ws } from '@/utils';
+
+const handleMessage = (event) => {
+  const { data } = JSON.parse(event.data);
+  console.log('data: ', data);
+};
+ws.send('serverInfo');
+
+ws.client?.addEventListener('message', handleMessage);
 </script>
