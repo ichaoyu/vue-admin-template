@@ -345,7 +345,7 @@ export const asyncRouter: AppRouteRecordRaw[] = [
       {
         path: 'server',
         name: 'MonitorServerIndex',
-        component: () => import('@/views/demo'),
+        component: () => import('@/views/monitor/server'),
         meta: {
           title: '服务监控',
           sort: 13,
