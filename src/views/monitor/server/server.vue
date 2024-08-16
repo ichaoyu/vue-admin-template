@@ -243,7 +243,7 @@
                   </el-table-column>
                   <el-table-column label="已用百分比">
                     <template #default="{ row }">{{
-                      filterPercent(row.used)
+                      ((row.used / row.size) * 100).toFixed(3) + '%'
                     }}</template>
                   </el-table-column>
                 </el-table>
