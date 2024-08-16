@@ -4,6 +4,7 @@ import {
   OperLogType,
   OnlineType,
   CacheModelType,
+  CacheValueType,
   DelType,
 } from '@/interface';
 interface KeyType {
@@ -64,20 +65,20 @@ export const delOnlineApi = (id: string): Promise<any> => {
 
 // #region 缓存接口
 // 获取缓存名称列表
-export const getCacheListApi = (): Promise<CacheModelType> => {
+export const getCacheListApi = (): Promise<CacheModelType[]> => {
   return request.get({ url: '/api/monitor/cache/getNames' });
 };
 // 通过名称获取获取缓存键名列表
-export const getCacheKeyApi = (params: NameType): Promise<CacheModelType> => {
+export const getCacheKeyApi = (params: NameType): Promise<any[]> => {
   return request.get({ url: '/api/monitor/cache/getKeys', params });
+};
+// 通过键名获取缓存值
+export const getCacheValueApi = (params: KeyType): Promise<CacheValueType> => {
+  return request.get({ url: '/api/monitor/cache/value', params });
 };
 // 通过名称清除缓存
 export const delCacheByNameApi = (params: NameType): Promise<any> => {
   return request.delete({ url: '/api/monitor/cache/clearName', params });
-};
-// 通过键名获取缓存值
-export const getCacheValueApi = (params: KeyType): Promise<CacheModelType> => {
-  return request.get({ url: '/api/monitor/cache/value', params });
 };
 // 通过键名清除缓存
 export const delCacheByKeyApi = (params: KeyType): Promise<any> => {

@@ -333,7 +333,7 @@ export const asyncRouter: AppRouteRecordRaw[] = [
       {
         path: 'cacheList',
         name: 'MonitorCacheListIndex',
-        component: () => import('@/views/demo'),
+        component: () => import('@/views/monitor/cache-list'),
         meta: {
           title: '缓存列表',
           sort: 12,
