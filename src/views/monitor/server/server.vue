@@ -20,7 +20,7 @@
                   <el-table-column label="属性" prop="key" />
                   <el-table-column label="值" prop="value">
                     <template #default="{ row, $index }">
-                      {{ $index === 0 ? row.value : filterPercent(row.value) }}
+                      {{ $index === 0 ? row.value : row.value + '%' }}
                     </template>
                   </el-table-column>
                 </el-table>
@@ -243,7 +243,7 @@
                   </el-table-column>
                   <el-table-column label="已用百分比">
                     <template #default="{ row }">{{
-                      ((row.used / row.size) * 100).toFixed(3) + '%'
+                      filterPercent(row.used / row.size)
                     }}</template>
                   </el-table-column>
                 </el-table>
@@ -289,7 +289,7 @@ const filterSize = (size: number) => {
 };
 
 const filterPercent = (percent: number) => {
-  return `${percent}%`;
+  return `${(percent * 100).toPrecision(4)}%`;
 };
 
 const filterValue = (value: number) => {

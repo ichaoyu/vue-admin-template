@@ -90,6 +90,8 @@ export class WebSocketClient extends EventDispatcher {
       const data = JSON.parse(event.data);
       if (data?.event === 'error') {
         ElMessage.error(data?.data?.msg);
+        this.close();
+        return;
       }
       this.dispatchEvent('message', event);
       this.startHeartbeat();
