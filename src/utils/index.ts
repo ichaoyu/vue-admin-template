@@ -4,7 +4,7 @@ export * from './tree';
 export * from './is';
 export * from './color';
 export * from './routerHelper';
-// export * from './ws';
+export * from './date';
 export * from './websocket';
 
 export { request };
