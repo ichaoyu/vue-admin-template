@@ -1,3 +1,4 @@
+import { ElMessage } from 'element-plus';
 import { EventDispatcher } from './dispatcher';
 import { useUserStore } from '@/store/modules/user';
 
@@ -86,6 +87,10 @@ export class WebSocketClient extends EventDispatcher {
     };
 
     this.socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data?.event === 'error') {
+        ElMessage.error(data?.data?.msg);
+      }
       this.dispatchEvent('message', event);
       this.startHeartbeat();
     };
