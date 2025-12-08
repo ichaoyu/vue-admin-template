@@ -75,4 +75,12 @@ export interface ArticleType {
    * 更新时间
    */
   updateTime?: Date;
+  /**
+   * 备注
+   */
+  remark?: string;
+  /**
+   * 排序
+   */
+  sort?: number;
 }

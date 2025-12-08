@@ -131,7 +131,7 @@
                   <el-descriptions-item label="项目路径">
                     {{ serverData.node.filePath }}
                   </el-descriptions-item>
-                  <el-descriptions-item label="运行参数" span="{2}">
+                  <el-descriptions-item label="运行参数" :span="2">
                     {{ serverData.node.args }}
                   </el-descriptions-item>
                 </el-descriptions>

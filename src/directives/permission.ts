@@ -6,9 +6,9 @@ import type { App, Directive, DirectiveBinding } from 'vue';
 import { useUserStore } from '@/store/modules/user';
 
 const hasPermission = (value: string[]): boolean => {
-  const { getPermission } = useUserStore();
-  if (!getPermission || !value) return true;
-  const hasInclude = value.some((item) => getPermission.includes(item));
+  const { getPermissions } = useUserStore();
+  if (!getPermissions || !value) return true;
+  const hasInclude = value.some((item) => getPermissions.includes(item));
   return hasInclude;
 };
 function hasPermi(el: Element, binding: DirectiveBinding) {

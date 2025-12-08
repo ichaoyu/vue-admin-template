@@ -1,15 +1,20 @@
 //引入项目中全部的全局组件
 import IconFont from './IconFont';
 import PageContainer from './PageContainer';
+//引入vue类型
+import { App, Component } from 'vue';
 
 //引入element-plus提供全部图标组件
 import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 //全局对象
-const allGloablComponent: any = { IconFont, PageContainer };
+const allGloablComponent: Record<string, Component> = {
+  IconFont,
+  PageContainer,
+};
 //对外暴露插件对象
 export default {
   //务必叫做install方法
-  install(app: any) {
+  install(app: App) {
     //注册项目全部的全局组件
     Object.keys(allGloablComponent).forEach((key) => {
       //注册为全局组件

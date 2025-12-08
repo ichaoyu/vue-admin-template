@@ -2,7 +2,7 @@ import { TableProps as ElTableProps } from 'element-plus';
 
 interface btnStyle {
   type?: string;
-  link?: string | boolean;
+  link?: boolean;
   color?: string;
   icon?: string;
 }

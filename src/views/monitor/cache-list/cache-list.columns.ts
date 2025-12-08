@@ -1,9 +1,9 @@
 import { dayjs } from 'element-plus';
-import { CacheListType } from '@/interface';
+import { CacheModelType } from '@/interface';
 import { TableColumn } from '@/components/Table/types';
 
 // 查看
-const onView = (row: CacheListType, index: number, data: CacheListType[]) => {
+const onView = (row: CacheModelType, index: number, data: CacheModelType[]) => {
   console.log(row, index, data);
 };
 

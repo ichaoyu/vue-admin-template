@@ -18,7 +18,10 @@ export default defineComponent({
       index: ctx.index,
     };
     if (ctx.column) params.column = ctx.column;
-    return ctx.render(ctx?.row[ctx?.column?.key], ctx.row, ctx.index);
+    if (typeof ctx.render === 'function') {
+      return ctx.render(ctx?.row[ctx?.column?.key], ctx.row, ctx.index);
+    }
+    return null;
   },
 });
 </script>

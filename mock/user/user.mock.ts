@@ -36,7 +36,7 @@ const genertorUserList = (currentPage = 1, pageSize = 10) => {
 const List: List[] = [
   {
     user: {
-      id: '1',
+      id: 1,
       userName: 'admin',
       nickName: '若依',
       email: 'ry@163.com',
@@ -56,10 +56,11 @@ const List: List[] = [
     roles: ['admin'],
     permissions: ['*.*.*'],
     password: '123456',
+    rememberMe: true,
   },
   {
     user: {
-      id: '2',
+      id: 2,
       userName: 'test',
       nickName: '测试',
       email: 'ry@163.com',
@@ -79,6 +80,7 @@ const List: List[] = [
     roles: ['test'],
     permissions: ['example:dialog:create', 'example:dialog:delete'],
     password: '123456',
+    rememberMe: true,
   },
 ];
 export default [

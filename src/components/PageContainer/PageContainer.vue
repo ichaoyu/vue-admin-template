@@ -43,9 +43,8 @@ defineProps({
 
   :deep(.el-card__body) {
     height: calc(
-      100% - var(--el-card-padding) * 3 - var(--card-header-height) - var(
-          --pagination-height
-        )
+      100% - var(--el-card-padding) *
+        3 - var(--card-header-height) - var(--pagination-height)
     );
   }
 }

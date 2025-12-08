@@ -62,6 +62,7 @@
 import { ArticleType } from '@/interface';
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus';
 import { addArticleApi, updateArticleApi } from '@/api/site.api';
+import { isUrl } from '@/utils/is';
 
 const props = defineProps({
   visible: {

@@ -66,7 +66,7 @@
                 <el-input
                   v-model="cacheValues.cacheValue"
                   type="textarea"
-                  rows="{8}"
+                  :rows="8"
                   readonly
                 />
               </el-form-item>
@@ -83,11 +83,9 @@ import {
   getCacheListApi,
   getCacheKeyApi,
   getCacheValueApi,
-  delCacheByNameApi,
 } from '@/api/monitor.api';
 
 import { CacheModelType, CacheValueType } from '@/interface';
-import { ElMessage } from 'element-plus';
 
 const { meta } = useRoute();
 
@@ -109,28 +107,10 @@ const onSelectCacheKey = async (row: any) => {
   const cache = await getCacheValueApi({ key: row.cacheKey });
   cacheValues.value = cache;
 };
-// #region 删除
-const onDelete = async (row: CacheModelType) => {
-  // const ids = [row.id!];
-  // handleDelete(ids);
+
+const onBatchDelete = (row: CacheModelType) => {
+  console.log('Delete cache:', row);
 };
-// 批量删除
-const onBatchDelete = (data: CacheModelType[]) => {
-  // const ids = data.map((item) => item.id!);
-  // handleDelete(ids);
-};
-// 删除操作
-const handleDelete = async (ids: string[] | number[]) => {
-  // try {
-  //   await delCacheByNameApi({ ids });
-  //   ElMessage.success('删除成功');
-  // } catch (err) {
-  //   console.error(err);
-  // } finally {
-  //   await fetchTableList();
-  // }
-};
-//#endregion 删除
 
 onMounted(() => {
   fetchTableList();

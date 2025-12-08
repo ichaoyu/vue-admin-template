@@ -152,7 +152,7 @@
                   size: 'small',
                   ...opr.btnStyle,
                   ...$attrs,
-                }"
+                } as any"
               >
                 <span>{{ opr.text }}</span>
               </el-button>
