@@ -81,13 +81,8 @@ export default defineConfig(({ command, mode }) => {
       include: [
         'vue',
         'vue-router',
-        'vue-types',
-        'element-plus/es/locale/lang/zh-cn',
-        'element-plus/es/locale/lang/en',
         'axios',
         'qs',
-        'echarts',
-        'vue-json-pretty',
         'dayjs',
       ],
     },

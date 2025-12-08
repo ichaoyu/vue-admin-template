@@ -4,9 +4,8 @@ import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css';
 import '@/assets/styles/index.scss';
 import '@/assets/styles/theme.css';
-// @ts-ignore 忽略当前文件ts类型的检测否则有红色提示(打包会失败)
-import zhCn from 'element-plus/dist/locale/zh-cn.mjs';
-
+// 引入Element Plus语言包
+import { zhCn } from 'element-plus/es/locales';
 // 引入全部组件
 import allGloablComponent from '@/components';
 // 自定义指令
@@ -21,7 +20,6 @@ import '@/router/permission';
 import './utils/iconfont';
 
 import App from './App.vue';
-
 const app = createApp(App);
 // 注册pinia
 app.use(store);

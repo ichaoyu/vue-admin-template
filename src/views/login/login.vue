@@ -111,6 +111,7 @@ const onChangeCode = () => {
 const getVerifyCode = async () => {
   try {
     const res: Captcha = await verifyCodeApi();
+    console.log('api获取验证码res: ', res);
     verifyCodeData.value = res?.imageBase64;
     loginForm.captchaId = res?.id;
   } catch (err) {

@@ -76,9 +76,9 @@ axiosInstance.interceptors.response.use(
     if (response?.config?.responseType === 'blob') {
       // 文件流直接返回全部
       return response;
-    } else if (response?.status === 200) {
+    } else if (response?.status === 200 || response?.status === 201) {
       // 成功直接返回data数据
-      if (response.data.code === 200) {
+      if (response.data.status === 200) {
         return response.data.data;
       } else {
         ElMessage.error(response?.data?.msg ?? '未知错误');
@@ -138,7 +138,7 @@ const request = (option: AxiosConfig) => {
     headers: {
       'Content-Type': 'application/json',
       [userStore.getTokenKey ?? 'Authorization']:
-        `Bearer ${userStore.getToken}` ?? '',
+        `Bearer ${userStore.getToken}`,
       ...headers,
     },
   });

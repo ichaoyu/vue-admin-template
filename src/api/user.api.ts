@@ -10,15 +10,17 @@ import {
 // #region 验证接口
 // 验证码
 export const verifyCodeApi = (): Promise<Captcha> => {
-  return request.get({ url: '/api/auth/captcha' });
+  const res = request.get({ url: '/api/captcha' });
+  console.log('res: ', res);
+  return res;
 };
 // 登录
 export const loginApi = (data: UserLoginType): Promise<any> => {
-  return request.post({ url: '/api/auth/login', data });
+  return request.post({ url: '/api/login', data });
 };
 // 退出登录
 export const loginOutApi = (): Promise<any> => {
-  return request.post({ url: '/api/auth/logout' });
+  return request.post({ url: '/api/logout' });
 };
 // #endregion 验证接口
 
