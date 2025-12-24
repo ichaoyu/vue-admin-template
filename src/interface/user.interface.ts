@@ -47,7 +47,7 @@ export interface UserState {
   /**
    * 用户信息
    */
-  user: userInfo | null;
+  user: UserInfo | null;
   /**
    * 记住我
    */
@@ -81,7 +81,7 @@ export interface Captcha {
 /**
  * 用户信息
  */
-export interface userInfo {
+export interface UserInfo {
   id?: number;
   userName: string;
   nickName?: string;

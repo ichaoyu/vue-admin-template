@@ -1,10 +1,10 @@
 import { request } from '@/utils';
+import { PageVO } from '@/types';
 import {
   UserLoginType,
   RoleParams,
-  UserState,
   Captcha,
-  type userInfo,
+  UserInfo,
 } from '@/interface/user.interface';
 
 // #region 验证接口
@@ -26,25 +26,25 @@ export const loginOutApi = (): Promise<any> => {
 
 //#region 当前用户信息接口
 // 获取当前用户信息
-export const getUserInfoApi = (): Promise<UserState> => {
+export const getUserInfoApi = (): Promise<any> => {
   return request.get({ url: '/api/current-user/getInfo' });
 };
 // 获取用户配置接口
-export const getUserProfileApi = (): Promise<UserState> => {
+export const getUserProfileApi = (): Promise<any> => {
   return request.get({ url: '/api/current-user/getProfile' });
 };
 // 更新用户基本信息
-export const updateUserInfoApi = (): Promise<UserState> => {
+export const updateUserInfoApi = (): Promise<any> => {
   return request.get({ url: '/api/current-user/updateBase' });
 };
 // 更新用户密码
-export const updateUserPwdApi = (): Promise<UserState> => {
+export const updateUserPwdApi = (): Promise<any> => {
   return request.get({ url: '/api/current-user/updatePassword' });
 };
 //#endregion 当前用户信息接口
 
 // 用户列表
-export const getUserListApi = (data: any): Promise<PageVO<userInfo>> => {
+export const getUserListApi = (data: any): Promise<PageVO<UserInfo>> => {
   return request.post({ url: '/api/system/user/page', data });
 };
 
@@ -77,9 +77,7 @@ export const changeUserStatusApi = (data: {
 };
 
 // 获取用户角色列表
-export const getUserRoleListApi = (
-  params: RoleParams,
-): Promise<AppCustomRouteRecordRaw[]> => {
+export const getUserRoleListApi = (params: RoleParams): Promise<any[]> => {
   return request.get({ url: '/api/role/list', params });
 };
 

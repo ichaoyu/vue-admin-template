@@ -40,6 +40,7 @@ export default defineConfig(({ command, mode }) => {
     css: {
       preprocessorOptions: {
         scss: {
+          api: "modern",
           javascriptEnable: true,
           additionalData: `
           @use "@/assets/styles/element.scss" as *;

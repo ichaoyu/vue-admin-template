@@ -54,6 +54,18 @@
       <el-table-column v-if="props.expand" type="expand" fixed>
         <slot name="expand"></slot>
       </el-table-column>
+      <!-- 序号 -->
+      <el-table-column
+        v-if="props.index"
+        type="index"
+        width="60"
+        fixed
+        align="center"
+      >
+        <template #default="scope">
+          {{ (props.currentPage - 1) * props.pageSize + scope.$index + 1 }}
+        </template>
+      </el-table-column>
       <!-- 复选框 -->
       <el-table-column
         v-if="props.selection"
@@ -139,23 +151,23 @@
       <el-table-column v-if="props.action.length > 0" v-bind="actionCfg">
         <template #default="scope">
           <div class="operator_btn" :style="actionCfg && actionCfg.style">
-            <template v-for="(opr, opridx) in props.action" :key="opridx">
-              <!-- TODOS: 增加权限判断 -->
-              <el-button
-                @click="
-                  opr.action && opr.action(scope.row, scope.$index, props.data)
-                "
-                v-bind="{
-                  type: 'primary',
-                  link: true,
-                  text: true,
-                  size: 'small',
-                  ...opr.btnStyle,
-                  ...$attrs,
-                } as any"
-              >
-                <span>{{ opr.text }}</span>
-              </el-button>
+            <template v-for="(opr, opridx) in props.action" :key="opr.key || opridx">
+              <!-- 权限判断 -->
+              <template v-if="!opr.permission || hasPermission(opr.permission)">
+                <el-button
+                  @click="opr.action && opr.action(scope.row, scope.$index, props.data)"
+                  v-bind="{
+                    type: 'primary',
+                    link: true,
+                    text: true,
+                    size: 'small',
+                    ...opr.btnStyle,
+                  } as any"
+                  :disabled="opr.disabled && opr.disabled(scope.row, scope.$index)"
+                >
+                  <span>{{ opr.text }}</span>
+                </el-button>
+              </template>
             </template>
           </div>
         </template>
@@ -181,6 +193,7 @@
 </template>
 
 <script setup lang="ts" name="Table">
+import { computed, ref, PropType } from 'vue';
 import { ElTooltipProps, ElMessage, ElTable } from 'element-plus';
 import { useClipboard } from '@/hooks/useClipboard';
 import ToolsTableSize from './ToolsTableSize.vue';
@@ -192,6 +205,7 @@ import {
   TableAction,
   TableActionConfig,
 } from './types';
+import { ElementSize } from '@/types';
 const props = defineProps({
   loading: {
     type: Boolean,
@@ -353,7 +367,7 @@ const props = defineProps({
   },
   emptyText: {
     type: String,
-    defalut: '暂无数据',
+    default: '暂无数据',
   },
   // 是否默认展开所有行
   defaultExpandAll: {

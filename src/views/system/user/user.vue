@@ -571,8 +571,6 @@ const resetSearch = () => {
   };
   fetchTableList();
 };
-
-
 </script>
 
 <style lang="scss" scoped></style>

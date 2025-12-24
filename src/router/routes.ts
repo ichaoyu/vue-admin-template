@@ -1,12 +1,13 @@
 import Layout from '@/layout/index.vue';
+import type { AppRouteRecordRaw } from '@/types';
 
-//对外暴露配置路由
+// 常量路由配置
 export const constantRoute: AppRouteRecordRaw[] = [
   {
-    //登录路由
+    // 登录路由
     path: '/login',
     component: () => import('@/views/login'),
-    name: 'login', //命名路由
+    name: 'Login',
     meta: {
       hidden: true,
       title: '登录',
@@ -14,41 +15,41 @@ export const constantRoute: AppRouteRecordRaw[] = [
     },
   },
   {
-    //登录成功后展示数据路由
+    // 根路由
     path: '/',
     component: Layout,
     redirect: '/home/dashboard',
-    name: 'layout',
+    name: 'Root',
     meta: {
       hidden: true,
       title: '',
     },
   },
   {
-    //404路由
+    // 404路由
     path: '/404',
     component: () => import('@/views/error/404.vue'),
-    name: '404',
+    name: 'NotFound',
     meta: {
       hidden: true,
       title: '404',
     },
   },
   {
-    //403路由
+    // 403路由
     path: '/403',
     component: () => import('@/views/error/403.vue'),
-    name: '403',
+    name: 'Forbidden',
     meta: {
       hidden: true,
       title: '403',
     },
   },
   {
-    //任意路由，上面都没有匹配，重定向到404页面
+    // 任意路由，重定向到404页面
     path: '/:pathMatch(.*)*',
     redirect: '/404',
-    name: 'Any',
+    name: 'AnyRoute',
     meta: {
       hidden: true,
       title: '404',
@@ -57,313 +58,278 @@ export const constantRoute: AppRouteRecordRaw[] = [
   },
 ];
 
+// 异步路由配置
 export const asyncRouter: AppRouteRecordRaw[] = [
   {
     path: '/home',
-    name: 'SystemHomeIndex',
+    name: 'Home',
     redirect: '/home/dashboard',
     component: Layout,
     meta: {
       title: '看板',
       icon: 'home',
       sort: 1,
-      hidden: false,
-      noCache: false,
-      alwaysShow: false,
     },
     children: [
       {
         path: 'dashboard',
-        name: 'home',
+        name: 'Dashboard',
         component: () => import('@/views/demo'),
         meta: {
           title: '看板',
           sort: 1,
-          hidden: false,
           noCache: true,
-          alwaysShow: false,
         },
       },
     ],
   },
   {
-    // 基本设置 SEO设置 应用配置 七牛云配置 微信配置
-    path: '/website',
-    name: 'Website',
-    redirect: '/website/settings',
+    path: '/cms',
+    name: 'Cms',
+    redirect: '/cms/article',
     component: Layout,
     meta: {
-      title: '站点管理',
+      title: 'CMS管理',
       icon: 'site',
+      sort: 2,
+      alwaysShow: true,
     },
     children: [
-      {
-        path: 'settings',
-        name: 'WebsiteSettings',
-        component: () => import('@/views/site/config'),
-        meta: {
-          title: '站点设置',
-        },
-      },
-      {
-        path: 'friendlink',
-        name: 'WebsiteFriendLink',
-        component: () => import('@/views/site/flink'),
-        meta: {
-          title: '友情链接',
-        },
-      },
-      {
-        path: 'message',
-        name: 'WebsiteMessage',
-        component: () => import('@/views/site/message'),
-        meta: {
-          title: '消息管理',
-        },
-      },
-    ],
-  },
-  {
-    path: '/article',
-    name: 'Article',
-    redirect: '/article/category',
-    component: Layout,
-    meta: {
-      title: '内容管理',
-      icon: 'article',
-    },
-    children: [
-      {
-        path: 'category',
-        name: 'ArticleCategory',
-        component: () => import('@/views/demo'),
-        meta: {
-          title: '栏目管理',
-        },
-      },
       {
         path: 'article',
-        name: 'ArticleList',
+        name: 'CmsArticle',
         component: () => import('@/views/site/article'),
         meta: {
           title: '文章管理',
+          sort: 1,
+        },
+      },
+      {
+        path: 'category',
+        name: 'CmsCategory',
+        component: () => import('@/views/demo'),
+        meta: {
+          title: '分类管理',
+          sort: 2,
         },
       },
       {
         path: 'tag',
-        name: 'WebsiteTag',
+        name: 'CmsTag',
         component: () => import('@/views/site/tag'),
         meta: {
           title: '标签管理',
+          sort: 3,
+        },
+      },
+      {
+        path: 'friendlink',
+        name: 'CmsFriendlink',
+        component: () => import('@/views/site/flink'),
+        meta: {
+          title: '友情链接',
+          sort: 4,
+        },
+      },
+      {
+        path: 'message',
+        name: 'CmsMessage',
+        component: () => import('@/views/site/message'),
+        meta: {
+          title: '消息管理',
+          sort: 5,
+        },
+      },
+      {
+        path: 'site',
+        name: 'CmsSite',
+        component: () => import('@/views/site/config'),
+        meta: {
+          title: '站点设置',
+          sort: 6,
         },
       },
     ],
   },
   {
     path: '/system',
-    name: 'system',
+    name: 'System',
     redirect: '/system/user',
     component: Layout,
     meta: {
       title: '系统管理',
       icon: 'setting',
       sort: 3,
-      hidden: false,
-      noCache: false,
       alwaysShow: true,
     },
     children: [
       {
         path: 'user',
-        name: 'SystemUserIndex',
+        name: 'SystemUser',
         component: () => import('@/views/system/user'),
         meta: {
           title: '用户管理',
           sort: 1,
-          hidden: false,
           noCache: true,
-          alwaysShow: false,
         },
       },
       {
         path: 'role',
-        name: 'SystemRoleIndex',
+        name: 'SystemRole',
         component: () => import('@/views/demo'),
         meta: {
           title: '角色管理',
           sort: 2,
-          hidden: false,
           noCache: true,
-          alwaysShow: false,
         },
       },
       {
         path: 'menu',
-        name: 'SystemMenuIndex',
+        name: 'SystemMenu',
         component: () => import('@/views/demo'),
         meta: {
           title: '菜单管理',
           sort: 3,
           hidden: true,
           noCache: true,
-          alwaysShow: false,
         },
       },
       {
         path: 'dept',
-        name: 'SystemDeptIndex',
+        name: 'SystemDept',
         component: () => import('@/views/demo'),
         meta: {
           title: '部门管理',
           sort: 4,
-          hidden: false,
           noCache: true,
-          alwaysShow: false,
         },
       },
       {
         path: 'post',
-        name: 'SystemPostIndex',
+        name: 'SystemPost',
         component: () => import('@/views/demo'),
         meta: {
           title: '岗位管理',
           sort: 5,
-          hidden: false,
           noCache: true,
-          alwaysShow: false,
         },
       },
       {
         path: 'dictType',
-        name: 'SystemDictTypeIndex',
+        name: 'SystemDictType',
         component: () => import('@/views/system/dict'),
         meta: {
           title: '字典管理',
           sort: 6,
-          hidden: false,
           noCache: true,
-          alwaysShow: false,
         },
       },
       {
         path: 'dictData/:id',
-        name: 'SystemDictDataIndex',
+        name: 'SystemDictData',
         component: () => import('@/views/system/dict/dict-data.vue'),
         meta: {
           title: '字典数据',
-          sort: 14,
+          sort: 7,
           hidden: true,
           noCache: true,
-          alwaysShow: false,
         },
       },
       {
         path: 'config',
-        name: 'SystemConfigIndex',
+        name: 'SystemConfig',
         component: () => import('@/views/system/config'),
         meta: {
           title: '参数配置',
-          sort: 7,
-          hidden: false,
+          sort: 8,
           noCache: true,
-          alwaysShow: false,
         },
       },
       {
         path: 'roleAuth/:id',
-        name: 'SystemRoleAuthIndex',
+        name: 'SystemRoleAuth',
         component: () => import('@/views/demo'),
         meta: {
           title: '分配用户',
-          sort: 13,
+          sort: 9,
           hidden: true,
           noCache: true,
-          alwaysShow: false,
         },
       },
     ],
   },
   {
     path: '/monitor',
-    name: '',
+    name: 'Monitor',
     redirect: '/monitor/loginLog',
     component: Layout,
     meta: {
       title: '系统监控',
       icon: 'watch',
-      hidden: false,
+      sort: 4,
     },
     children: [
       {
         path: 'loginLog',
-        name: 'MonitorLoginLogIndex',
+        name: 'MonitorLoginLog',
         component: () => import('@/views/monitor/login-log'),
         meta: {
           title: '登录日志',
-          sort: 7,
-          hidden: false,
+          sort: 1,
           noCache: true,
-          alwaysShow: false,
         },
       },
       {
         path: 'online',
-        name: 'MonitorOnlineIndex',
+        name: 'MonitorOnline',
         component: () => import('@/views/monitor/online'),
         meta: {
           title: '在线用户',
-          sort: 8,
-          hidden: false,
+          sort: 2,
           noCache: true,
-          alwaysShow: false,
         },
       },
       {
         path: 'operLog',
-        name: 'MonitorOperLogIndex',
+        name: 'MonitorOperLog',
         component: () => import('@/views/monitor/oper-log'),
         meta: {
           title: '操作日志',
-          sort: 9,
-          hidden: false,
+          sort: 3,
           noCache: true,
-          alwaysShow: false,
         },
       },
       {
         path: 'cacheList',
-        name: 'MonitorCacheListIndex',
+        name: 'MonitorCacheList',
         component: () => import('@/views/monitor/cache-list'),
         meta: {
           title: '缓存列表',
-          sort: 12,
-          hidden: false,
+          sort: 4,
           noCache: true,
-          alwaysShow: false,
         },
       },
       {
         path: 'server',
-        name: 'MonitorServerIndex',
+        name: 'MonitorServer',
         component: () => import('@/views/monitor/server'),
         meta: {
           title: '服务监控',
-          sort: 13,
-          hidden: false,
+          sort: 5,
           noCache: true,
-          alwaysShow: false,
         },
       },
     ],
   },
   {
     path: '/personal',
-    name: '',
+    name: 'Personal',
     redirect: '/personal/center',
     component: Layout,
     meta: {
       title: '个人中心',
       hidden: true,
+      sort: 5,
     },
     children: [
       {
