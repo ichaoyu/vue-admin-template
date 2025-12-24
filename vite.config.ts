@@ -66,7 +66,7 @@ export default defineConfig(({ command, mode }) => {
     },
     server: {
       open: true,
-      port: 7002,
+      port: 7000,
       // 代理配置
       proxy: {
         [env.VITE_APP_BASE_API]: {
@@ -78,13 +78,7 @@ export default defineConfig(({ command, mode }) => {
       },
     },
     optimizeDeps: {
-      include: [
-        'vue',
-        'vue-router',
-        'axios',
-        'qs',
-        'dayjs',
-      ],
+      include: ['vue', 'vue-router', 'axios', 'qs', 'dayjs'],
     },
   };
 });
