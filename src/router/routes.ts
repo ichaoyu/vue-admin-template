@@ -107,7 +107,7 @@ export const asyncRouter: AppRouteRecordRaw[] = [
       {
         path: 'category',
         name: 'CmsCategory',
-        component: () => import('@/views/demo'),
+        component: () => import('@/views/site/category'),
         meta: {
           title: '分类管理',
           sort: 2,
@@ -176,7 +176,7 @@ export const asyncRouter: AppRouteRecordRaw[] = [
       {
         path: 'role',
         name: 'SystemRole',
-        component: () => import('@/views/demo'),
+        component: () => import('@/views/system/role'),
         meta: {
           title: '角色管理',
           sort: 2,
@@ -186,7 +186,7 @@ export const asyncRouter: AppRouteRecordRaw[] = [
       {
         path: 'menu',
         name: 'SystemMenu',
-        component: () => import('@/views/demo'),
+        component: () => import('@/views/system/menu'),
         meta: {
           title: '菜单管理',
           sort: 3,
@@ -197,7 +197,7 @@ export const asyncRouter: AppRouteRecordRaw[] = [
       {
         path: 'dept',
         name: 'SystemDept',
-        component: () => import('@/views/demo'),
+        component: () => import('@/views/system/dept'),
         meta: {
           title: '部门管理',
           sort: 4,
@@ -207,7 +207,7 @@ export const asyncRouter: AppRouteRecordRaw[] = [
       {
         path: 'post',
         name: 'SystemPost',
-        component: () => import('@/views/demo'),
+        component: () => import('@/views/system/post'),
         meta: {
           title: '岗位管理',
           sort: 5,
@@ -335,7 +335,7 @@ export const asyncRouter: AppRouteRecordRaw[] = [
       {
         path: 'center',
         name: 'PersonalCenter',
-        component: () => import('@/views/demo'),
+        component: () => import('@/views/personal'),
         meta: {
           title: '个人中心',
           hidden: true,

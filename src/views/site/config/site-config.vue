@@ -78,7 +78,7 @@
 
 <script setup lang="ts" name="SiteConfig">
 import { ElMessage, type TabsPaneContext } from 'element-plus';
-import { getSiteInfoApi, updateSiteInfoApi } from '@/api/site.api';
+import { getSiteInfoApi, updateSiteInfoApi } from '@/api/cms.site.api';
 import { SiteInfoType } from '@/interface';
 const { meta } = useRoute();
 

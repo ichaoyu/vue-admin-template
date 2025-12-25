@@ -46,7 +46,7 @@
 <script setup lang="ts">
 import { TagType } from '@/interface';
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus';
-import { addTagApi, updateTagApi } from '@/api/site.api';
+import { addTagApi, updateTagApi } from '@/api/cms.tag.api';
 
 const props = defineProps({
   visible: {

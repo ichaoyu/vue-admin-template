@@ -275,124 +275,10 @@ const userRules = {
   deptId: [{ required: true, message: '请选择部门', trigger: 'change' }],
 };
 
-// 操作按钮配置
-const operator = [
-  {
-    text: '查看',
-    action: handleView,
-    btnStyle: {
-      type: 'primary',
-      link: true,
-      text: false,
-      icon: 'View',
-    },
-  },
-  {
-    text: '编辑',
-    action: handleEdit,
-    btnStyle: {
-      type: 'warning',
-      link: true,
-      text: false,
-      icon: 'Edit',
-    },
-  },
-  {
-    text: '删除',
-    action: handleDelete,
-    btnStyle: {
-      type: 'danger',
-      link: true,
-      text: false,
-      icon: 'Delete',
-    },
-  },
-  {
-    text: '角色分配',
-    action: handleAssignRoleClick,
-    btnStyle: {
-      type: 'info',
-      link: true,
-      text: false,
-      icon: 'User',
-    },
-  },
-  {
-    text: '状态',
-    action: handleStatusChange,
-    btnStyle: {
-      type: 'success',
-      link: true,
-      text: false,
-      icon: 'Refresh',
-    },
-  },
-];
-
-// 生命周期钩子
-onMounted(() => {
-  fetchTableList();
-  fetchDeptList();
-  fetchRoleList();
-});
-
-// 获取用户列表
-const fetchTableList = async () => {
-  loading.value = true;
-  try {
-    const res = await getUserListApi({
-      pageNum: currentPage.value,
-      pageSize: pageSize.value,
-      ...searchForm.value,
-    });
-    data.value = res.list;
-    total.value = res.total;
-  } catch (err) {
-    console.error(err);
-    ElMessage.error('获取用户列表失败');
-  } finally {
-    loading.value = false;
-  }
-};
-
-// 获取部门列表
-const fetchDeptList = async () => {
-  try {
-    const res = await getDeptListApi();
-    deptList.value = res;
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-// 获取角色列表
-const fetchRoleList = async () => {
-  try {
-    const res = await getUserRoleListApi({ roleName: '' });
-    roleList.value = res;
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-// 分页
-const onPageChange = ({ page, size }) => {
-  currentPage.value = page ?? currentPage.value;
-  pageSize.value = size ?? pageSize.value;
-  fetchTableList();
-};
-
 // 新增用户
 const handleAdd = () => {
   dialogType.value = { add: true, edit: false };
   resetForm();
-  dialogVisible.value = true;
-};
-
-// 编辑用户
-const handleEdit = (row) => {
-  dialogType.value = { add: false, edit: true };
-  userForm.value = { ...row };
   dialogVisible.value = true;
 };
 
@@ -403,6 +289,13 @@ const handleView = (row) => {
   // userFormRef.value?.$el.querySelectorAll('input, select, textarea, .el-switch').forEach(el => {
   //   el.disabled = true;
   // });
+};
+
+// 编辑用户
+const handleEdit = (row) => {
+  dialogType.value = { add: false, edit: true };
+  userForm.value = { ...row };
+  dialogVisible.value = true;
 };
 
 // 删除用户
@@ -508,6 +401,113 @@ const handleAssignRole = async () => {
     console.error(err);
     ElMessage.error('角色分配失败');
   }
+};
+
+// 操作按钮配置
+const operator = [
+  {
+    text: '查看',
+    action: handleView,
+    btnStyle: {
+      type: 'primary',
+      link: true,
+      text: false,
+      icon: 'View',
+    },
+  },
+  {
+    text: '编辑',
+    action: handleEdit,
+    btnStyle: {
+      type: 'warning',
+      link: true,
+      text: false,
+      icon: 'Edit',
+    },
+  },
+  {
+    text: '删除',
+    action: handleDelete,
+    btnStyle: {
+      type: 'danger',
+      link: true,
+      text: false,
+      icon: 'Delete',
+    },
+  },
+  {
+    text: '角色分配',
+    action: handleAssignRoleClick,
+    btnStyle: {
+      type: 'info',
+      link: true,
+      text: false,
+      icon: 'User',
+    },
+  },
+  {
+    text: '状态',
+    action: handleStatusChange,
+    btnStyle: {
+      type: 'success',
+      link: true,
+      text: false,
+      icon: 'Refresh',
+    },
+  },
+];
+
+// 生命周期钩子
+onMounted(() => {
+  fetchTableList();
+  fetchDeptList();
+  fetchRoleList();
+});
+
+// 获取用户列表
+const fetchTableList = async () => {
+  loading.value = true;
+  try {
+    const res = await getUserListApi({
+      pageNum: currentPage.value,
+      pageSize: pageSize.value,
+      ...searchForm.value,
+    });
+    data.value = res.list;
+    total.value = res.total;
+  } catch (err) {
+    console.error(err);
+    ElMessage.error('获取用户列表失败');
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 获取部门列表
+const fetchDeptList = async () => {
+  try {
+    const res = await getDeptListApi();
+    deptList.value = res;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+// 获取角色列表
+const fetchRoleList = async () => {
+  try {
+    const res = await getUserRoleListApi({ roleName: '' });
+    roleList.value = res;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+// 分页
+const onPageChange = ({ page, size }) => {
+  currentPage.value = page ?? currentPage.value;
+  pageSize.value = size ?? pageSize.value;
+  fetchTableList();
 };
 
 // 提交表单

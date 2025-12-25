@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { getTagListApi, delTagApi } from '@/api/site.api';
+import { getTagListApi, delTagApi } from '@/api/cms.tag.api';
 import Table from '@/components/Table';
 import createDraw from './tag.create.vue';
 

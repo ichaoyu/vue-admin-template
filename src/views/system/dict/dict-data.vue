@@ -65,7 +65,7 @@ import {
   delDictDataApi,
   updateDictDataApi,
   getDictTypeApi,
-} from '@/api/dict.api';
+} from '@/api/system.dict.api';
 import Table from '@/components/Table';
 import createDraw from './dict-data.create.vue';
 

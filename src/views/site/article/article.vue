@@ -47,13 +47,16 @@
 </template>
 
 <script setup lang="ts">
-import { getArticleListApi, delArticleApi } from '@/api/site.api';
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { getArticleListApi, delArticleApi } from '@/api/cms.article.api';
 import Table from '@/components/Table';
 import createDraw from './article.create.vue';
 
 import Columns from './article.columns';
 import { ArticleType } from '@/interface';
 import { ElMessage } from 'element-plus';
+import type { PageVO } from '@/types';
 
 const { meta } = useRoute();
 
@@ -127,6 +130,12 @@ const onPageChange = ({ page, size }) => {
   fetchTableList();
 };
 
+interface PageDTO {
+  pageNum: number;
+  pageSize: number;
+  keywords?: string;
+}
+
 const fetchTableList = async () => {
   loading.value = true;
   try {
@@ -135,7 +144,7 @@ const fetchTableList = async () => {
       pageSize: pageSize.value,
       // keywords: keywords.value,
     };
-    const res = await getArticleListApi(params);
+    const res = await getArticleListApi(params) as PageVO<ArticleType>;
     data.value = res.list;
     total.value = res.total;
   } catch (err) {

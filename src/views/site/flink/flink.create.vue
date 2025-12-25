@@ -64,8 +64,9 @@
 <script setup lang="ts">
 import { FlinkType } from '@/interface';
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus';
-import { isUrl } from '@/utils';
-import { addFlinkApi, updateFlinkApi } from '@/api/site.api';
+import { isUrl, PropType } from '@/utils';
+import { addFriendlinkApi, updateFriendlinkApi } from '@/api/cms.friendlink.api';
+import { ref, watch, reactive } from 'vue';
 
 const props = defineProps({
   visible: {
@@ -138,7 +139,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     if (valid) {
       try {
         loading.value = true;
-        const saveApi = props.record ? updateFlinkApi : addFlinkApi;
+        const saveApi = props.record ? updateFriendlinkApi : addFriendlinkApi;
         await saveApi(ruleForm.value);
         ElMessage.success('操作成功');
         onCancelVisible();

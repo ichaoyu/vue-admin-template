@@ -74,7 +74,7 @@
 <script setup lang="ts">
 import { DictDataType } from '@/interface';
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus';
-import { addDictDataApi, updateDictDataApi } from '@/api/dict.api';
+import { addDictDataApi, updateDictDataApi } from '@/api/system.dict.api';
 
 const props = defineProps({
   visible: {

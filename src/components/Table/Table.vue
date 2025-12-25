@@ -133,7 +133,7 @@
               ><span>{{ scope.row[item.key] }}</span></template
             >
             <!-- 复制 -->
-            <icon-font
+            <IconFont
               v-if="item.copy"
               class="icon-btn-copy"
               name="copy"
@@ -199,6 +199,7 @@ import { useClipboard } from '@/hooks/useClipboard';
 import ToolsTableSize from './ToolsTableSize.vue';
 import ToolsColumnsToggle from './ToolsColumnsToggle.vue';
 import render from './render.vue';
+import IconFont from '../IconFont/IconFont.vue';
 import {
   Pagination,
   TableColumn,
@@ -521,15 +522,16 @@ const actionCfg = computed(() =>
 );
 
 // 抛出事件
-const emits = defineEmits(['page-change', 'batch-delete', 'selections-change']);
+const emits = defineEmits(['page-change', 'batch-delete', 'selections-change', 'change']);
 
 // 页码变更
 const onPageChange = (page: number) => {
   emits('page-change', { page });
 };
 // 每页显示数量变更
-const onChangePageSize = (size: number) => {
-  emits('page-change', { size });
+const onChangePageSize = (size: ElementSize) => {
+  tableSize.value = size;
+  emits('change', { size });
 };
 // table大小
 const tableSize = ref<ElementSize>(props.size);
@@ -569,6 +571,12 @@ const commonTableRef = ref<InstanceType<typeof ElTable>>();
 const onCancelSelection = () => {
   commonTableRef.value!.clearSelection();
   emits('selections-change', []);
+};
+
+// 权限检查
+const hasPermission = (permission: string | string[]) => {
+  // 简单实现，实际应该从权限store中获取
+  return true;
 };
 </script>
 

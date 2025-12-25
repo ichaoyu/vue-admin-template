@@ -34,38 +34,38 @@ export const getUserProfileApi = (): Promise<any> => {
   return request.get({ url: '/api/current-user/getProfile' });
 };
 // 更新用户基本信息
-export const updateUserInfoApi = (): Promise<any> => {
-  return request.get({ url: '/api/current-user/updateBase' });
+export const updateUserInfoApi = (data: any): Promise<any> => {
+  return request.put({ url: '/api/current-user/updateBase', data });
 };
 // 更新用户密码
-export const updateUserPwdApi = (): Promise<any> => {
-  return request.get({ url: '/api/current-user/updatePassword' });
+export const updateUserPwdApi = (data: any): Promise<any> => {
+  return request.put({ url: '/api/current-user/updatePassword', data });
 };
 //#endregion 当前用户信息接口
 
 // 用户列表
-export const getUserListApi = (data: any): Promise<PageVO<UserInfo>> => {
-  return request.post({ url: '/api/system/user/page', data });
+export const getUserListApi = (params: any): Promise<PageVO<UserInfo>> => {
+  return request.get({ url: '/api/system/user', params });
 };
 
 // 新增用户
 export const addUserApi = (data: any): Promise<any> => {
-  return request.post({ url: '/api/system/user/add', data });
+  return request.post({ url: '/api/system/user', data });
 };
 
 // 编辑用户
 export const editUserApi = (data: any): Promise<any> => {
-  return request.put({ url: '/api/system/user/edit', data });
+  return request.patch({ url: `/api/system/user/${data.id}`, data });
 };
 
 // 删除用户
 export const deleteUserApi = (id: number): Promise<any> => {
-  return request.delete({ url: `/api/system/user/delete/${id}` });
+  return request.delete({ url: `/api/system/user/${id}` });
 };
 
 // 批量删除用户
 export const batchDeleteUserApi = (data: { ids: number[] }): Promise<any> => {
-  return request.delete({ url: '/api/system/user/batchDelete', data });
+  return request.delete({ url: '/api/system/user', params: { ids: data.ids.join(',') } });
 };
 
 // 修改用户状态
@@ -73,17 +73,17 @@ export const changeUserStatusApi = (data: {
   id: number;
   status: number;
 }): Promise<any> => {
-  return request.put({ url: '/api/system/user/changeStatus', data });
+  return request.patch({ url: `/api/system/user/${data.id}`, data: { status: data.status } });
 };
 
 // 获取用户角色列表
 export const getUserRoleListApi = (params: RoleParams): Promise<any[]> => {
-  return request.get({ url: '/api/role/list', params });
+  return request.get({ url: '/api/system/role', params });
 };
 
 // 获取用户分配的角色
 export const getUserRoleApi = (userId: number): Promise<any> => {
-  return request.get({ url: `/api/system/user/role/${userId}` });
+  return request.get({ url: `/api/system/user/${userId}` });
 };
 
 // 分配用户角色
@@ -91,10 +91,10 @@ export const assignUserRoleApi = (data: {
   userId: number;
   roleIds: number[];
 }): Promise<any> => {
-  return request.post({ url: '/api/system/user/assignRole', data });
+  return request.patch({ url: `/api/system/user/${data.userId}`, data: { roleIds: data.roleIds } });
 };
 
 // 获取部门列表
 export const getDeptListApi = (): Promise<any> => {
-  return request.get({ url: '/api/system/dept/list' });
+  return request.get({ url: '/api/system/dept' });
 };

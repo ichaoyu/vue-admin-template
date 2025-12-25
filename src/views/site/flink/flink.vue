@@ -54,13 +54,16 @@
 </template>
 
 <script setup lang="ts">
-import { getFlinkListApi, delFlinkApi } from '@/api/site.api';
+import { getFriendlinkListApi, delFriendlinkApi } from '@/api/cms.friendlink.api';
 import Table from '@/components/Table';
 import createDraw from './flink.create.vue';
 
 import Columns from './flink.columns';
 import { FlinkType } from '@/interface';
+import { PageDTO, PageVO } from '@/types';
 import { ElMessage } from 'element-plus';
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
 
 const { meta } = useRoute();
 
@@ -92,7 +95,7 @@ const onBatchDelete = (data: FlinkType[]) => {
 // 删除操作
 const handleDelete = async (ids: string[] | number[]) => {
   try {
-    await delFlinkApi({ ids });
+    await delFriendlinkApi({ ids });
     ElMessage.success('删除成功');
   } catch (err) {
     console.error(err);
@@ -142,7 +145,7 @@ const fetchTableList = async () => {
       pageSize: pageSize.value,
       keywords: keywords.value,
     };
-    const res = await getFlinkListApi(params);
+    const res = await getFriendlinkListApi(params);
     data.value = res.list;
     total.value = res.total;
   } catch (err) {

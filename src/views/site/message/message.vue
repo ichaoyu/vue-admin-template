@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { getMessageListApi, delMessageApi } from '@/api/site.api';
+import { getMessageListApi, delMessageApi } from '@/api/cms.message.api';
 import Table from '@/components/Table';
 
 import Columns from './message.columns';

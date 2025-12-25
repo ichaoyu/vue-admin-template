@@ -15,7 +15,7 @@
 
 <script setup>
 import { ElMessage } from 'element-plus';
-import { getConfigListApi } from '@/api/config.api';
+import { getConfigListApi } from '@/api/system.config.api';
 import Table from '@/components/Table';
 
 import Columns from './config.columns';
