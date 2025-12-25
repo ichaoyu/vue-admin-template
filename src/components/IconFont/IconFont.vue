@@ -1,17 +1,18 @@
 <template>
   <!-- ElementPlus图标 -->
   <el-icon v-if="icon" :color="color" :size="size">
-    <component :is="icon" :style="{ width, height }" />
+    <component :is="icon" />
   </el-icon>
   <!-- IconFont图标 -->
-  <svg
-    v-else
-    class="icon"
-    aria-hidden="true"
-    :style="{ width, height, 'font-size': size + 'px' }"
-  >
-    <use :xlink:href="prefix + name" :fill="color" />
-  </svg>
+  <el-icon v-else :color="color" :size="size">
+    <svg
+      class="icon"
+      aria-hidden="true"
+      :style="{ width: size + 'px', height: size + 'px' }"
+    >
+      <use :xlink:href="prefix + name" :fill="color" />
+    </svg>
+  </el-icon>
 </template>
 
 <script setup>

@@ -42,6 +42,7 @@
         <Menu
           :menuList="item.children"
           :parent-path="pathResolve(parentPath, item.path)"
+          :collapse="collapse"
         />
       </el-sub-menu>
     </template>
@@ -55,6 +56,8 @@ export default {
 <script lang="ts" setup>
 import { pathResolve } from '@/utils';
 import { useUserStore } from '@/store/modules/user';
+import type { AppRouteRecordRaw } from '@/types';
+import type { PropType } from 'vue';
 
 const props = defineProps({
   menuList: {
@@ -67,7 +70,7 @@ const props = defineProps({
   },
   collapse: {
     type: Boolean,
-    defaulat: false,
+    default: false,
   },
 });
 //获取路由器对象
