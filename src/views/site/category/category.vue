@@ -221,7 +221,7 @@ const fetchTableList = async () => {
   loading.value = true;
   try {
     const res = await getCategoryListApi({
-      pageNum: currentPage.value,
+      page: currentPage.value,
       pageSize: pageSize.value,
       ...searchForm.value,
     });

@@ -148,7 +148,7 @@
         </el-table-column>
       </template>
       <!-- 操作按钮 -->
-      <el-table-column v-if="props.action.length > 0" v-bind="actionCfg">
+      <el-table-column v-if="props.action.length > 0" v-bind="actionCfg" :show-overflow-tooltip="false">
         <template #default="scope">
           <div class="operator_btn" :style="actionCfg && actionCfg.style">
             <template v-for="(opr, opridx) in props.action" :key="opr.key || opridx">

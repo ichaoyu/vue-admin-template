@@ -53,7 +53,7 @@ const fetchTableList = async () => {
   loading.value = true;
   try {
     const res = await getConfigListApi({
-      pageNum: currentPage.value,
+      page: currentPage.value,
       pageSize: pageSize.value,
     });
     data.value = res.list;

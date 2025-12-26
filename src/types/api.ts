@@ -8,7 +8,7 @@ export declare interface IResponse<T = any> {
 
 // 分页响应类型
 export declare interface PageVO<T = any> {
-  pageNum: number;
+  page: number;
   pageSize: number;
   total: number;
   list: T[];
@@ -16,7 +16,7 @@ export declare interface PageVO<T = any> {
 
 // 分页请求类型
 export declare interface PageDTO<T = any> {
-  pageNum: number;
+  page: number;
   pageSize: number;
   [key: string]: any;
 }

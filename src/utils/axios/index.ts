@@ -69,33 +69,36 @@ axiosInstance.interceptors.request.use(defaultRequestInterceptors);
  * 响应拦截器
  */
 axiosInstance.interceptors.response.use(
-  (response: AxiosResponse<IResponse>) => {
+  (response: AxiosResponse<any>) => {
     console.log('response: ', response);
     // #region 成功回调
-    // return response;
     if (response?.config?.responseType === 'blob') {
       // 文件流直接返回全部
       return response;
-    } else if (response?.status === 200 || response?.status === 201) {
-      // 成功直接返回data数据
-      if (response.data.status === 200) {
-        return response.data.data;
-      } else {
-        ElMessage.error(response?.data?.msg ?? '未知错误');
-      }
+    }
+    
+    const { code, message, data } = response.data;
+    
+    // 成功时返回data数据
+    if (code === 200) {
+      return data;
     } else {
-      ElMessage.error(response?.data?.msg ?? response.statusText ?? '服务故障');
+      // 失败时显示错误信息
+      ElMessage.error(message ?? '未知错误');
+      return Promise.reject(new Error(message ?? '请求失败'));
     }
   },
   (error) => {
+    const errorData = error?.response?.data;
     const errorMsg =
-      error?.response?.data?.msg ??
+      errorData?.message ??
+      errorData?.msg ??
       error?.message ??
       error?.statusText ??
       '请求失败';
 
     // 无权限 阻断操作 跳转到登录页
-    if (error?.response?.status === 401) {
+    if (error?.response?.status === 401 || errorData?.code === 401) {
       ElNotification.error('登录已过期，请重新登录！');
       sessionStorage.clear();
       return false;

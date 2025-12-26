@@ -6,7 +6,9 @@ import { ArticleType } from '@/interface';
  * 文章管理API
  */
 // 获取文章列表
-export const getArticleListApi = (params: any): Promise<PageVO<ArticleType>> => {
+export const getArticleListApi = (
+  params: any,
+): Promise<PageVO<ArticleType>> => {
   return request.get({ url: '/api/cms/article', params });
 };
 
@@ -26,6 +28,8 @@ export const updateArticleApi = (data: ArticleType): Promise<any> => {
 };
 
 // 获取文章详情
-export const getArticleDetailApi = (id: number | string): Promise<ArticleType> => {
+export const getArticleDetailApi = (
+  id: number | string,
+): Promise<ArticleType> => {
   return request.get({ url: `/api/cms/article/${id}` });
 };

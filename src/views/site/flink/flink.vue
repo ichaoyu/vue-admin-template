@@ -141,7 +141,7 @@ const fetchTableList = async () => {
   loading.value = true;
   try {
     const params: PageDTO = {
-      pageNum: currentPage.value,
+      page: currentPage.value,
       pageSize: pageSize.value,
       keywords: keywords.value,
     };

@@ -118,7 +118,7 @@ const fetchTableList = async () => {
   loading.value = true;
   try {
     const params: PageDTO<OperLogType> = {
-      pageNum: currentPage.value,
+      page: currentPage.value,
       pageSize: pageSize.value,
       title: title.value,
     };
@@ -151,7 +151,7 @@ const onExportLoginLog = async () => {
   try {
     loading.value = true;
     const params: PageDTO = {
-      pageNum: currentPage.value,
+      page: currentPage.value,
       pageSize: pageSize.value,
     };
     const res = await exportOperLogApi(params);

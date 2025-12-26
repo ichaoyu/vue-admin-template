@@ -56,7 +56,6 @@ import createDraw from './article.create.vue';
 import Columns from './article.columns';
 import { ArticleType } from '@/interface';
 import { ElMessage } from 'element-plus';
-import type { PageVO } from '@/types';
 
 const { meta } = useRoute();
 
@@ -131,7 +130,7 @@ const onPageChange = ({ page, size }) => {
 };
 
 interface PageDTO {
-  pageNum: number;
+  page: number;
   pageSize: number;
   keywords?: string;
 }
@@ -140,11 +139,11 @@ const fetchTableList = async () => {
   loading.value = true;
   try {
     const params: PageDTO = {
-      pageNum: currentPage.value,
+      page: currentPage.value,
       pageSize: pageSize.value,
       // keywords: keywords.value,
     };
-    const res = await getArticleListApi(params) as PageVO<ArticleType>;
+    const res = await getArticleListApi(params);
     data.value = res.list;
     total.value = res.total;
   } catch (err) {

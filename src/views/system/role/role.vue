@@ -185,50 +185,6 @@ const roleRules = {
   roleSort: [{ required: true, message: '请输入显示顺序', trigger: 'blur' }],
 };
 
-// 操作按钮配置
-const operator = [
-  {
-    text: '查看',
-    action: handleView,
-    btnStyle: {
-      type: 'primary',
-      link: true,
-      text: false,
-      icon: 'View',
-    },
-  },
-  {
-    text: '编辑',
-    action: handleEdit,
-    btnStyle: {
-      type: 'warning',
-      link: true,
-      text: false,
-      icon: 'Edit',
-    },
-  },
-  {
-    text: '删除',
-    action: handleDelete,
-    btnStyle: {
-      type: 'danger',
-      link: true,
-      text: false,
-      icon: 'Delete',
-    },
-  },
-  {
-    text: '权限分配',
-    action: handleAssignPermissionClick,
-    btnStyle: {
-      type: 'info',
-      link: true,
-      text: false,
-      icon: 'Authorization',
-    },
-  },
-];
-
 // 生命周期钩子
 onMounted(() => {
   fetchTableList();
@@ -239,7 +195,7 @@ const fetchTableList = async () => {
   loading.value = true;
   try {
     const res = await getRoleListApi({
-      pageNum: currentPage.value,
+      page: currentPage.value,
       pageSize: pageSize.value,
       ...searchForm.value,
     });
@@ -417,6 +373,50 @@ const resetSearch = () => {
   };
   fetchTableList();
 };
+
+// 操作按钮配置
+const operator = [
+  {
+    text: '查看',
+    action: handleView,
+    btnStyle: {
+      type: 'primary',
+      link: true,
+      text: false,
+      icon: 'View',
+    },
+  },
+  {
+    text: '编辑',
+    action: handleEdit,
+    btnStyle: {
+      type: 'warning',
+      link: true,
+      text: false,
+      icon: 'Edit',
+    },
+  },
+  {
+    text: '删除',
+    action: handleDelete,
+    btnStyle: {
+      type: 'danger',
+      link: true,
+      text: false,
+      icon: 'Delete',
+    },
+  },
+  {
+    text: '权限分配',
+    action: handleAssignPermissionClick,
+    btnStyle: {
+      type: 'info',
+      link: true,
+      text: false,
+      icon: 'Authorization',
+    },
+  },
+];
 </script>
 
 <style lang="scss" scoped></style>

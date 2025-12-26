@@ -213,7 +213,7 @@ const userForm = ref({
   phone: '',
   email: '',
   sex: '0',
-  deptId: null,
+  deptId: '',
   status: 0,
   remark: '',
 });
@@ -469,7 +469,7 @@ const fetchTableList = async () => {
   loading.value = true;
   try {
     const res = await getUserListApi({
-      pageNum: currentPage.value,
+      page: currentPage.value,
       pageSize: pageSize.value,
       ...searchForm.value,
     });
@@ -487,7 +487,10 @@ const fetchTableList = async () => {
 const fetchDeptList = async () => {
   try {
     const res = await getDeptListApi();
-    deptList.value = res;
+    // 过滤掉 id 为 null 或 undefined 的部门
+    deptList.value = res.filter(
+      (dept) => dept.id !== null && dept.id !== undefined,
+    );
   } catch (err) {
     console.error(err);
   }
@@ -556,7 +559,7 @@ const resetForm = () => {
     phone: '',
     email: '',
     sex: '0',
-    deptId: null,
+    deptId: '',
     status: 0,
     remark: '',
   };
