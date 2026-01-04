@@ -12,3 +12,4 @@ export * from './tag.interface';
 export * from './dict.interface';
 export * from './message.interface';
 export * from './article.interface';
+export * from './category.interface';

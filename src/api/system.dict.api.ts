@@ -14,7 +14,10 @@ export const addDictTypeApi = (data: DictTypeType): Promise<any> => {
 };
 
 // 更新字典类型
-export const updateDictTypeApi = (id: number | string, data: DictTypeType): Promise<any> => {
+export const updateDictTypeApi = (
+  id: number | string,
+  data: DictTypeType,
+): Promise<any> => {
   return request.put({ url: `/api/system/dict/type/${id}`, data });
 };
 
@@ -61,7 +64,10 @@ export const addDictDataApi = (data: DictDataType): Promise<any> => {
 };
 
 // 更新字典数据
-export const updateDictDataApi = (id: number | string, data: DictDataType): Promise<any> => {
+export const updateDictDataApi = (
+  id: number | string,
+  data: DictDataType,
+): Promise<any> => {
   return request.put({ url: `/api/system/dict/data/${id}`, data });
 };
 

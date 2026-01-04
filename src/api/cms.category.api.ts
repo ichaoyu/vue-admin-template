@@ -6,7 +6,10 @@ import { CategoryType } from '@/interface';
  * 分类管理API
  */
 // 获取分类列表
-export const getCategoryListApi = (params: any): Promise<PageVO<CategoryType>> => {
+export const getCategoryListApi = (
+  params: any,
+): Promise<PageVO<CategoryType>> => {
+  console.log('params: ', params);
   return request.get({ url: '/api/cms/category', params });
 };
 
@@ -26,6 +29,8 @@ export const updateCategoryApi = (data: CategoryType): Promise<any> => {
 };
 
 // 获取分类详情
-export const getCategoryDetailApi = (id: number | string): Promise<CategoryType> => {
+export const getCategoryDetailApi = (
+  id: number | string,
+): Promise<CategoryType> => {
   return request.get({ url: `/api/cms/category/${id}` });
 };

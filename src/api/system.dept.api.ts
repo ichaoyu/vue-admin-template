@@ -23,7 +23,10 @@ export const createDeptApi = (data: any): Promise<DeptVO> => {
 };
 
 // 更新部门
-export const updateDeptApi = (id: number | string, data: any): Promise<DeptVO> => {
+export const updateDeptApi = (
+  id: number | string,
+  data: any,
+): Promise<DeptVO> => {
   return request.put({ url: `/api/system/dept/${id}`, data });
 };
 

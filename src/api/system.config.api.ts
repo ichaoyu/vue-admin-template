@@ -25,7 +25,10 @@ export const createConfigApi = (data: any): Promise<any> => {
 };
 
 // 更新配置
-export const updateConfigApi = (id: number | string, data: any): Promise<any> => {
+export const updateConfigApi = (
+  id: number | string,
+  data: any,
+): Promise<any> => {
   return request.put({ url: `/api/system/config/${id}`, data });
 };
 

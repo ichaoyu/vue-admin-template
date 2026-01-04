@@ -18,7 +18,10 @@ export const createPostApi = (data: any): Promise<PostVO> => {
 };
 
 // 更新岗位
-export const updatePostApi = (id: number | string, data: any): Promise<PostVO> => {
+export const updatePostApi = (
+  id: number | string,
+  data: any,
+): Promise<PostVO> => {
   return request.put({ url: `/api/system/post/${id}`, data });
 };
 
@@ -29,6 +32,9 @@ export const deletePostApi = (id: number | string): Promise<any> => {
 
 // 批量删除岗位
 export const batchDeletePostApi = (ids: (number | string)[]): Promise<any> => {
-  return request.delete({ url: '/api/system/post', params: { ids: ids.join(',') } });
+  return request.delete({
+    url: '/api/system/post',
+    params: { ids: ids.join(',') },
+  });
 };
 // #endregion 岗位管理接口

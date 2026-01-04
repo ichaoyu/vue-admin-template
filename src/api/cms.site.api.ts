@@ -16,7 +16,9 @@ export const getSiteInfoApi = (id: number | string): Promise<SiteInfoType> => {
 };
 
 // 创建网站配置
-export const createSiteInfoApi = (data: SiteInfoType): Promise<SiteInfoType> => {
+export const createSiteInfoApi = (
+  data: SiteInfoType,
+): Promise<SiteInfoType> => {
   return request.post({ url: '/api/cms/site', data });
 };
 

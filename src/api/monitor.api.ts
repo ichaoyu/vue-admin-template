@@ -29,7 +29,10 @@ export const delLoginLogApi = (id: number | string): Promise<any> => {
 };
 // 批量删除登录日志
 export const batchDelLoginLogApi = (ids: (number | string)[]): Promise<any> => {
-  return request.delete({ url: `/api/monitor/loginLog`, params: { ids: ids.join(',') } });
+  return request.delete({
+    url: `/api/monitor/loginLog`,
+    params: { ids: ids.join(',') },
+  });
 };
 // 清空登录日志
 export const clearLoginLogApi = (): Promise<any> => {
@@ -39,7 +42,9 @@ export const clearLoginLogApi = (): Promise<any> => {
 
 // #region 操作日志接口
 // 操作日志分页
-export const getOperLogListApi = (params: any): Promise<PageVO<OperLogType>> => {
+export const getOperLogListApi = (
+  params: any,
+): Promise<PageVO<OperLogType>> => {
   return request.get({ url: '/api/monitor/operLog/page', params });
 };
 // 导出日志分页
@@ -54,7 +59,10 @@ export const delOperLogApi = (id: number | string): Promise<any> => {
 
 // 批量删除操作日志
 export const batchDelOperLogApi = (ids: (number | string)[]): Promise<any> => {
-  return request.delete({ url: `/api/monitor/operLog`, params: { ids: ids.join(',') } });
+  return request.delete({
+    url: `/api/monitor/operLog`,
+    params: { ids: ids.join(',') },
+  });
 };
 
 // 清空操作日志
@@ -74,7 +82,10 @@ export const delOnlineApi = (id: string): Promise<any> => {
 };
 // 批量下线用户
 export const batchDelOnlineApi = (ids: string[]): Promise<any> => {
-  return request.delete({ url: `/api/monitor/online`, params: { ids: ids.join(',') } });
+  return request.delete({
+    url: `/api/monitor/online`,
+    params: { ids: ids.join(',') },
+  });
 };
 //#endregion 在线用户接口
 

@@ -65,7 +65,10 @@ export const deleteUserApi = (id: number): Promise<any> => {
 
 // 批量删除用户
 export const batchDeleteUserApi = (data: { ids: number[] }): Promise<any> => {
-  return request.delete({ url: '/api/system/user', params: { ids: data.ids.join(',') } });
+  return request.delete({
+    url: '/api/system/user',
+    params: { ids: data.ids.join(',') },
+  });
 };
 
 // 修改用户状态
@@ -73,7 +76,10 @@ export const changeUserStatusApi = (data: {
   id: number;
   status: number;
 }): Promise<any> => {
-  return request.patch({ url: `/api/system/user/${data.id}`, data: { status: data.status } });
+  return request.patch({
+    url: `/api/system/user/${data.id}`,
+    data: { status: data.status },
+  });
 };
 
 // 获取用户角色列表
@@ -91,7 +97,10 @@ export const assignUserRoleApi = (data: {
   userId: number;
   roleIds: number[];
 }): Promise<any> => {
-  return request.patch({ url: `/api/system/user/${data.userId}`, data: { roleIds: data.roleIds } });
+  return request.patch({
+    url: `/api/system/user/${data.userId}`,
+    data: { roleIds: data.roleIds },
+  });
 };
 
 // 获取部门列表

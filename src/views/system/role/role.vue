@@ -105,7 +105,9 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="permissionDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="handleAssignPermission">确定</el-button>
+          <el-button type="primary" @click="handleAssignPermission"
+            >确定</el-button
+          >
         </span>
       </template>
     </el-dialog>
@@ -176,11 +178,21 @@ const treeProps = {
 const roleRules = {
   roleName: [
     { required: true, message: '请输入角色名称', trigger: 'blur' },
-    { min: 2, max: 30, message: '角色名称长度在 2 到 30 个字符', trigger: 'blur' },
+    {
+      min: 2,
+      max: 30,
+      message: '角色名称长度在 2 到 30 个字符',
+      trigger: 'blur',
+    },
   ],
   roleKey: [
     { required: true, message: '请输入角色标识', trigger: 'blur' },
-    { min: 2, max: 100, message: '角色标识长度在 2 到 100 个字符', trigger: 'blur' },
+    {
+      min: 2,
+      max: 100,
+      message: '角色标识长度在 2 到 100 个字符',
+      trigger: 'blur',
+    },
   ],
   roleSort: [{ required: true, message: '请输入显示顺序', trigger: 'blur' }],
 };

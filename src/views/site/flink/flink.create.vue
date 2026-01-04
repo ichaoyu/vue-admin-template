@@ -65,7 +65,10 @@
 import { FlinkType } from '@/interface';
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus';
 import { isUrl, PropType } from '@/utils';
-import { addFriendlinkApi, updateFriendlinkApi } from '@/api/cms.friendlink.api';
+import {
+  addFriendlinkApi,
+  updateFriendlinkApi,
+} from '@/api/cms.friendlink.api';
 import { ref, watch, reactive } from 'vue';
 
 const props = defineProps({

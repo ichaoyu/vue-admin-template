@@ -1,5 +1,9 @@
 import { request } from '@/utils';
-import { RoleListVO, RolePermissionVO, RoleVO } from '@/interface/role.interface';
+import {
+  RoleListVO,
+  RolePermissionVO,
+  RoleVO,
+} from '@/interface/role.interface';
 
 // #region 角色管理接口
 // 获取角色列表
@@ -8,7 +12,9 @@ export const getRoleListApi = (): Promise<RoleListVO> => {
 };
 
 // 获取角色详情
-export const getRoleDetailApi = (id: number | string): Promise<RolePermissionVO> => {
+export const getRoleDetailApi = (
+  id: number | string,
+): Promise<RolePermissionVO> => {
   return request.get({ url: `/api/system/role/${id}` });
 };
 
@@ -18,7 +24,10 @@ export const createRoleApi = (data: any): Promise<RoleVO> => {
 };
 
 // 更新角色
-export const updateRoleApi = (id: number | string, data: any): Promise<RoleVO> => {
+export const updateRoleApi = (
+  id: number | string,
+  data: any,
+): Promise<RoleVO> => {
   return request.put({ url: `/api/system/role/${id}`, data });
 };
 
@@ -29,6 +38,9 @@ export const deleteRoleApi = (id: number | string): Promise<any> => {
 
 // 批量删除角色
 export const batchDeleteRoleApi = (ids: (number | string)[]): Promise<any> => {
-  return request.delete({ url: '/api/system/role', params: { ids: ids.join(',') } });
+  return request.delete({
+    url: '/api/system/role',
+    params: { ids: ids.join(',') },
+  });
 };
 // #endregion 角色管理接口

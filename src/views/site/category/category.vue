@@ -20,7 +20,7 @@
       <el-button type="primary" @click="fetchTableList">搜索</el-button>
       <el-button @click="resetSearch">重置</el-button>
     </template>
-    
+
     <!-- 分类树结构 -->
     <el-card class="category-tree-card" shadow="never">
       <el-tree
@@ -45,11 +45,7 @@
               >
                 编辑
               </el-button>
-              <el-button
-                type="text"
-                size="small"
-                @click.stop="handleAdd(data)"
-              >
+              <el-button type="text" size="small" @click.stop="handleAdd(data)">
                 添加子分类
               </el-button>
               <el-button
@@ -99,7 +95,11 @@
           </el-select>
         </el-form-item>
         <el-form-item label="显示顺序" prop="orderNum">
-          <el-input-number v-model="categoryForm.orderNum" :min="0" :max="999" />
+          <el-input-number
+            v-model="categoryForm.orderNum"
+            :min="0"
+            :max="999"
+          />
         </el-form-item>
         <el-form-item label="分类状态" prop="status">
           <el-switch
@@ -187,7 +187,12 @@ const categoryForm = ref({
 const categoryRules = {
   name: [
     { required: true, message: '请输入分类名称', trigger: 'blur' },
-    { min: 1, max: 50, message: '分类名称长度在 1 到 50 个字符', trigger: 'blur' },
+    {
+      min: 1,
+      max: 50,
+      message: '分类名称长度在 1 到 50 个字符',
+      trigger: 'blur',
+    },
   ],
   orderNum: [{ required: true, message: '请输入显示顺序', trigger: 'blur' }],
 };
@@ -202,7 +207,6 @@ const treeProps = {
 // 生命周期钩子
 onMounted(() => {
   fetchTableList();
-  fetchCategoryTree();
 });
 
 // 监听搜索条件变化
@@ -213,10 +217,10 @@ watch(
       categoryTreeRef.value.filter(searchForm.value.name);
     }
   },
-  { immediate: true, deep: true }
+  { immediate: true, deep: true },
 );
 
-// 获取分类列表
+// 获取分类列表和树结构
 const fetchTableList = async () => {
   loading.value = true;
   try {
@@ -227,26 +231,17 @@ const fetchTableList = async () => {
     });
     data.value = res.list;
     total.value = res.total;
-  } catch (err) {
-    console.error(err);
-    ElMessage.error('获取分类列表失败');
-  } finally {
-    loading.value = false;
-  }
-};
 
-// 获取分类树
-const fetchCategoryTree = async () => {
-  try {
-    const res = await getCategoryListApi({});
-    // 将列表数据转换为树结构
+    // 同时构建分类树结构
     const treeData = buildTree(res.list, '0');
     categoryTree.value = treeData;
     // 默认展开所有节点
     expandedKeys.value = treeData.map((item) => item.id);
   } catch (err) {
     console.error(err);
-    ElMessage.error('获取分类树失败');
+    ElMessage.error('获取分类列表失败');
+  } finally {
+    loading.value = false;
   }
 };
 
@@ -312,7 +307,6 @@ const handleDelete = (row) => {
       try {
         await delCategoryApi(row.id);
         ElMessage.success('删除成功');
-        fetchCategoryTree();
         fetchTableList();
       } catch (err) {
         ElMessage.error('删除失败');
@@ -346,7 +340,6 @@ const submitForm = async () => {
       ElMessage.success('编辑分类成功');
     }
     dialogVisible.value = false;
-    fetchCategoryTree();
     fetchTableList();
   } catch (err) {
     console.error(err);
@@ -386,8 +379,8 @@ const resetSearch = () => {
 
 .tree-node-content {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
   padding: 0 4px;
 

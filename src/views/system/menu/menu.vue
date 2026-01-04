@@ -21,7 +21,7 @@
       <el-button type="primary" @click="fetchTableList">搜索</el-button>
       <el-button @click="resetSearch">重置</el-button>
     </template>
-    
+
     <!-- 菜单树结构 -->
     <el-card class="menu-tree-card" shadow="never">
       <el-tree
@@ -46,11 +46,7 @@
               >
                 编辑
               </el-button>
-              <el-button
-                type="text"
-                size="small"
-                @click.stop="handleAdd(data)"
-              >
+              <el-button type="text" size="small" @click.stop="handleAdd(data)">
                 添加子菜单
               </el-button>
               <el-button
@@ -106,7 +102,11 @@
         <el-form-item label="路由地址" prop="path" v-if="menuForm.type === 1">
           <el-input v-model="menuForm.path" placeholder="请输入路由地址" />
         </el-form-item>
-        <el-form-item label="组件路径" prop="component" v-if="menuForm.type === 1">
+        <el-form-item
+          label="组件路径"
+          prop="component"
+          v-if="menuForm.type === 1"
+        >
           <el-input v-model="menuForm.component" placeholder="请输入组件路径" />
         </el-form-item>
         <el-form-item label="权限标识" prop="perms">
@@ -223,17 +223,32 @@ const menuForm = ref({
 const menuRules = {
   menuName: [
     { required: true, message: '请输入菜单名称', trigger: 'blur' },
-    { min: 1, max: 50, message: '菜单名称长度在 1 到 50 个字符', trigger: 'blur' },
+    {
+      min: 1,
+      max: 50,
+      message: '菜单名称长度在 1 到 50 个字符',
+      trigger: 'blur',
+    },
   ],
   orderNum: [{ required: true, message: '请输入显示顺序', trigger: 'blur' }],
   type: [{ required: true, message: '请选择菜单类型', trigger: 'change' }],
   path: [
     { required: true, message: '请输入路由地址', trigger: 'blur' },
-    { min: 1, max: 200, message: '路由地址长度在 1 到 200 个字符', trigger: 'blur' },
+    {
+      min: 1,
+      max: 200,
+      message: '路由地址长度在 1 到 200 个字符',
+      trigger: 'blur',
+    },
   ],
   component: [
     { required: true, message: '请输入组件路径', trigger: 'blur' },
-    { min: 1, max: 200, message: '组件路径长度在 1 到 200 个字符', trigger: 'blur' },
+    {
+      min: 1,
+      max: 200,
+      message: '组件路径长度在 1 到 200 个字符',
+      trigger: 'blur',
+    },
   ],
 };
 
@@ -258,7 +273,7 @@ watch(
       menuTreeRef.value.filter(searchForm.value.menuName);
     }
   },
-  { immediate: true, deep: true }
+  { immediate: true, deep: true },
 );
 
 // 获取菜单列表

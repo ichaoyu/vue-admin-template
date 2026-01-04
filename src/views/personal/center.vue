@@ -14,12 +14,19 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="用户名" prop="userName">
-                  <el-input v-model="userInfo.userName" placeholder="请输入用户名" disabled />
+                  <el-input
+                    v-model="userInfo.userName"
+                    placeholder="请输入用户名"
+                    disabled
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="昵称" prop="nickName">
-                  <el-input v-model="userInfo.nickName" placeholder="请输入昵称" />
+                  <el-input
+                    v-model="userInfo.nickName"
+                    placeholder="请输入昵称"
+                  />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -31,7 +38,10 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="手机号" prop="phone">
-                  <el-input v-model="userInfo.phone" placeholder="请输入手机号" />
+                  <el-input
+                    v-model="userInfo.phone"
+                    placeholder="请输入手机号"
+                  />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -46,7 +56,11 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="部门" prop="deptName">
-                  <el-input v-model="userInfo.deptName" placeholder="部门" disabled />
+                  <el-input
+                    v-model="userInfo.deptName"
+                    placeholder="部门"
+                    disabled
+                  />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -121,7 +135,9 @@
             <el-row :gutter="20">
               <el-col :span="24" class="form-actions">
                 <el-button @click="resetPwdForm">重置</el-button>
-                <el-button type="primary" @click="handlePwdSubmit">保存</el-button>
+                <el-button type="primary" @click="handlePwdSubmit"
+                  >保存</el-button
+                >
               </el-col>
             </el-row>
           </el-form>
@@ -145,7 +161,7 @@
                 class="avatar-uploader"
                 action="/api/current-user/updateAvatar"
                 :show-file-list="false"
-                :headers="{ 'Authorization': `Bearer ${getToken()}` }"
+                :headers="{ Authorization: `Bearer ${getToken()}` }"
                 :on-success="handleAvatarSuccess"
                 :before-upload="beforeAvatarUpload"
               >
@@ -168,7 +184,11 @@
 import { ref, onMounted, computed } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRoute, useRouter } from 'vue-router';
-import { getUserInfoApi, updateUserInfoApi, updateUserPwdApi } from '@/api/user.api';
+import {
+  getUserInfoApi,
+  updateUserInfoApi,
+  updateUserPwdApi,
+} from '@/api/user.api';
 
 // 模拟 getToken 函数，实际项目中应该从 store 或 cookie 中获取 token
 const getToken = () => {

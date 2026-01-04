@@ -146,11 +146,21 @@ const postForm = ref({
 const postRules = {
   postName: [
     { required: true, message: '请输入岗位名称', trigger: 'blur' },
-    { min: 1, max: 50, message: '岗位名称长度在 1 到 50 个字符', trigger: 'blur' },
+    {
+      min: 1,
+      max: 50,
+      message: '岗位名称长度在 1 到 50 个字符',
+      trigger: 'blur',
+    },
   ],
   postCode: [
     { required: true, message: '请输入岗位编码', trigger: 'blur' },
-    { min: 1, max: 50, message: '岗位编码长度在 1 到 50 个字符', trigger: 'blur' },
+    {
+      min: 1,
+      max: 50,
+      message: '岗位编码长度在 1 到 50 个字符',
+      trigger: 'blur',
+    },
   ],
   postSort: [{ required: true, message: '请输入显示顺序', trigger: 'blur' }],
 };

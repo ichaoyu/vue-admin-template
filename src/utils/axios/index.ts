@@ -76,9 +76,9 @@ axiosInstance.interceptors.response.use(
       // 文件流直接返回全部
       return response;
     }
-    
+
     const { code, message, data } = response.data;
-    
+
     // 成功时返回data数据
     if (code === 200) {
       return data;

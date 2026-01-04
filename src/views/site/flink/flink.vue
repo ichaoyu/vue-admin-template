@@ -54,7 +54,10 @@
 </template>
 
 <script setup lang="ts">
-import { getFriendlinkListApi, delFriendlinkApi } from '@/api/cms.friendlink.api';
+import {
+  getFriendlinkListApi,
+  delFriendlinkApi,
+} from '@/api/cms.friendlink.api';
 import Table from '@/components/Table';
 import createDraw from './flink.create.vue';
 
@@ -132,8 +135,8 @@ let currentPage = ref<number>(1);
 let pageSize = ref<number>(20);
 // 分页
 const onPageChange = ({ page, size }) => {
-  currentPage = page ?? currentPage.value;
-  pageSize = size ?? pageSize.value;
+  currentPage.value = page ?? currentPage.value;
+  pageSize.value = size ?? pageSize.value;
   fetchTableList();
 };
 

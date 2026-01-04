@@ -6,7 +6,9 @@ import { FlinkType } from '@/interface';
  * 友情链接管理API
  */
 // 获取友情链接列表
-export const getFriendlinkListApi = (params: any): Promise<PageVO<FlinkType>> => {
+export const getFriendlinkListApi = (
+  params: any,
+): Promise<PageVO<FlinkType>> => {
   return request.get({ url: '/api/cms/friendlink', params });
 };
 
@@ -26,6 +28,8 @@ export const updateFriendlinkApi = (data: FlinkType): Promise<any> => {
 };
 
 // 获取友情链接详情
-export const getFriendlinkDetailApi = (id: number | string): Promise<FlinkType> => {
+export const getFriendlinkDetailApi = (
+  id: number | string,
+): Promise<FlinkType> => {
   return request.get({ url: `/api/cms/friendlink/${id}` });
 };

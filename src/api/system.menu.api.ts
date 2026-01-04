@@ -23,7 +23,10 @@ export const createMenuApi = (data: any): Promise<MenuVO> => {
 };
 
 // 更新菜单
-export const updateMenuApi = (id: number | string, data: any): Promise<MenuVO> => {
+export const updateMenuApi = (
+  id: number | string,
+  data: any,
+): Promise<MenuVO> => {
   return request.put({ url: `/api/system/menu/${id}`, data });
 };
 

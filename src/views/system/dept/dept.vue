@@ -20,7 +20,7 @@
       <el-button type="primary" @click="fetchTableList">搜索</el-button>
       <el-button @click="resetSearch">重置</el-button>
     </template>
-    
+
     <!-- 部门树结构 -->
     <el-card class="dept-tree-card" shadow="never">
       <el-tree
@@ -45,11 +45,7 @@
               >
                 编辑
               </el-button>
-              <el-button
-                type="text"
-                size="small"
-                @click.stop="handleAdd(data)"
-              >
+              <el-button type="text" size="small" @click.stop="handleAdd(data)">
                 添加子部门
               </el-button>
               <el-button
@@ -200,7 +196,12 @@ const deptForm = ref({
 const deptRules = {
   deptName: [
     { required: true, message: '请输入部门名称', trigger: 'blur' },
-    { min: 1, max: 50, message: '部门名称长度在 1 到 50 个字符', trigger: 'blur' },
+    {
+      min: 1,
+      max: 50,
+      message: '部门名称长度在 1 到 50 个字符',
+      trigger: 'blur',
+    },
   ],
   orderNum: [{ required: true, message: '请输入显示顺序', trigger: 'blur' }],
   phone: [
@@ -240,7 +241,7 @@ watch(
       deptTreeRef.value.filter(searchForm.value.deptName);
     }
   },
-  { immediate: true, deep: true }
+  { immediate: true, deep: true },
 );
 
 // 获取部门列表
