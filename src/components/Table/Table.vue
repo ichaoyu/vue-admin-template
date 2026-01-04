@@ -1,60 +1,42 @@
 <template>
-  <div class="table">
-    <div class="table-tools">
-      <div class="tools-bar">
-        <!-- 表格外操作 -->
-        <slot name="toolbar"></slot>
-      </div>
-      <div class="tools-column">
-        <div class="tools-column-selection">
-          <template v-if="selections.length > 0">
-            <div class="select-num">
-              <span
-                >已选择 {{ selections.length }}/{{ props.data.length }}</span
-              >
-              <el-tooltip placement="top" content="取消选择">
-                <IconFont
-                  class="icon-close"
-                  icon="CircleCloseFilled"
-                  @click="onCancelSelection"
-                />
-              </el-tooltip>
-            </div>
-            <slot name="selections"></slot>
-            <el-button type="danger" @click="onBatchDelete">批量删除</el-button>
-          </template>
-        </div>
-        <div class="tools-column-opr">
-          <!-- 表格大小 -->
-          <ToolsTableSize
-            :size="tableSize"
-            @change-table-size="onChangeTableSize"
-          />
-          <!-- 列设置 -->
-          <ToolsColumnsToggle
-            :columns="columnsSettings"
-            @change-columns="onChangeColumns"
-          />
-        </div>
-      </div>
+  <div class="table-wrapper">
+    <!-- 表格工具栏 -->
+    <div class="table-tools" v-if="$slots.toolbar">
+      <slot name="toolbar"></slot>
     </div>
+
+    <!-- 多选操作栏 -->
+    <div class="table-selection" v-if="selections.length > 0">
+      <span class="selection-info">已选择 {{ selections.length }} 项</span>
+      <slot name="selections"></slot>
+      <el-button type="danger" @click="handleBatchDelete" size="small"
+        >批量删除</el-button
+      >
+      <el-button @click="handleCancelSelection" size="small"
+        >取消选择</el-button
+      >
+    </div>
+
+    <!-- 表格主体 -->
     <el-table
-      ref="commonTableRef"
-      class="table-body"
-      :data="props.data"
-      :height="props.height"
+      ref="tableRef"
       v-bind="$attrs"
-      :size="tableSize"
+      :data="props.data"
+      :loading="props.loading"
       :highlight-current-row="props.highlightCurrentRow"
-      :empty-text="props.emptyText"
-      :show-overflow-tooltip="props.showOverflowTooltip"
       @selection-change="handleSelectionChange"
+      @sort-change="handleSortChange"
+      @row-click="handleRowClick"
+      @cell-click="handleCellClick"
     >
-      <!-- 折叠 -->
+      <!-- 展开列 -->
       <el-table-column v-if="props.expand" type="expand" fixed>
-        <slot name="expand"></slot>
+        <template #default="scope">
+          <slot name="expand" :row="scope.row" :index="scope.$index"></slot>
+        </template>
       </el-table-column>
-      <!-- 序号 -->
+
+      <!-- 序号列 -->
       <el-table-column
         v-if="props.index"
         type="index"
@@ -66,106 +48,134 @@
           {{ (props.currentPage - 1) * props.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <!-- 复选框 -->
+
+      <!-- 多选列 -->
       <el-table-column
         v-if="props.selection"
-        v-bind="{
-          type: 'selection',
-          width: 45,
-          fixed: true,
-        }"
+        type="selection"
+        width="45"
+        fixed
       />
-      <!-- 表格主体内容 -->
-      <template v-for="item in columnsSettings" :key="item.key">
+
+      <!-- 动态列渲染 -->
+      <template v-for="column in props.columns" :key="column.key">
         <el-table-column
-          :label="item.label"
-          :width="item.width"
-          :type="item.type"
-          :prop="item.key"
-          :min-width="item['min-width'] || item.minWidth"
-          :sortable="item.sortable"
-          :align="item.align"
-          :fixed="item.fixed"
+          :label="column.label"
+          :prop="column.key"
+          :width="column.width"
+          :min-width="column.minWidth"
+          :type="column.type"
+          :sortable="column.sortable"
+          :align="column.align || props.align"
+          :header-align="column.headerAlign || props.headerAlign"
+          :fixed="column.fixed"
+          :show-overflow-tooltip="
+            column.showOverflowTooltip || props.showOverflowTooltip
+          "
         >
-          <template #header>{{ item.label }}</template>
+          <!-- 自定义表头插槽 -->
+          <template #header v-if="column.slotName?.includes('header')">
+            <slot :name="column.slotName" :column="column"></slot>
+          </template>
+
+          <!-- 自定义内容插槽 -->
           <template #default="scope">
-            <!-- 自定义插槽 -->
-            <template v-if="item.slotName">
-              <slot :name="item.slotName" :scope="scope"></slot>
-            </template>
-            <!-- 自定义渲染 -->
-            <template v-if="item.render">
-              <render
-                :column="item"
+            <!-- 优先使用插槽渲染 -->
+            <template
+              v-if="column.slotName && !column.slotName.includes('header')"
+            >
+              <slot
+                :name="column.slotName"
                 :row="scope.row"
-                :render="item.render"
+                :index="scope.$index"
+                :column="column"
+              ></slot>
+            </template>
+            <!-- 其次使用自定义渲染函数 -->
+            <template v-else-if="column.render">
+              <component
+                :is="renderComponent"
+                :render="column.render"
+                :row="scope.row"
+                :column="column"
                 :index="scope.$index"
               />
             </template>
-            <!-- 字典map -->
-            <template v-if="item.dictMap">
-              <i
-                v-if="item.dictMap.color"
-                class="dict-dot"
-                :style="{
-                  backgroundColor: item.dictMap.color[scope.row[item.key]],
-                }"
-              ></i
-              >{{ item.dictMap.value[scope.row[item.key]] }}
+            <!-- 字典映射渲染 -->
+            <template v-else-if="column.dictMap">
+              <span>
+                <i
+                  v-if="column.dictMap.color"
+                  class="dict-dot"
+                  :style="{
+                    backgroundColor:
+                      column.dictMap.color[scope.row[column.key]],
+                  }"
+                ></i>
+                {{
+                  column.dictMap.value[scope.row[column.key]] ||
+                  scope.row[column.key]
+                }}
+              </span>
+            </template>
+            <!-- 链接形式渲染 -->
+            <template v-else-if="column.oprAction">
+              <el-link
+                type="primary"
+                @click="column.oprAction(scope.row, scope.$index, props.data)"
+                :underline="false"
+              >
+                {{ scope.row[column.key] }}
+              </el-link>
+            </template>
+            <!-- 默认文本渲染 -->
+            <template v-else>
+              <span>{{ scope.row[column.key] }}</span>
             </template>
 
-            <!-- 链接查看 -->
-            <el-link
-              v-if="item.oprAction"
-              class="view-link"
-              type="primary"
-              @click="item.oprAction(scope.row, scope.$index, props.data)"
-              >{{ scope.row[item.key] }}</el-link
+            <!-- 复制功能 -->
+            <el-icon
+              v-if="column.copy"
+              class="copy-icon"
+              @click="handleCopy(scope.row[column.key], column)"
             >
-            <!-- 文本 -->
-            <template
-              v-if="
-                !item.render &&
-                !item.slotName &&
-                !item.dictMap &&
-                !item.oprAction
-              "
-              ><span>{{ scope.row[item.key] }}</span></template
-            >
-            <!-- 复制 -->
-            <IconFont
-              v-if="item.copy"
-              class="icon-btn-copy"
-              name="copy"
-              :size="14"
-              @click="
-                item.copyFun
-                  ? item.copyFun(scope.row[item.key], item.key, scope.row)
-                  : onCopyItem(scope.row[item.key])
-              "
-            />
+              <CopyDocument />
+            </el-icon>
           </template>
         </el-table-column>
       </template>
-      <!-- 操作按钮 -->
-      <el-table-column v-if="props.action.length > 0" v-bind="actionCfg" :show-overflow-tooltip="false">
+
+      <!-- 操作列 -->
+      <el-table-column
+        v-if="props.action && props.action.length > 0"
+        :width="actionConfig.width"
+        :fixed="actionConfig.fixed"
+        :label="actionConfig.label"
+        :align="actionConfig.align"
+        :show-overflow-tooltip="actionConfig.showOverflowTooltip"
+      >
         <template #default="scope">
-          <div class="operator_btn" :style="actionCfg && actionCfg.style">
-            <template v-for="(opr, opridx) in props.action" :key="opr.key || opridx">
+          <div class="action-buttons">
+            <template v-for="(action, index) in props.action" :key="index">
               <!-- 权限判断 -->
-              <template v-if="!opr.permission || hasPermission(opr.permission)">
+              <template
+                v-if="!action.permission || hasPermission(action.permission)"
+              >
                 <el-button
-                  @click="opr.action && opr.action(scope.row, scope.$index, props.data)"
-                  v-bind="{
-                    type: 'primary',
-                    link: true,
-                    text: true,
-                    size: 'small',
-                    ...opr.btnStyle,
-                  } as any"
-                  :disabled="opr.disabled && opr.disabled(scope.row, scope.$index)"
+                  :type="action.type || 'primary'"
+                  :link="action.link || true"
+                  :text="action.textBtn"
+                  :size="action.size || 'small'"
+                  :icon="action.icon"
+                  :disabled="
+                    typeof action.disabled === 'function'
+                      ? action.disabled(scope.row, scope.$index)
+                      : action.disabled
+                  "
+                  @click="action.action(scope.row, scope.$index, props.data)"
+                  class="action-btn"
                 >
-                  <span>{{ opr.text }}</span>
+                  {{ action.text }}
                 </el-button>
               </template>
             </template>
@@ -173,515 +183,261 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
-      v-if="props.pagination"
-      class="table-pagination"
-      background
-      :size="tableSize"
-      v-model:current-page="$props.currentPage"
-      v-model:page-size="$props.pageSize"
-      :page-sizes="[10, 20, 50, 100, 200]"
-      layout="total, sizes, ->, prev, pager, next, jumper"
-      :hide-on-single-page="false"
-      @current-change="onPageChange"
-      @update:page-size="onChangePageSize"
-      v-bind="props.pagination"
-    >
-      <slot name="pagination"></slot>
-    </el-pagination>
+
+    <!-- 分页组件 -->
+    <div class="table-pagination" v-if="props.pagination">
+      <el-pagination
+        v-model:current-page="currentPage"
+        v-model:page-size="pageSize"
+        :total="props.pagination.total || 0"
+        :page-sizes="props.pagination.pageSizes || [10, 20, 50, 100]"
+        :layout="
+          props.pagination.layout ||
+          'total, sizes, ->, prev, pager, next, jumper'
+        "
+        :background="props.pagination.background || true"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      >
+        <slot name="pagination"></slot>
+      </el-pagination>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts" name="Table">
-import { computed, ref, PropType } from 'vue';
-import { ElTooltipProps, ElMessage, ElTable } from 'element-plus';
+import { ref, computed } from 'vue';
+import { ElMessage, ElTable } from 'element-plus';
+import { CopyDocument } from '@element-plus/icons-vue';
 import { useClipboard } from '@/hooks/useClipboard';
-import ToolsTableSize from './ToolsTableSize.vue';
-import ToolsColumnsToggle from './ToolsColumnsToggle.vue';
-import render from './render.vue';
-import IconFont from '../IconFont/IconFont.vue';
-import {
-  Pagination,
+import type {
+  TableProps,
   TableColumn,
   TableAction,
   TableActionConfig,
 } from './types';
-import { ElementSize } from '@/types';
-const props = defineProps({
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-  // 折叠
-  expand: {
-    type: Boolean,
-    default: false,
-  },
-  // 多选框
-  selection: {
-    type: Boolean,
-    default: false,
-  },
-  // 序号
-  index: {
-    type: Boolean,
-    default: false,
-  },
 
-  // 每页数量
-  pageSize: {
-    type: Number,
-    default: 10,
-  },
-  // 当前页码
-  currentPage: {
-    type: Number,
-    default: 1,
-  },
-  // 分页配置
-  pagination: {
-    type: Object as PropType<Pagination>,
-    default: (): Pagination | undefined => undefined,
-  },
-  // 是否超出隐藏
-  showOverflowTooltip: {
-    type: Boolean,
-    default: true,
-  },
-  // 对齐方式
-  align: {
-    type: String as PropType<'left' | 'center' | 'right'>,
-    default: 'left',
-  },
-  // 操作列
-  action: {
-    type: Array as PropType<TableAction[]>,
-    default: () => [],
-  },
-  // 操作列配置
-  actionConfig: {
-    type: Object as PropType<TableActionConfig>,
-    default: () => ({
-      width: 180,
-      fixed: 'right',
-      label: '操作',
-      align: 'center',
-    }),
-  },
-  // 表头对齐方式
-  headerAlign: {
-    type: String as PropType<'left' | 'center' | 'right'>,
-    default: 'left',
-  },
-  // 表头
-  columns: {
-    type: Array as PropType<TableColumn[]>,
-    default: () => [],
-  },
-  // 表格数据
-  data: {
-    type: Array as PropType<Recordable[]>,
-    default: () => [],
-  },
-  // 条纹
-  stripe: {
-    type: Boolean,
-    default: false,
-  },
-  // 边框
-  border: {
-    type: Boolean,
-    default: false,
-  },
-  // 高度
-  height: {
-    type: [Number, String],
-    // default: 'var(--table-height)',
-    default: '100%',
-  },
-  // 最大高度
-  maxHeight: {
-    type: [Number, String],
-    default: '800',
-  },
-  // 尺寸
-  size: {
-    type: String as PropType<ElementSize>,
-    default: 'small',
-  },
-  // 列宽是否自动撑开
-  fit: {
-    type: Boolean,
-    default: true,
-  },
-  // 是否显示表头
-  showHeader: {
-    type: Boolean,
-    default: true,
-  },
-  // 是否要高亮当前行
-  highlightCurrentRow: {
-    type: Boolean,
-    default: false,
-  },
-  // current-row-key	当前行的 key，只写属性
-  currentRowKey: {
-    type: [Number, String],
-    default: 'id',
-  },
-  // 行的 className 的回调方法或字符串的 className
-  rowClassName: {
-    type: [Function, String] as PropType<
-      (row: Recordable, rowIndex: number) => string | string
-    >,
-    default: '',
-  },
-
-  // 单元格的 className 的回调方法或字符串的 className
-  cellClassName: {
-    type: [Function, String] as PropType<
-      (row: Recordable, column: any, rowIndex: number) => string | string
-    >,
-    default: '',
-  },
-
-  // 表头行的 className 的回调方法或字符串的 className
-  headerRowClassName: {
-    type: [Function, String] as PropType<
-      (row: Recordable, rowIndex: number) => string | string
-    >,
-    default: '',
-  },
-
-  // 表头单元格的 className 的回调方法或字符串的 className
-  headerCellClassName: {
-    type: [Function, String] as PropType<
-      (row: Recordable, column: any, rowIndex: number) => string | string
-    >,
-    default: '',
-  },
-
-  // 行数据的 Key，用来优化 Table 的渲染
-  rowKey: {
-    type: String,
-    default: 'id',
-  },
-  emptyText: {
-    type: String,
-    default: '暂无数据',
-  },
-  // 是否默认展开所有行
-  defaultExpandAll: {
-    type: Boolean,
-    default: false,
-  },
-  // 设置 Table 目前的展开行，需要设置 row-key 属性才能使用
-  expandRowKeys: {
-    type: Array as PropType<string[]>,
-    default: undefined,
-  },
-  // 默认的排序列的 prop 和顺序
-  defaultSort: {
-    type: Object as PropType<{ prop: string; order: string }>,
-    default: () => ({}),
-  },
-  // 溢出的 tooltip 的 effect
-  tooltipEffect: {
-    type: String as PropType<'dark' | 'light'>,
-    default: 'dark',
-  },
-  // 溢出 tooltip 的选项
-  tooltipOptions: {
-    type: Object as PropType<
-      Pick<
-        ElTooltipProps,
-        | 'effect'
-        | 'enterable'
-        | 'hideAfter'
-        | 'offset'
-        | 'placement'
-        | 'popperClass'
-        | 'popperOptions'
-        | 'showAfter'
-        | 'showArrow'
-      >
-    >,
-    default: () => ({
-      enterable: true,
-      placement: 'top',
-      showArrow: true,
-      hideAfter: 200,
-      popperOptions: { strategy: 'fixed' },
-    }),
-  },
-  // 是否在表尾显示合计行
-  showSummary: {
-    type: Boolean,
-    default: false,
-  },
-  // 显示摘要行第一列的文本
-  sumText: {
-    type: String,
-    default: 'Sum',
-  },
-  // 自定义的合计计算方法
-  summaryMethod: {
-    type: Function as PropType<
-      (param: { columns: any[]; data: any[] }) => any[]
-    >,
-    default: undefined,
-  },
-  // 合并行或列的计算方法
-  spanMethod: {
-    type: Function as PropType<
-      (param: {
-        row: any;
-        column: any;
-        rowIndex: number;
-        columnIndex: number;
-      }) => any[]
-    >,
-    default: undefined,
-  },
-  // 部分行被选中
-  selectOnIndeterminate: {
-    type: Boolean,
-    default: true,
-  },
-  // 树节点的缩进
-  indent: {
-    type: Number,
-    default: 16,
-  },
-  // 是否懒加载子节点数据
-  lazy: {
-    type: Boolean,
-    default: false,
-  },
-  // 加载子节点数据的函数，lazy 为 true 时生效
-  load: {
-    type: Function as PropType<
-      (row: Recordable, treeNode: any, resolve: Function) => void
-    >,
-    default: undefined,
-  },
-  // 渲染嵌套数据的配置选项
-  treeProps: {
-    type: Object as PropType<{
-      hasChildren?: string;
-      children?: string;
-      label?: string;
-    }>,
-    default: () => ({
-      hasChildren: 'hasChildren',
-      children: 'children',
-      label: 'label',
-    }),
-  },
-  // 设置表格单元、行和列的布局方式
-  tableLayout: {
-    type: String as PropType<'auto' | 'fixed'>,
-    default: 'fixed',
-  },
-  // 总是显示滚动条
-  scrollbarAlwaysOn: {
-    type: Boolean,
-    default: false,
-  },
-  // 确保主轴的最小尺寸，以便不超过内容
-  flexible: {
-    type: Boolean,
-    default: false,
-  },
-  // 自定义内容
-  customContent: {
-    type: Boolean,
-    default: false,
-  },
-
-  cardBodyClass: {
-    type: String as PropType<string>,
-    default: '',
-  },
-
-  cardWrapClass: {
-    type: String as PropType<string>,
-    default: '',
-  },
+// 定义组件属性
+const props = withDefaults(defineProps<TableProps>(), {
+  columns: () => [],
+  action: () => [],
+  currentPage: 1,
+  pageSize: 10,
+  align: 'left',
+  headerAlign: 'left',
+  showOverflowTooltip: true,
+  pagination: undefined,
+  selection: false,
+  index: false,
+  expand: false,
+  loading: false,
+  highlightCurrentRow: false,
 });
-const actionCfg = computed(() =>
-  Object.assign(
-    {
-      width: 150,
-      fixed: 'right',
-      label: '操作',
-      align: 'center',
-    },
-    props.actionConfig,
-  ),
-);
 
-// 抛出事件
-const emits = defineEmits(['page-change', 'batch-delete', 'selections-change', 'change']);
+// 定义事件
+const emit = defineEmits<{
+  'update:currentPage': [page: number];
+  'update:pageSize': [size: number];
+  'page-change': [page: number, size: number];
+  'selection-change': [selection: any[]];
+  'batch-delete': [selection: any[]];
+  'sort-change': [sort: any];
+  'row-click': [row: any, column: any, event: Event];
+  'cell-click': [row: any, column: any, cell: any, event: Event];
+}>();
 
-// 页码变更
-const onPageChange = (page: number) => {
-  emits('page-change', { page });
-};
-// 每页显示数量变更
-const onChangePageSize = (size: ElementSize) => {
-  tableSize.value = size;
-  emits('change', { size });
-};
-// table大小
-const tableSize = ref<ElementSize>(props.size);
-const onChangeTableSize = (size: ElementSize) => {
-  tableSize.value = size;
-};
-// 显隐列
-const columnsSettings = ref<TableColumn[]>(props.columns);
-const onChangeColumns = (columns: TableColumn[]) => {
-  columnsSettings.value = columns;
+// 计算操作列配置
+const actionConfig = computed<TableActionConfig>(() => {
+  return {
+    width: 180,
+    fixed: 'right',
+    label: '操作',
+    align: 'center',
+    showOverflowTooltip: false,
+    ...props.actionConfig,
+  };
+});
+
+// 当前页码和每页条数的响应式变量
+const currentPage = ref(props.currentPage);
+const pageSize = ref(props.pageSize);
+
+// 监听页码变化
+currentPage.value = props.currentPage;
+pageSize.value = props.pageSize;
+
+// 表格引用
+const tableRef = ref<InstanceType<typeof ElTable>>();
+
+// 选中项
+const selections = ref<any[]>([]);
+
+// 自定义渲染组件
+const renderComponent = (props: any) => {
+  return props.render(props.row, props.column, props.index);
 };
 
-// 复制
-// 复制
-const { copy, copied, isSupported } = useClipboard();
-const onCopyItem = (row: string) => {
+// 权限检查函数
+const hasPermission = (permission: string | string[]): boolean => {
+  // 这里可以根据实际项目的权限系统进行实现
+  // 暂时返回true，表示都有权限
+  return true;
+};
+
+// 复制功能
+const { copy, isSupported } = useClipboard();
+const handleCopy = (value: any, column: TableColumn) => {
   if (!isSupported.value) {
-    ElMessage.error('你的浏览器不支持 Clipboard API');
+    ElMessage.error('您的浏览器不支持剪贴板API');
     return;
   }
-  copy(row);
-  copied && ElMessage.success('复制成功');
-};
-// 批量
-const selections = ref<any[]>([]);
-// 删除
-const onBatchDelete = () => {
-  emits('batch-delete', selections.value);
-};
-// 选项变动
-const handleSelectionChange = (val: any[]) => {
-  selections.value = val;
-  emits('selections-change', val);
-};
-// 取消选择
-const commonTableRef = ref<InstanceType<typeof ElTable>>();
-const onCancelSelection = () => {
-  commonTableRef.value!.clearSelection();
-  emits('selections-change', []);
+
+  if (column.copyFun) {
+    column.copyFun(value, column.key, column);
+  } else {
+    copy(String(value));
+    ElMessage.success('复制成功');
+  }
 };
 
-// 权限检查
-const hasPermission = (permission: string | string[]) => {
-  // 简单实现，实际应该从权限store中获取
-  return true;
+// 多选变更事件
+const handleSelectionChange = (selection: any[]) => {
+  selections.value = selection;
+  emit('selection-change', selection);
+};
+
+// 批量删除事件
+const handleBatchDelete = () => {
+  emit('batch-delete', selections.value);
+};
+
+// 取消选择事件
+const handleCancelSelection = () => {
+  tableRef.value?.clearSelection();
+  emit('selection-change', []);
+};
+
+// 排序变更事件
+const handleSortChange = (sort: any) => {
+  emit('sort-change', sort);
+};
+
+// 行点击事件
+const handleRowClick = (row: any, column: any, event: Event) => {
+  emit('row-click', row, column, event);
+};
+
+// 单元格点击事件
+const handleCellClick = (row: any, column: any, cell: any, event: Event) => {
+  emit('cell-click', row, column, cell, event);
+};
+
+// 页码变更事件
+const handleCurrentChange = (page: number) => {
+  currentPage.value = page;
+  emit('update:currentPage', page);
+  emit('page-change', page, pageSize.value);
+};
+
+// 每页条数变更事件
+const handleSizeChange = (size: number) => {
+  pageSize.value = size;
+  emit('update:pageSize', size);
+  emit('page-change', currentPage.value, size);
 };
 </script>
 
 <style lang="scss" scoped>
-.el-table {
-  --el-table-header-text-color: var(--el-text-color-primary);
-  --el-table-header-bg-color: var(--el-bg-color-overlay);
-  --el-table-tr-bg-color: var(--el-bg-color-overlay);
-  --el-table-row-hover-bg-color: var(--bg-global-color);
-}
-
-.el-pagination {
-  --el-pagination-font-size: 12px;
-}
-
-:deep(.el-select__wrapper) {
-  font-size: 12px;
-}
-
-.view-link {
-  font-size: 12px;
-}
-
-.el-select {
-  --el-select-input-font-size: 12px;
-}
-
-.el-table__cell {
-  &:hover {
-    .icon-btn-copy {
-      visibility: visible;
-    }
-  }
-}
-
-.table {
-  @include flex-layout($direction: column, $align: flex-start);
-
+.table-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   height: 100%;
+}
 
-  &-tools {
-    width: 100%;
+.table-tools {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 
-    .tools-column {
-      @include flex-layout($justify: space-between);
+.table-selection {
+  margin-bottom: 16px;
+  padding: 12px;
+  background-color: var(--el-bg-color-overlay);
+  border-radius: var(--el-border-radius-base);
+  display: flex;
+  align-items: center;
+  gap: 12px;
 
-      min-height: 30px;
-      gap: 10px;
+  .selection-info {
+    font-size: 14px;
+    color: var(--el-text-color-primary);
+  }
+}
 
-      &-selection {
-        @include flex-layout();
+:deep(.el-table) {
+  flex: 1;
+  width: 100%;
 
-        gap: 10px;
-
-        .select-num {
-          @include flex-layout();
-
-          gap: 10px;
-          margin-right: 20px;
-          color: var(--el-text-color-regular);
-          font-size: 12px;
-
-          .icon-close {
-            @extend %item-hover;
-          }
-        }
-      }
-
-      &-opr {
-        @include flex-layout();
-
-        gap: 10px;
-        align-self: flex-end;
-      }
+  // 表头样式
+  .el-table__header-wrapper {
+    th {
+      font-weight: 600;
+      background-color: var(--el-bg-color-overlay);
     }
   }
 
-  &-body {
-    flex: 1;
-    width: 100%;
+  // 行悬停样式
+  .el-table__body-wrapper {
+    .el-table__row {
+      &:hover {
+        background-color: var(--el-fill-color-light);
+      }
+    }
   }
+}
 
-  &-pagination {
-    align-self: flex-end;
-    height: var(--pagination-height);
-    margin-top: 10px;
+.table-pagination {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.action-btn {
+  margin: 0;
+  padding: 0 8px;
+  height: 24px;
+  line-height: 24px;
+  font-size: 12px;
+}
+
+.copy-icon {
+  margin-left: 8px;
+  cursor: pointer;
+  color: var(--el-color-primary);
+  font-size: 14px;
+
+  &:hover {
+    color: var(--el-color-primary-light-3);
   }
+}
 
-  .icon-btn-copy {
-    @extend %item-hover;
-
-    visibility: hidden;
-    position: absolute;
-    z-index: 999;
-    top: 30%;
-    right: 0;
-    margin-left: 6px;
-  }
-
-  .dict-dot {
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    margin-right: 4px;
-    border-radius: 100%;
-  }
+.dict-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 4px;
+  border-radius: 50%;
+  vertical-align: middle;
 }
 </style>
