@@ -189,13 +189,23 @@
       <el-pagination
         v-model:current-page="currentPage"
         v-model:page-size="pageSize"
-        :total="props.pagination.total || 0"
-        :page-sizes="props.pagination.pageSizes || [10, 20, 50, 100]"
-        :layout="
-          props.pagination.layout ||
-          'total, sizes, ->, prev, pager, next, jumper'
+        :total="isObject(props.pagination) ? props.pagination.total || 0 : 0"
+        :page-sizes="
+          isObject(props.pagination)
+            ? props.pagination.pageSizes || [10, 20, 50, 100]
+            : [10, 20, 50, 100]
         "
-        :background="props.pagination.background || true"
+        :layout="
+          isObject(props.pagination)
+            ? props.pagination.layout ||
+              'total, sizes, ->, prev, pager, next, jumper'
+            : 'total, sizes, ->, prev, pager, next, jumper'
+        "
+        :background="
+          isObject(props.pagination)
+            ? props.pagination.background || true
+            : true
+        "
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       >
@@ -209,7 +219,6 @@
 import { ref, computed } from 'vue';
 import { ElMessage, ElTable } from 'element-plus';
 import { CopyDocument } from '@element-plus/icons-vue';
-import { useClipboard } from '@/hooks/useClipboard';
 import type {
   TableProps,
   TableColumn,
@@ -232,6 +241,8 @@ const props = withDefaults(defineProps<TableProps>(), {
   expand: false,
   loading: false,
   highlightCurrentRow: false,
+  // 从ElTableProps继承的属性
+  data: () => [],
 });
 
 // 定义事件
@@ -254,7 +265,7 @@ const actionConfig = computed<TableActionConfig>(() => {
     label: '操作',
     align: 'center',
     showOverflowTooltip: false,
-    ...props.actionConfig,
+    ...(props.actionConfig || {}),
   };
 });
 
@@ -277,6 +288,11 @@ const renderComponent = (props: any) => {
   return props.render(props.row, props.column, props.index);
 };
 
+// 判断是否为对象
+const isObject = (value: any): value is Record<string, any> => {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+};
+
 // 权限检查函数
 const hasPermission = (permission: string | string[]): boolean => {
   // 这里可以根据实际项目的权限系统进行实现
@@ -285,19 +301,40 @@ const hasPermission = (permission: string | string[]): boolean => {
 };
 
 // 复制功能
-const { copy, isSupported } = useClipboard();
 const handleCopy = (value: any, column: TableColumn) => {
-  if (!isSupported.value) {
-    ElMessage.error('您的浏览器不支持剪贴板API');
+  const text = String(value);
+
+  if (column.copyFun) {
+    column.copyFun(text, column.key, column);
+    ElMessage.success('复制成功');
     return;
   }
 
-  if (column.copyFun) {
-    column.copyFun(value, column.key, column);
-  } else {
-    copy(String(value));
-    ElMessage.success('复制成功');
-  }
+  // 简单的复制实现
+  const copyToClipboard = async (text: string) => {
+    try {
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(text);
+        ElMessage.success('复制成功');
+      } else {
+        // 降级方案
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        ElMessage.success('复制成功');
+      }
+    } catch (err) {
+      ElMessage.error('复制失败');
+      console.error('复制失败:', err);
+    }
+  };
+
+  copyToClipboard(text);
 };
 
 // 多选变更事件
@@ -356,24 +393,24 @@ const handleSizeChange = (size: number) => {
 }
 
 .table-tools {
-  margin-bottom: 16px;
   display: flex;
   align-items: center;
+  margin-bottom: 16px;
   gap: 12px;
 }
 
 .table-selection {
-  margin-bottom: 16px;
-  padding: 12px;
-  background-color: var(--el-bg-color-overlay);
-  border-radius: var(--el-border-radius-base);
   display: flex;
   align-items: center;
+  margin-bottom: 16px;
+  padding: 12px;
+  border-radius: var(--el-border-radius-base);
+  background-color: var(--el-bg-color-overlay);
   gap: 12px;
 
   .selection-info {
-    font-size: 14px;
     color: var(--el-text-color-primary);
+    font-size: 14px;
   }
 }
 
@@ -384,8 +421,8 @@ const handleSizeChange = (size: number) => {
   // 表头样式
   .el-table__header-wrapper {
     th {
-      font-weight: 600;
       background-color: var(--el-bg-color-overlay);
+      font-weight: 600;
     }
   }
 
@@ -400,32 +437,32 @@ const handleSizeChange = (size: number) => {
 }
 
 .table-pagination {
-  margin-top: 16px;
   display: flex;
-  justify-content: flex-end;
   align-items: center;
+  justify-content: flex-end;
+  margin-top: 16px;
 }
 
 .action-buttons {
   display: flex;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 8px;
-  flex-wrap: nowrap;
 }
 
 .action-btn {
+  height: 24px;
   margin: 0;
   padding: 0 8px;
-  height: 24px;
-  line-height: 24px;
   font-size: 12px;
+  line-height: 24px;
 }
 
 .copy-icon {
   margin-left: 8px;
-  cursor: pointer;
   color: var(--el-color-primary);
   font-size: 14px;
+  cursor: pointer;
 
   &:hover {
     color: var(--el-color-primary-light-3);
