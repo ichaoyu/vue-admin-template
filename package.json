@@ -1,0 +1,48 @@
+{
+  "name": "vue-admin",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint src/**/*.js src/**/*.vue && stylelint src/**/*.css src/**/*.vue",
+    "lint:fix": "eslint src/**/*.js src/**/*.vue --fix && stylelint src/**/*.css src/**/*.vue --fix",
+    "format": "prettier --write src/**/*.{js,vue,css,json}",
+    "format:check": "prettier --check src/**/*.{js,vue,css,json}",
+    "fix": "pnpm lint:fix && pnpm format"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.3.2",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^5.1.12",
+    "axios": "^1.15.2",
+    "dayjs": "^1.11.20",
+    "element-plus": "^2.13.7",
+    "pinia": "^3.0.4",
+    "pinia-plugin-persistedstate": "^4.7.1",
+    "vue": "^3.5.33",
+    "vue-router": "^5.0.6"
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.28.6",
+    "@eslint/eslintrc": "^3.3.5",
+    "@vitejs/plugin-vue": "^6.0.6",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-vue": "^10.9.0",
+    "postcss-html": "^1.8.1",
+    "prettier": "^3.8.3",
+    "sass-embedded": "^1.99.0",
+    "stylelint": "^17.9.1",
+    "stylelint-config-standard": "^40.0.0",
+    "stylelint-prettier": "^5.0.3",
+    "unplugin-auto-import": "^21.0.0",
+    "unplugin-vue-components": "^32.0.0",
+    "vite": "^8.0.10",
+    "vite-plugin-compression": "^0.5.1",
+    "vue-eslint-parser": "^10.4.0"
+  }
+}

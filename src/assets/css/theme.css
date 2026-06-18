@@ -1,0 +1,56 @@
+/**
+ * Theme Styles - 深色主题样式
+ * 通过 html.dark 类名控制深色主题
+ * Element Plus 组件已通过 dark/css-vars.css 自动处理
+ */
+
+/* #region 根元素深色主题 */
+
+html.dark {
+  color-scheme: dark;
+}
+
+html.dark body {
+  color: #e5eaf3;
+  background-color: #141414;
+}
+
+/* #endregion */
+
+/* #region 布局组件深色主题 */
+
+html.dark .layout-aside {
+  background-color: #141414;
+}
+
+html.dark .layout-header {
+  background-color: #1d1e1f;
+  border-bottom-color: #414243;
+}
+
+html.dark .user-name {
+  color: #e5eaf3;
+}
+
+html.dark .layout-content {
+  background-color: #141414;
+}
+
+html.dark .layout-logo {
+  background-color: #002140;
+}
+
+/* #endregion */
+
+/* #region 自定义组件深色主题 */
+
+html.dark .menu-container {
+  background-color: #141414;
+}
+
+html.dark .search-bar .el-input__wrapper,
+html.dark .search-bar .el-select__wrapper {
+  background-color: #1d1e1f;
+}
+
+/* #endregion */

@@ -1,0 +1,100 @@
+{
+  "id": "4585015",
+  "name": "vue3框架",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "709091",
+      "name": "cms",
+      "font_class": "cms",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
+      "icon_id": "6184952",
+      "name": "内容管理",
+      "font_class": "article",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "21053578",
+      "name": "站点管理",
+      "font_class": "site",
+      "unicode": "e668",
+      "unicode_decimal": 58984
+    },
+    {
+      "icon_id": "7791403",
+      "name": "验证码",
+      "font_class": "captcha",
+      "unicode": "e63e",
+      "unicode_decimal": 58942
+    },
+    {
+      "icon_id": "11981529",
+      "name": "复制",
+      "font_class": "copy",
+      "unicode": "e94c",
+      "unicode_decimal": 59724
+    },
+    {
+      "icon_id": "39643681",
+      "name": "column-height",
+      "font_class": "column-height",
+      "unicode": "e659",
+      "unicode_decimal": 58969
+    },
+    {
+      "icon_id": "37799184",
+      "name": "黑色主题",
+      "font_class": "moon",
+      "unicode": "e71a",
+      "unicode_decimal": 59162
+    },
+    {
+      "icon_id": "37799185",
+      "name": "白色主题",
+      "font_class": "sun",
+      "unicode": "e71b",
+      "unicode_decimal": 59163
+    },
+    {
+      "icon_id": "13029339",
+      "name": "系统设置",
+      "font_class": "setting",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "16480886",
+      "name": "系统监控",
+      "font_class": "watch",
+      "unicode": "e69f",
+      "unicode_decimal": 59039
+    },
+    {
+      "icon_id": "23791463",
+      "name": "取消全屏",
+      "font_class": "fullscreen-exit",
+      "unicode": "e624",
+      "unicode_decimal": 58916
+    },
+    {
+      "icon_id": "807275",
+      "name": "全屏",
+      "font_class": "fullscreen",
+      "unicode": "e660",
+      "unicode_decimal": 58976
+    },
+    {
+      "icon_id": "1166005",
+      "name": "首页",
+      "font_class": "home",
+      "unicode": "e667",
+      "unicode_decimal": 58983
+    }
+  ]
+}

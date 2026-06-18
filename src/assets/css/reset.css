@@ -1,0 +1,87 @@
+/**
+ * CSS Reset - 重置浏览器默认样式
+ * 消除浏览器对元素的默认样式差异
+ */
+
+/* #region 全局重置 */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* #endregion */
+
+/* #region 文档根元素 */
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  background-color: #f0f2f5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* #endregion */
+
+/* #region 链接重置 */
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* #endregion */
+
+/* #region 列表重置 */
+
+ul,
+ol {
+  list-style: none;
+}
+
+/* #endregion */
+
+/* #region 图片重置 */
+
+img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
+}
+
+/* #endregion */
+
+/* #region 表单元素重置 */
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+}
+
+/* #endregion */
+
+/* #region 应用容器 */
+
+#app {
+  width: 100%;
+  height: 100%;
+}
+
+/* #endregion */
