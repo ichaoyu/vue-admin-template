@@ -25,11 +25,10 @@ export const createPostAPI = (data) => api.post('/system/post', data)
 
 /**
  * 更新岗位
- * @param {string} id - 岗位ID
  * @param {Object} data - 岗位信息
  * @returns {Promise<Object>} 返回更新后的岗位信息
  */
-export const updatePostAPI = (id, data) => api.patch(`/system/post/${id}`, data)
+export const updatePostAPI = (data) => api.patch('/system/post', data)
 
 /**
  * 删除岗位（单个）

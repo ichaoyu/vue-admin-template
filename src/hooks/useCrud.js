@@ -1,49 +1,82 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { useTable } from './useTable'
 
 /**
  * CRUD 操作管理 Hook
  *
- * 提供增删改查的通用操作，包括新增、编辑、删除、状态切换等
- * 适用于所有管理页面的 CRUD 操作
+ * 集成 useTable，一个调用即可获得列表页全部逻辑：表格数据 + CRUD 操作
+ * 单独使用 useTable 仍可用于只读列表页等场景
  *
- * @param {Object} api - API 对象，包含 create, update, delete 等方法
+ * @param {Function} fetchAPI - 列表查询 API 函数
+ * @param {Object} apiMap - API 映射
+ * @param {Function} apiMap.create - 新增 API
+ * @param {Function} apiMap.update - 更新 API，签名 update(data)
+ * @param {Function} apiMap.delete - 删除 API
+ * @param {Function} [apiMap.batchDelete] - 批量删除 API（可选）
  * @param {Object} options - 配置选项
- * @param {Function} options.afterCreate - 创建成功后的回调
- * @param {Function} options.afterUpdate - 更新成功后的回调
- * @param {Function} options.afterDelete - 删除成功后的回调
- * @param {Function} options.afterStatusChange - 状态切换成功后的回调
- * @param {Function} options.formatFormData - 格式化表单数据的函数
- * @param {string} options.nameField - 名称字段，用于删除确认提示，默认 'name'
- * @param {boolean} options.enableBatchDelete - 是否启用批量删除功能，默认 false
+ * @param {string} [options.nameField='name'] - 删除确认时显示的名称字段
+ * @param {Object} [options.formDefaults={}] - 表单默认值
+ * @param {Object} [options.defaultParams={}] - 默认查询参数（透传给 useTable）
+ * @param {number} [options.defaultPageSize=10] - 默认每页条数（透传给 useTable）
+ * @param {Function} [options.formatFormData] - handleEdit 时格式化行数据
+ * @param {Function} [options.formatSubmitData] - 提交前格式化表单数据
+ * @param {Function} [options.afterCreate] - 创建成功后回调
+ * @param {Function} [options.afterUpdate] - 更新成功后回调
+ * @param {Function} [options.afterDelete] - 删除成功后回调
+ * @param {Function} [options.afterSubmit] - 提交成功后回调（新增/更新通用）
  *
- * @returns {Object} CRUD 相关的状态和方法
+ * @returns {Object} useTable 全部返回值 + CRUD 状态和方法
  *
  * @example
  * ```javascript
- * const { form, dialogVisible, handleAdd, handleEdit, handleSubmit, handleDelete, handleStatusChange } = useCrud(
+ * const { tableData, loading, total, form, dialogVisible, handleAdd, handleEdit, handleSubmit, handleDelete } = useCrud(
+ *   getUserListAPI,
  *   { create: createUserAPI, update: updateUserAPI, delete: deleteUserAPI },
- *   { nameField: 'userName' }
+ *   { nameField: 'userName', formDefaults: { status: 1 } }
  * )
  * ```
  */
-export const useCrud = (api, options = {}) => {
+export const useCrud = (fetchAPI, apiMap, options = {}) => {
   const {
+    nameField = 'name',
+    formDefaults = {},
+    defaultParams = {},
+    defaultPageSize = 10,
+    formatFormData = null,
+    formatSubmitData = null,
     afterCreate = null,
     afterUpdate = null,
     afterDelete = null,
-    afterStatusChange = null,
-    formatFormData = null,
-    nameField = 'name',
-    enableBatchDelete = false,
+    afterSubmit = null,
   } = options
+
+  // #region useTable 集成
+
+  const tableState = useTable(fetchAPI, {
+    defaultParams,
+    defaultPageSize,
+    immediate: true,
+  })
+
+  // #endregion
 
   // #region 状态定义
 
   const dialogVisible = ref(false)
   const submitLoading = ref(false)
-  const form = ref({})
-  // 批量操作：选中的行 ID 列表
+  const form = ref({ ...formDefaults })
   const selectedIds = ref([])
+
+  // #endregion
+
+  // #region 表单重置
+
+  /**
+   * 重置表单到默认值
+   */
+  const resetForm = () => {
+    form.value = { ...formDefaults }
+  }
 
   // #endregion
 
@@ -51,10 +84,9 @@ export const useCrud = (api, options = {}) => {
 
   /**
    * 打开新增弹窗
-   * @param {Object} defaultValues - 表单默认值
    */
-  const handleAdd = (defaultValues = {}) => {
-    form.value = { ...defaultValues }
+  const handleAdd = () => {
+    resetForm()
     dialogVisible.value = true
   }
 
@@ -65,21 +97,10 @@ export const useCrud = (api, options = {}) => {
   /**
    * 打开编辑弹窗
    * @param {Object} row - 行数据
-   * @param {Object} fieldMapping - 字段映射，用于处理字段名不一致的情况
    */
-  const handleEdit = (row, fieldMapping = {}) => {
-    const formData = { ...row }
-
-    // 处理字段映射
-    Object.keys(fieldMapping).forEach((key) => {
-      const mappedKey = fieldMapping[key]
-      if (row[mappedKey] !== undefined) {
-        formData[key] = row[mappedKey]
-      }
-    })
-
-    // 格式化表单数据
-    form.value = formatFormData ? formatFormData(formData) : formData
+  const handleEdit = (row) => {
+    const formData = formatFormData ? formatFormData(row) : { ...row }
+    form.value = formData
     dialogVisible.value = true
   }
 
@@ -89,11 +110,9 @@ export const useCrud = (api, options = {}) => {
 
   /**
    * 提交表单
-   * @param {Object} formData - 表单数据
-   * @param {Object} formRef - 表单引用，用于验证
-   * @param {Function} onSuccess - 成功后的回调（如刷新列表）
+   * @param {Object} formRef - el-form 引用，用于验证
    */
-  const handleSubmit = async (formData, formRef = null, onSuccess = null) => {
+  const handleSubmit = async (formRef) => {
     // 表单验证
     if (formRef) {
       try {
@@ -106,24 +125,26 @@ export const useCrud = (api, options = {}) => {
     submitLoading.value = true
 
     try {
-      const id = formData.id
+      const submitData = formatSubmitData ? formatSubmitData(form.value) : form.value
+      const id = submitData.id
 
       if (id) {
         // 更新
-        await api.update(id, formData)
+        await apiMap.update(submitData)
         ElMessage.success('修改成功')
-        afterUpdate?.(formData)
+        afterUpdate?.(submitData)
       } else {
         // 新增
-        await api.create(formData)
+        await apiMap.create(submitData)
         ElMessage.success('新增成功')
-        afterCreate?.(formData)
+        afterCreate?.(submitData)
       }
 
+      afterSubmit?.(submitData)
       dialogVisible.value = false
-      onSuccess?.()
+      tableState.getData()
     } catch (error) {
-      console.error('提交失败:', error)
+      // 错误由 axios 拦截器统一处理
     } finally {
       submitLoading.value = false
     }
@@ -136,29 +157,25 @@ export const useCrud = (api, options = {}) => {
   /**
    * 删除数据
    * @param {Object} row - 行数据
-   * @param {Function} onSuccess - 成功后的回调（如刷新列表）
-   * @param {string} customMessage - 自定义确认消息
    */
-  const handleDelete = async (row, onSuccess = null, customMessage = null) => {
+  const handleDelete = async (row) => {
     const id = row.id
     const name = row[nameField] || '该数据'
 
-    const message = customMessage || `确认要删除"${name}"吗？`
-
     try {
-      await ElMessageBox.confirm(message, '提示', {
+      await ElMessageBox.confirm(`确认要删除"${name}"吗？`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
       })
 
-      await api.delete(id)
+      await apiMap.delete(id)
       ElMessage.success('删除成功')
       afterDelete?.(row)
-      onSuccess?.()
+      tableState.getData()
     } catch (error) {
       if (error !== 'cancel') {
-        console.error('删除失败:', error)
+        // 错误由 axios 拦截器统一处理
       }
     }
   }
@@ -171,26 +188,23 @@ export const useCrud = (api, options = {}) => {
    * 切换状态
    * @param {Object} row - 行数据
    * @param {string} statusField - 状态字段名，默认 'status'
-   * @param {Function} onSuccess - 成功后的回调
    */
-  const handleStatusChange = async (row, statusField = 'status', onSuccess = null) => {
+  const handleStatusChange = async (row, statusField = 'status') => {
     const id = row.id
+    const oldStatus = row[statusField]
 
     if (!id) {
-      // 没有ID时恢复状态
-      row[statusField] = row[statusField] === '0' ? '1' : '0'
+      // 没有 ID 时恢复状态
+      row[statusField] = oldStatus === '0' ? '1' : '0'
       return
     }
 
     try {
-      await api.update(id, { [statusField]: row[statusField] })
+      await apiMap.update({ id, [statusField]: row[statusField] })
       ElMessage.success('状态更新成功')
-      afterStatusChange?.(row)
-      onSuccess?.()
     } catch (error) {
       // 失败时恢复状态
-      row[statusField] = row[statusField] === '0' ? '1' : '0'
-      console.error('状态更新失败:', error)
+      row[statusField] = oldStatus === '0' ? '1' : '0'
     }
   }
 
@@ -199,7 +213,7 @@ export const useCrud = (api, options = {}) => {
   // #region 批量操作
 
   /**
-   * 处理表格选择变化（与 el-table 的 @selection-change 事件配合使用）
+   * 处理表格选择变化
    * @param {Array} selection - 当前选中的行数据数组
    */
   const handleSelectionChange = (selection) => {
@@ -208,41 +222,32 @@ export const useCrud = (api, options = {}) => {
 
   /**
    * 批量删除
-   * @param {Function} batchDeleteAPI - 批量删除 API 函数，接收 ids 数组参数
-   * @param {Function} onSuccess - 成功后的回调（如刷新列表）
    */
-  const handleBatchDelete = async (batchDeleteAPI, onSuccess = null) => {
-    // 检查是否有选中的数据
+  const handleBatchDelete = async () => {
+    if (!apiMap.batchDelete) {
+      console.warn('useCrud: batchDelete API 未配置')
+      return
+    }
+
     if (!selectedIds.value || selectedIds.value.length === 0) {
       ElMessage.warning('请选择要删除的数据')
       return
     }
 
     try {
-      // 显示确认对话框
-      await ElMessageBox.confirm(
-        `确认要删除选中的 ${selectedIds.value.length} 条数据吗？`,
-        '提示',
-        {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-        }
-      )
+      await ElMessageBox.confirm(`确认要删除选中的 ${selectedIds.value.length} 条数据吗？`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
 
-      // 调用批量删除 API，传递 ids 数组
-      await batchDeleteAPI(selectedIds.value)
-
+      await apiMap.batchDelete(selectedIds.value)
       ElMessage.success('删除成功')
-      onSuccess?.()
-
-      // 清空选中状态
       selectedIds.value = []
+      tableState.getData()
     } catch (error) {
-      // 用户取消操作时不打印错误
       if (error !== 'cancel') {
-        console.error('批量删除失败:', error)
-        ElMessage.error('批量删除失败，请重试')
+        // 错误由 axios 拦截器统一处理
       }
     }
   }
@@ -250,13 +255,17 @@ export const useCrud = (api, options = {}) => {
   // #endregion
 
   return {
-    // 状态
+    // useTable 状态
+    ...tableState,
+
+    // CRUD 状态
     form,
     dialogVisible,
     submitLoading,
     selectedIds,
 
-    // 方法
+    // CRUD 方法
+    resetForm,
     handleAdd,
     handleEdit,
     handleSubmit,

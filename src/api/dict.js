@@ -25,11 +25,10 @@ export const getDictTypeDetailAPI = (id) => api.get(`/system/dict/type/${id}`)
 
 /**
  * 更新字典类型
- * @param {string} id - 字典类型ID
  * @param {Object} data - 字典类型信息
  * @returns {Promise<Object>} 返回更新后的字典类型信息
  */
-export const updateDictTypeAPI = (id, data) => api.patch(`/system/dict/type/${id}`, data)
+export const updateDictTypeAPI = (data) => api.patch('/system/dict/type', data)
 
 /**
  * 删除字典类型
@@ -72,11 +71,10 @@ export const getDictDataDetailAPI = (id) => api.get(`/system/dict/data/${id}`)
 
 /**
  * 更新字典数据
- * @param {string} id - 字典数据ID
  * @param {Object} data - 字典数据信息
  * @returns {Promise<Object>} 返回更新后的字典数据信息
  */
-export const updateDictDataAPI = (id, data) => api.patch(`/system/dict/data/${id}`, data)
+export const updateDictDataAPI = (data) => api.patch('/system/dict/data', data)
 
 /**
  * 删除字典数据

@@ -25,11 +25,10 @@ export const getConfigDetailAPI = (id) => api.get(`/system/config/${id}`)
 
 /**
  * 更新参数
- * @param {string} id - 参数ID
  * @param {Object} data - 参数信息
  * @returns {Promise<Object>} 返回更新后的参数信息
  */
-export const updateConfigAPI = (id, data) => api.patch(`/system/config/${id}`, data)
+export const updateConfigAPI = (data) => api.patch('/system/config', data)
 
 /**
  * 删除参数
@@ -51,5 +50,11 @@ export const batchDeleteConfigsAPI = (ids) => api.delete('/system/config', { dat
  * @returns {Promise<string>} 返回参数值
  */
 export const getConfigByKeyAPI = (configKey) => api.get(`/system/config/key/${configKey}`)
+
+/**
+ * 刷新参数缓存
+ * @returns {Promise<void>}
+ */
+export const refreshConfigCacheAPI = () => api.post('/system/config/cache/refresh')
 
 // #endregion

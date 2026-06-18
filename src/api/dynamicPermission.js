@@ -42,7 +42,6 @@ export const createDynamicPermissionAPI = (data) => api.post('/system/dynamic-pe
 
 /**
  * 更新动态权限规则
- * @param {string} id - 规则 ID
  * @param {Object} data - 规则信息
  * @param {string} [data.ruleName] - 规则名称
  * @param {string} [data.resourceCode] - 资源编码
@@ -57,7 +56,7 @@ export const createDynamicPermissionAPI = (data) => api.post('/system/dynamic-pe
  * @param {string} [data.description] - 描述
  * @returns {Promise<Object>} 返回更新后的规则信息
  */
-export const updateDynamicPermissionAPI = (id, data) => api.patch(`/system/dynamic-permission/${id}`, data)
+export const updateDynamicPermissionAPI = (data) => api.patch('/system/dynamic-permission', data)
 
 /**
  * 删除动态权限规则
@@ -75,17 +74,17 @@ export const batchDeleteDynamicPermissionAPI = (ids) => api.delete('/system/dyna
 
 /**
  * 启用动态权限规则
- * @param {string} id - 规则 ID
+ * @param {Object} data - 包含规则 ID 的参数
  * @returns {Promise<void>}
  */
-export const enableDynamicPermissionAPI = (id) => api.patch(`/system/dynamic-permission/${id}/enable`)
+export const enableDynamicPermissionAPI = (data) => api.patch('/system/dynamic-permission/enable', data)
 
 /**
  * 停用动态权限规则
- * @param {string} id - 规则 ID
+ * @param {Object} data - 包含规则 ID 的参数
  * @returns {Promise<void>}
  */
-export const disableDynamicPermissionAPI = (id) => api.patch(`/system/dynamic-permission/${id}/disable`)
+export const disableDynamicPermissionAPI = (data) => api.patch('/system/dynamic-permission/disable', data)
 
 /**
  * 验证动态权限

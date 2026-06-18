@@ -38,7 +38,6 @@ export const createPermissionAPI = (data) => api.post('/system/permission', data
 
 /**
  * 更新权限
- * @param {string} id - 权限 ID
  * @param {Object} data - 权限信息
  * @param {string} [data.permissionName] - 权限名称
  * @param {string} [data.permissionCode] - 权限编码
@@ -48,7 +47,7 @@ export const createPermissionAPI = (data) => api.post('/system/permission', data
  * @param {string} [data.remark] - 备注
  * @returns {Promise<Object>} 返回更新后的权限信息
  */
-export const updatePermissionAPI = (id, data) => api.put(`/system/permission/${id}`, data)
+export const updatePermissionAPI = (data) => api.patch('/system/permission', data)
 
 /**
  * 删除权限

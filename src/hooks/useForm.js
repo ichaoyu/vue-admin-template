@@ -1,8 +1,10 @@
 /**
  * 表单管理 Hook
  *
+ * @deprecated 推荐使用 useCrud 返回的 form + resetForm，或直接使用 ref({}) 管理表单状态。
+ * 此 Hook 仍可用于非 CRUD 场景（如搜索表单、独立表单页）。
+ *
  * 提供表单的状态管理、验证、重置等功能
- * 适用于所有需要表单操作的场景
  *
  * @param {Object} options - 配置选项
  * @param {Object} options.defaultValues - 表单默认值
@@ -120,7 +122,6 @@ export const useForm = (options = {}) => {
       }
       onSuccess?.()
     } catch (error) {
-      console.error('提交失败:', error)
       onError?.(error)
     } finally {
       loading.value = false

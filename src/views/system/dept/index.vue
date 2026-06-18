@@ -14,37 +14,20 @@
       @refresh="handleRefresh"
     >
       <template #toolbar-left>
-        <el-input
-          v-model="searchForm.deptName"
-          placeholder="搜索部门名称"
-          clearable
-          :prefix-icon="Search"
-          style="width: 200px"
-        />
-        <DictSelect
-          v-model="searchForm.status"
-          dict-type="sys_normal_disable"
-          placeholder="部门状态"
-          clearable
-          style="width: 120px"
-        />
+        <el-input v-model="searchForm.deptName" placeholder="搜索部门名称" clearable :prefix-icon="Search" style="width: 200px" />
+        <DictSelect v-model="searchForm.status" dict-type="sys_normal_disable" placeholder="部门状态" clearable style="width: 120px" />
         <el-button type="primary" :icon="Plus" @click="handleAdd()">新增</el-button>
-        <el-button :icon="Expand" @click="toggleExpand">
-          {{ expandedAll ? '折叠' : '展开' }}
-        </el-button>
+        <el-button :icon="Expand" @click="toggleExpand">{{ expandedAll ? '折叠' : '展开' }}</el-button>
       </template>
 
-      <!-- 部门名称 -->
       <template #deptName="{ row }">
         <span>{{ row.deptName }}</span>
       </template>
 
-      <!-- 状态 -->
       <template #status="{ row }">
         <el-switch v-model="row.status" :active-value="1" :inactive-value="0" @change="handleStatusChange(row)" />
       </template>
 
-      <!-- 操作 -->
       <template #operation="{ row }">
         <el-button type="primary" size="small" link :icon="Edit" @click="handleEdit(row)">编辑</el-button>
         <el-button type="success" size="small" link :icon="Plus" @click="handleAdd(row)">新增</el-button>
@@ -61,13 +44,13 @@
       width="600px"
       content-height="400px"
       :confirm-loading="submitLoading"
-      @confirm="handleSubmit"
+      @confirm="onSubmit"
     >
       <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="上级部门:" prop="parentId">
           <el-tree-select
             v-model="form.parentId"
-            :data="deptTree"
+            :data="deptTreeSelect"
             :props="{ value: 'id', label: 'deptName', children: 'children' }"
             placeholder="请选择上级部门"
             clearable
@@ -102,8 +85,10 @@
 <script setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Edit, Delete, Search, Expand } from '@element-plus/icons-vue'
+import { useTable } from '@/hooks'
 import { getDeptTreeAPI, createDeptAPI, updateDeptAPI, deleteDeptAPI } from '@/api/dept'
 import { formatDateTime } from '@/utils/date'
+import { filterTree } from '@/utils/common'
 import ProTable from '@/components/Table/index.vue'
 import ProDialog from '@/components/Dialog/index.vue'
 import DictSelect from '@/components/DictSelect/index.vue'
@@ -116,7 +101,6 @@ defineOptions({
 
 const tableRef = ref(null)
 const tableKey = ref(0)
-const loading = ref(false)
 const expandedAll = ref(true)
 
 const searchForm = reactive({
@@ -124,14 +108,12 @@ const searchForm = reactive({
   status: '',
 })
 
-const deptList = ref([])
-const deptTree = ref([])
 const dialogVisible = ref(false)
-const dialogTitle = computed(() => (form.id ? '编辑部门' : '新增部门'))
+const dialogTitle = computed(() => (form.value.id ? '编辑部门' : '新增部门'))
 const submitLoading = ref(false)
 const formRef = ref(null)
 
-const form = reactive({
+const formDefaults = {
   id: '',
   parentId: '0',
   deptName: '',
@@ -140,7 +122,9 @@ const form = reactive({
   phone: '',
   email: '',
   status: 1,
-})
+}
+
+const form = ref({ ...formDefaults })
 
 const rules = {
   deptName: [{ required: true, message: '部门名称不能为空', trigger: 'blur' }],
@@ -160,67 +144,34 @@ const columns = [
 
 // #endregion
 
-// #region 计算属性
+// #region 数据获取
+
+const { tableData: deptList, loading, getData } = useTable(getDeptTreeAPI, {
+  immediate: true,
+  afterFetch: (res) => {
+    // 树形数据不分页，直接返回数组
+    return { list: res || [], total: 0 }
+  },
+})
+
+const deptTreeSelect = computed(() => {
+  return [{ id: '0', deptName: '主部门', children: deptList.value }]
+})
 
 const filteredDeptList = computed(() => {
   let result = deptList.value
 
   if (searchForm.deptName) {
     const filterName = searchForm.deptName.toLowerCase()
-    const filterDept = (depts) => {
-      return depts
-        .filter((dept) => {
-          if (dept.deptName.toLowerCase().includes(filterName)) {
-            return true
-          }
-          if (dept.children && dept.children.length > 0) {
-            dept.children = filterDept(dept.children)
-            return dept.children.length > 0
-          }
-          return false
-        })
-        .map((dept) => ({ ...dept }))
-    }
-    result = filterDept(JSON.parse(JSON.stringify(result)))
+    result = filterTree(result, (dept) => dept.deptName.toLowerCase().includes(filterName))
   }
 
   if (searchForm.status) {
-    const filterStatus = (depts) => {
-      return depts
-        .filter((dept) => {
-          if (dept.status === searchForm.status) {
-            return true
-          }
-          if (dept.children && dept.children.length > 0) {
-            dept.children = filterStatus(dept.children)
-            return dept.children.length > 0
-          }
-          return false
-        })
-        .map((dept) => ({ ...dept }))
-    }
-    result = filterStatus(JSON.parse(JSON.stringify(result)))
+    result = filterTree(result, (dept) => dept.status === searchForm.status)
   }
 
   return result
 })
-
-// #endregion
-
-// #region 数据获取
-
-const getData = async () => {
-  loading.value = true
-  try {
-    const data = await getDeptTreeAPI()
-    deptList.value = data || []
-    deptTree.value = [{ id: '0', deptName: '主部门', children: data || [] }]
-  } catch (error) {
-    console.error('获取部门数据失败:', error)
-  } finally {
-    loading.value = false
-  }
-}
 
 const handleRefresh = () => {
   getData()
@@ -231,15 +182,15 @@ const handleRefresh = () => {
 // #region 新增/编辑
 
 const handleAdd = (row = null) => {
-  resetForm()
+  form.value = { ...formDefaults }
   if (row) {
-    form.parentId = row.id
+    form.value.parentId = row.id
   }
   dialogVisible.value = true
 }
 
 const handleEdit = (row) => {
-  Object.assign(form, {
+  form.value = {
     id: row.id,
     parentId: row.parentId || '0',
     deptName: row.deptName,
@@ -248,46 +199,35 @@ const handleEdit = (row) => {
     phone: row.phone || '',
     email: row.email || '',
     status: row.status || 0,
-  })
+  }
   dialogVisible.value = true
 }
 
-const handleSubmit = async () => {
+const onSubmit = async () => {
   if (!formRef.value) return
 
-  await formRef.value.validate(async (valid) => {
-    if (!valid) return
+  try {
+    await formRef.value.validate()
+  } catch {
+    return
+  }
 
-    submitLoading.value = true
-    try {
-      if (form.id) {
-        await updateDeptAPI(form.id, form)
-        ElMessage.success('修改成功')
-      } else {
-        await createDeptAPI(form)
-        ElMessage.success('新增成功')
-      }
-      dialogVisible.value = false
-      getData()
-    } catch (error) {
-      console.error('提交失败:', error)
-    } finally {
-      submitLoading.value = false
+  submitLoading.value = true
+  try {
+    if (form.value.id) {
+      await updateDeptAPI({ ...form.value })
+      ElMessage.success('修改成功')
+    } else {
+      await createDeptAPI(form.value)
+      ElMessage.success('新增成功')
     }
-  })
-}
-
-const resetForm = () => {
-  Object.assign(form, {
-    id: '',
-    parentId: '0',
-    deptName: '',
-    orderNum: 0,
-    leader: '',
-    phone: '',
-    email: '',
-    status: 1,
-  })
+    dialogVisible.value = false
+    getData()
+  } catch (error) {
+    // 错误由 axios 拦截器处理
+  } finally {
+    submitLoading.value = false
+  }
 }
 
 // #endregion
@@ -309,7 +249,7 @@ const handleDelete = (row) => {
       ElMessage.success('删除成功')
       getData()
     } catch (error) {
-      console.error('删除失败:', error)
+      // 错误由 axios 拦截器处理
     }
   })
 }
@@ -325,11 +265,10 @@ const handleStatusChange = async (row) => {
     return
   }
   try {
-    await updateDeptAPI(deptId, { status: row.status })
+    await updateDeptAPI({ id: deptId, status: row.status })
     ElMessage.success('状态更新成功')
   } catch (error) {
     row.status = row.status === 0 ? 1 : 0
-    console.error('状态更新失败:', error)
   }
 }
 
@@ -341,14 +280,6 @@ const toggleExpand = () => {
   expandedAll.value = !expandedAll.value
   tableKey.value++
 }
-
-// #endregion
-
-// #region 生命周期
-
-onMounted(() => {
-  getData()
-})
 
 // #endregion
 </script>

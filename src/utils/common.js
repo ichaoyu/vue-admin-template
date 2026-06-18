@@ -165,6 +165,49 @@ export const deepClone = (obj, cache = new WeakMap()) => {
 // #region 树形数据处理
 
 /**
+ * 过滤树形数据
+ *
+ * 递归遍历树，保留满足条件的节点及其祖先链。
+ * 如果子节点满足条件，其所有祖先节点也会被保留。
+ *
+ * @param {Array} tree - 树形数据
+ * @param {Function} filterFn - 过滤函数，返回 true 保留该节点
+ * @param {string} childrenKey - 子节点字段名，默认 'children'
+ * @returns {Array} 过滤后的树形数据（深拷贝，不修改原数据）
+ *
+ * @example
+ * ```javascript
+ * const tree = [
+ *   { id: 1, status: 0, children: [{ id: 2, status: 1 }] }
+ * ]
+ * const filtered = filterTree(tree, node => node.status === 1)
+ * // [{ id: 1, status: 0, children: [{ id: 2, status: 1 }] }]
+ * ```
+ */
+export const filterTree = (tree, filterFn, childrenKey = 'children') => {
+  if (!tree || !Array.isArray(tree)) return []
+
+  return tree
+    .map((node) => {
+      const cloned = { ...node }
+      const children = cloned[childrenKey]
+
+      if (children && children.length > 0) {
+        const filteredChildren = filterTree(children, filterFn, childrenKey)
+        cloned[childrenKey] = filteredChildren
+      }
+
+      return cloned
+    })
+    .filter((node) => {
+      // 保留自身满足条件的，或子节点中有满足条件的
+      const children = node[childrenKey]
+      const hasMatchingChildren = children && children.length > 0
+      return filterFn(node) || hasMatchingChildren
+    })
+}
+
+/**
  * 树形数据扁平化
  *
  * 将树形结构数据转换为扁平数组

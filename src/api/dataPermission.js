@@ -36,7 +36,6 @@ export const createDataPermissionAPI = (data) => api.post('/system/data-permissi
 
 /**
  * 更新数据权限规则
- * @param {string} id - 规则 ID
  * @param {Object} data - 规则信息
  * @param {string} [data.ruleName] - 规则名称
  * @param {string} [data.resourceType] - 资源类型
@@ -46,7 +45,7 @@ export const createDataPermissionAPI = (data) => api.post('/system/data-permissi
  * @param {string} [data.remark] - 备注
  * @returns {Promise<Object>} 返回更新后的规则信息
  */
-export const updateDataPermissionAPI = (id, data) => api.put(`/system/data-permission/${id}`, data)
+export const updateDataPermissionAPI = (data) => api.patch('/system/data-permission', data)
 
 /**
  * 删除数据权限规则

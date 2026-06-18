@@ -26,16 +26,16 @@ export const getNotificationListAPI = (params) => api.get('/notification/list', 
 
 /**
  * 标记已读
- * @param {string} id - 通知ID
+ * @param {Object} data - 包含通知 ID 的参数
  * @returns {Promise<Object>} 返回操作结果
  */
-export const markAsReadAPI = (id) => api.put(`/notification/${id}/read`)
+export const markAsReadAPI = (data) => api.patch('/notification/read', data)
 
 /**
  * 全部标记已读
  * @returns {Promise<Object>} 返回操作结果
  */
-export const markAllAsReadAPI = () => api.put('/notification/read-all')
+export const markAllAsReadAPI = () => api.patch('/notification/read-all')
 
 /**
  * 未读数量

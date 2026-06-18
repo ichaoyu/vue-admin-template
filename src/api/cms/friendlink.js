@@ -27,7 +27,7 @@ export const createFriendlinkAPI = (data) => api.post('/cms/friendlink', data)
  * @param {Object} data - 友情链接信息
  * @returns {Promise<Object>} 返回更新后的友情链接信息
  */
-export const updateFriendlinkAPI = (data) => api.put('/cms/friendlink', data)
+export const updateFriendlinkAPI = (data) => api.patch('/cms/friendlink', data)
 
 /**
  * 删除友情链接

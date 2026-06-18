@@ -27,7 +27,7 @@ export const createTagAPI = (data) => api.post('/cms/tag', data)
  * @param {Object} data - 标签信息
  * @returns {Promise<Object>} 返回更新后的标签信息
  */
-export const updateTagAPI = (data) => api.put('/cms/tag', data)
+export const updateTagAPI = (data) => api.patch('/cms/tag', data)
 
 /**
  * 删除标签

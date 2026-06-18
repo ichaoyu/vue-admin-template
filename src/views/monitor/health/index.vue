@@ -114,7 +114,6 @@ const getHealthData = async () => {
       components: {},
     }
   } catch (error) {
-    console.error('获取健康状态失败:', error)
     ElMessage.error('获取健康状态失败')
   }
 }
@@ -138,7 +137,6 @@ const checkReady = async () => {
       message: `系统就绪，数据库和 Redis 连接正常。检查时间：${formatTime(res.timestamp)}`,
     }
   } catch (error) {
-    console.error('就绪检查失败:', error)
     quickCheckResult.value = {
       title: '就绪检查失败',
       type: 'error',
@@ -159,7 +157,6 @@ const checkLive = async () => {
       message: '系统运行正常',
     }
   } catch (error) {
-    console.error('存活检查失败:', error)
     quickCheckResult.value = {
       title: '存活检查失败',
       type: 'error',

@@ -25,11 +25,10 @@ export const getUserDetailAPI = (id) => api.get(`/system/user/${id}`)
 
 /**
  * 更新用户
- * @param {string} id - 用户ID
  * @param {Object} data - 用户信息
  * @returns {Promise<Object>} 返回更新后的用户信息
  */
-export const updateUserAPI = (id, data) => api.patch(`/system/user/${id}`, data)
+export const updateUserAPI = (data) => api.patch('/system/user', data)
 
 /**
  * 删除用户
@@ -47,10 +46,10 @@ export const batchDeleteUsersAPI = (ids) => api.delete('/system/user', { data: {
 
 /**
  * 重置用户密码（仅超级管理员可用）
- * @param {string} userId - 用户 ID
+ * @param {Object} data - 重置密码参数
  * @returns {Promise<void>}
  */
-export const resetUserPasswordAPI = (userId) => api.put('/auth/reset-password', { userId })
+export const resetUserPasswordAPI = (data) => api.patch('/system/user/reset-password', data)
 
 /**
  * 强制用户下线（仅超级管理员可用）

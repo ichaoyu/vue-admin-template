@@ -31,11 +31,10 @@ export const createDeptAPI = (data) => api.post('/system/dept', data)
 
 /**
  * 更新部门
- * @param {string} id - 部门ID
  * @param {Object} data - 部门信息
  * @returns {Promise<Object>} 返回更新后的部门信息
  */
-export const updateDeptAPI = (id, data) => api.patch(`/system/dept/${id}`, data)
+export const updateDeptAPI = (data) => api.patch('/system/dept', data)
 
 /**
  * 删除部门

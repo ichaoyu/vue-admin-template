@@ -57,7 +57,7 @@ export const useNotificationStore = defineStore('notification', {
     },
 
     async markAsRead(id) {
-      await markAsReadAPI(id)
+      await markAsReadAPI({ id })
       const notification = this.notifications.find((n) => n.id === id)
       if (notification) {
         notification.isRead = 1

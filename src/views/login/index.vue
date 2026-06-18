@@ -79,7 +79,7 @@ const refreshCaptcha = async () => {
     captchaImage.value = data.image
     loginForm.captchaId = data.id
   } catch (error) {
-    console.error('获取验证码失败:', error)
+    // 错误由 axios 拦截器处理
   }
 }
 

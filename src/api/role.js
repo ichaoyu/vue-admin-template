@@ -25,11 +25,10 @@ export const getRoleDetailAPI = (id) => api.get(`/system/role/${id}`)
 
 /**
  * 更新角色
- * @param {string} id - 角色 ID
  * @param {Object} data - 角色信息（包含 menuIds）
  * @returns {Promise<Object>} 返回更新后的角色信息
  */
-export const updateRoleAPI = (id, data) => api.patch(`/system/role/${id}`, data)
+export const updateRoleAPI = (data) => api.patch('/system/role', data)
 
 /**
  * 删除角色

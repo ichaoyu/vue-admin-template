@@ -184,7 +184,7 @@ const getData = async () => {
     serverInfo.node = res?.node || {}
     serverInfo.redis = res?.redis || {}
   } catch (error) {
-    console.error('获取服务器信息失败:', error)
+    // 错误由 axios 拦截器处理
   } finally {
     loading.value = false
   }

@@ -27,7 +27,7 @@ export const createMessageAPI = (data) => api.post('/cms/message', data)
  * @param {Object} data - 留言信息
  * @returns {Promise<Object>} 返回更新后的留言信息
  */
-export const updateMessageAPI = (data) => api.put('/cms/message', data)
+export const updateMessageAPI = (data) => api.patch('/cms/message', data)
 
 /**
  * 删除留言

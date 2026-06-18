@@ -7,8 +7,8 @@
       :columns="columns"
       :loading="loading"
       :total="total"
-      :page="queryParams.pageNum"
-      :limit="queryParams.pageSize"
+      v-model:page="page"
+      v-model:limit="limit"
       @page-change="handlePageChange"
       @size-change="handleSizeChange"
       @refresh="handleRefresh"
@@ -24,8 +24,8 @@
           clearable
           style="width: 120px"
         />
-        <el-button type="primary" :icon="Plus" @click="handleAdd">新增</el-button>
-        <el-button type="danger" :disabled="selectedIds.length === 0" @click="handleBatchDelete">
+        <el-button v-permission="['system:dict:add']" type="primary" :icon="Plus" @click="onAdd">新增</el-button>
+        <el-button v-permission="['system:dict:delete']" type="danger" :disabled="selectedIds.length === 0" @click="handleBatchDelete">
           批量删除(已选{{ selectedIds.length }}项)
         </el-button>
       </template>
@@ -37,13 +37,13 @@
 
       <!-- 状态 -->
       <template #status="{ row }">
-        <DictTag :value="row.status" dict-type="sys_normal_disable" />
+        <StatusSwitch v-model="row.status" :id="row.id" :api="updateDictTypeAPI" />
       </template>
 
       <!-- 操作 -->
       <template #operation="{ row }">
-        <el-button type="primary" size="small" link :icon="Edit" @click="handleEdit(row)">编辑</el-button>
-        <el-button type="danger" size="small" link :icon="Delete" @click="handleDelete(row)">删除</el-button>
+        <el-button v-permission="['system:dict:edit']" type="primary" size="small" link :icon="Edit" @click="onEdit(row)">编辑</el-button>
+        <el-button v-permission="['system:dict:delete']" type="danger" size="small" link :icon="Delete" @click="handleDelete(row)">删除</el-button>
       </template>
     </pro-table>
     <!-- #endregion -->
@@ -56,7 +56,7 @@
       width="500px"
       content-height="280px"
       :confirm-loading="submitLoading"
-      @confirm="handleSubmit"
+      @confirm="onSubmit"
     >
       <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="字典名称:" prop="dictName">
@@ -76,7 +76,7 @@
     <!-- #endregion -->
 
     <!-- #region 字典数据抽屉 -->
-    <el-drawer v-model="drawerVisible" :title="drawerTitle" size="70%" :destroy-on-close="true">
+    <el-drawer v-model="drawerVisible" title="字典数据" size="70%" :destroy-on-close="true">
       <DictDataPanel v-if="drawerVisible" :dict-type="currentDictType" />
     </el-drawer>
     <!-- #endregion -->
@@ -85,48 +85,42 @@
 
 <script setup>
 import { defineAsyncComponent } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Edit, Delete } from '@element-plus/icons-vue'
-import { formatDateTime } from '@/utils/date'
+import { useCrud } from '@/hooks'
 import { getDictTypeListAPI, createDictTypeAPI, updateDictTypeAPI, deleteDictTypeAPI, batchDeleteDictTypesAPI } from '@/api/dict'
+import { formatDateTime } from '@/utils/date'
 import ProTable from '@/components/Table/index.vue'
 import ProDialog from '@/components/Dialog/index.vue'
 import DictSelect from '@/components/DictSelect/index.vue'
-import DictTag from '@/components/DictTag/index.vue'
-
-const DictDataPanel = defineAsyncComponent(() => import('../data/index.vue'))
+import StatusSwitch from '@/components/StatusSwitch/index.vue'
 
 defineOptions({
   name: 'SystemDictTypeIndex',
 })
 
+const DictDataPanel = defineAsyncComponent(() => import('../data/index.vue'))
+
 // #region 数据定义
 
-const tableRef = ref(null)
-const loading = ref(false)
-const tableData = ref([])
-const total = ref(0)
-const selectedIds = ref([])
-
-const queryParams = reactive({
-  pageNum: 1,
-  pageSize: 10,
-  dictName: '',
-  dictType: '',
-  status: '',
-})
-
-const dialogVisible = ref(false)
-const dialogTitle = computed(() => (form.id ? '编辑字典类型' : '新增字典类型'))
-const submitLoading = ref(false)
 const formRef = ref(null)
-const form = reactive({
-  id: '',
-  dictName: '',
-  dictType: '',
-  status: 1,
-  remark: '',
-})
+
+const {
+  tableData, loading, total, queryParams, page, limit,
+  getData, handlePageChange, handleSizeChange, handleRefresh,
+  form, dialogVisible, submitLoading, selectedIds, resetForm,
+  handleAdd, handleEdit, handleSubmit, handleDelete,
+  handleSelectionChange, handleBatchDelete,
+} = useCrud(
+  getDictTypeListAPI,
+  { create: createDictTypeAPI, update: updateDictTypeAPI, delete: deleteDictTypeAPI, batchDelete: batchDeleteDictTypesAPI },
+  {
+    nameField: 'dictName',
+    formDefaults: { dictName: '', dictType: '', status: 1, remark: '' },
+    defaultParams: { dictName: '', dictType: '', status: '' },
+  }
+)
+
+const dialogTitle = computed(() => (form.value.id ? '编辑字典类型' : '新增字典类型'))
 
 const rules = {
   dictName: [{ required: true, message: '字典名称不能为空', trigger: 'blur' }],
@@ -148,157 +142,28 @@ const columns = [
 // #region 抽屉相关
 
 const drawerVisible = ref(false)
-const drawerTitle = ref('')
 const currentDictType = ref('')
 
-// #endregion
-
-// #region 数据获取
-
-const getData = async () => {
-  loading.value = true
-  try {
-    const res = await getDictTypeListAPI(queryParams)
-    tableData.value = res?.list || res || []
-    total.value = res?.total || 0
-  } catch (error) {
-    console.error('获取字典类型列表失败:', error)
-  } finally {
-    loading.value = false
-  }
-}
-
-const handleRefresh = () => {
-  getData()
-}
-
-const handlePageChange = (page) => {
-  queryParams.pageNum = page
-  getData()
-}
-
-const handleSizeChange = (size) => {
-  queryParams.pageSize = size
-  queryParams.pageNum = 1
-  getData()
-}
-
-const handleSelectionChange = (selection) => {
-  selectedIds.value = selection.map((item) => item.id)
+const handleViewDictData = (row) => {
+  currentDictType.value = row.dictType
+  drawerVisible.value = true
 }
 
 // #endregion
 
 // #region 新增/编辑
 
-const handleAdd = () => {
-  resetForm()
-  dialogVisible.value = true
+const onAdd = () => {
+  handleAdd()
 }
 
-const handleEdit = (row) => {
-  Object.assign(form, {
-    id: row.id,
-    dictName: row.dictName,
-    dictType: row.dictType,
-    status: row.status,
-    remark: row.remark,
-  })
-  dialogVisible.value = true
+const onEdit = (row) => {
+  handleEdit(row)
 }
 
-const handleSubmit = async () => {
-  if (!formRef.value) return
-
-  await formRef.value.validate(async (valid) => {
-    if (!valid) return
-
-    submitLoading.value = true
-    try {
-      if (form.id) {
-        await updateDictTypeAPI(form.id, form)
-        ElMessage.success('修改成功')
-      } else {
-        await createDictTypeAPI(form)
-        ElMessage.success('新增成功')
-      }
-      dialogVisible.value = false
-      getData()
-    } catch (error) {
-      console.error('提交失败:', error)
-    } finally {
-      submitLoading.value = false
-    }
-  })
+const onSubmit = () => {
+  handleSubmit(formRef.value)
 }
-
-const resetForm = () => {
-  Object.assign(form, {
-    id: '',
-    dictName: '',
-    dictType: '',
-    status: 1,
-    remark: '',
-  })
-}
-
-// #endregion
-
-// #region 删除
-
-const handleDelete = (row) => {
-  ElMessageBox.confirm(`确认要删除字典类型"${row.dictName}"吗？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(async () => {
-    try {
-      await deleteDictTypeAPI(row.id)
-      ElMessage.success('删除成功')
-      getData()
-    } catch (error) {
-      console.error('删除失败:', error)
-    }
-  })
-}
-
-const handleBatchDelete = () => {
-  if (selectedIds.value.length === 0) {
-    ElMessage.warning('请选择要删除的字典类型')
-    return
-  }
-  ElMessageBox.confirm(`确认要删除选中的 ${selectedIds.value.length} 个字典类型吗？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(async () => {
-    try {
-      await batchDeleteDictTypesAPI(selectedIds.value)
-      ElMessage.success('删除成功')
-      getData()
-    } catch (error) {
-      console.error('批量删除失败:', error)
-    }
-  })
-}
-
-// #endregion
-
-// #region 查看字典数据
-
-const handleViewDictData = (row) => {
-  currentDictType.value = row.dictType
-  drawerTitle.value = `字典数据 - ${row.dictName} (${row.dictType})`
-  drawerVisible.value = true
-}
-
-// #endregion
-
-// #region 生命周期
-
-onMounted(() => {
-  getData()
-})
 
 // #endregion
 </script>

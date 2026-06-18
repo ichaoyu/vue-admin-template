@@ -143,7 +143,8 @@ const handleChange = async (val) => {
 
   try {
     // 调用 API 更新状态
-    await props.api(props.id, {
+    await props.api({
+      id: props.id,
       ...props.apiParams,
       status: val,
     })

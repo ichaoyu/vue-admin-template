@@ -7,8 +7,8 @@
       :columns="columns"
       :loading="loading"
       :total="total"
-      :page="queryParams.pageNum"
-      :limit="queryParams.pageSize"
+      v-model:page="page"
+      v-model:limit="limit"
       @page-change="handlePageChange"
       @size-change="handleSizeChange"
       @refresh="handleRefresh"
@@ -17,84 +17,26 @@
       <template #toolbar-left>
         <el-input v-model="queryParams.userName" placeholder="用户账号" clearable style="width: 200px" />
         <el-input v-model="queryParams.phone" placeholder="手机号码" clearable style="width: 200px" />
-        <DictSelect
-          v-model="queryParams.status"
-          dict-type="sys_normal_disable"
-          placeholder="用户状态"
-          clearable
-          style="width: 120px"
-        />
-        <!-- 新增按钮：需要 system:user:add 权限 -->
-        <el-button v-permission="['system:user:add']" type="primary" :icon="Plus" @click="handleAdd"> 新增 </el-button>
-        <!-- 批量删除按钮 -->
-        <el-button
-          v-permission="['system:user:delete']"
-          type="danger"
-          :disabled="selectedIds.length === 0"
-          @click="handleBatchDelete"
-        >
+        <DictSelect v-model="queryParams.status" dict-type="sys_normal_disable" placeholder="用户状态" clearable style="width: 120px" />
+        <el-button v-permission="['system:user:add']" type="primary" :icon="Plus" @click="onAdd">新增</el-button>
+        <el-button v-permission="['system:user:delete']" type="danger" :disabled="selectedIds.length === 0" @click="handleBatchDelete">
           批量删除(已选{{ selectedIds.length }}项)
         </el-button>
       </template>
 
-      <!-- 用户名 -->
       <template #userName="{ row }">
         <span>{{ row.userName }}</span>
       </template>
 
-      <!-- 状态 -->
       <template #status="{ row }">
         <el-switch v-model="row.status" :active-value="1" :inactive-value="0" @change="handleStatusChange(row)" />
       </template>
 
-      <!-- 操作 -->
       <template #operation="{ row }">
-        <!-- 编辑按钮：需要 system:user:edit 权限 -->
-        <el-button
-          v-permission="['system:user:edit']"
-          type="primary"
-          size="small"
-          link
-          :icon="Edit"
-          @click="handleEdit(row)"
-        >
-          编辑
-        </el-button>
-        <!-- 删除按钮：需要 system:user:delete 权限 -->
-        <el-button
-          v-permission="['system:user:delete']"
-          type="danger"
-          size="small"
-          link
-          :icon="Delete"
-          @click="handleDelete(row)"
-        >
-          删除
-        </el-button>
-        <!-- 重置密码按钮：需要 system:user:resetPwd 权限 -->
-        <el-button
-          v-permission="['system:user:resetPwd']"
-          v-if="isSuperAdmin"
-          type="warning"
-          size="small"
-          link
-          :icon="Key"
-          @click="handleResetPassword(row)"
-        >
-          重置密码
-        </el-button>
-        <!-- 强制下线按钮：需要 system:user:forceOffline 权限 -->
-        <el-button
-          v-permission="['system:user:forceOffline']"
-          v-if="isSuperAdmin"
-          type="danger"
-          size="small"
-          link
-          :icon="SwitchButton"
-          @click="handleForceOffline(row)"
-        >
-          强制下线
-        </el-button>
+        <el-button v-permission="['system:user:edit']" type="primary" size="small" link :icon="Edit" @click="onEdit(row)">编辑</el-button>
+        <el-button v-permission="['system:user:delete']" type="danger" size="small" link :icon="Delete" @click="handleDelete(row)">删除</el-button>
+        <el-button v-permission="['system:user:resetPwd']" v-if="isSuperAdmin" type="warning" size="small" link :icon="Key" @click="handleResetPassword(row)">重置密码</el-button>
+        <el-button v-permission="['system:user:forceOffline']" v-if="isSuperAdmin" type="danger" size="small" link :icon="SwitchButton" @click="handleForceOffline(row)">强制下线</el-button>
       </template>
     </pro-table>
     <!-- #endregion -->
@@ -107,7 +49,7 @@
       width="700px"
       content-height="500px"
       :confirm-loading="submitLoading"
-      @confirm="handleSubmit"
+      @confirm="onSubmit"
     >
       <el-form ref="formRef" :model="form" :rules="rules" label-width="100px" style="overflow: hidden">
         <el-row :gutter="20">
@@ -122,7 +64,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="手机号码:" prop="phone">
@@ -138,12 +79,7 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="用户性别:" prop="sex">
-              <DictSelect
-                v-model="form.sex"
-                dict-type="sys_user_sex"
-                placeholder="请选择用户性别"
-                style="width: 100%"
-              />
+              <DictSelect v-model="form.sex" dict-type="sys_user_sex" placeholder="请选择用户性别" style="width: 100%" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -196,18 +132,10 @@
 </template>
 
 <script setup>
-import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Edit, Delete, Key, SwitchButton } from '@element-plus/icons-vue'
 import { nextTick } from 'vue'
-import {
-  getUserListAPI,
-  createUserAPI,
-  updateUserAPI,
-  deleteUserAPI,
-  batchDeleteUsersAPI,
-  resetUserPasswordAPI,
-  forceUserOfflineAPI,
-} from '@/api/user'
+import { useCrud } from '@/hooks'
+import { getUserListAPI, createUserAPI, updateUserAPI, deleteUserAPI, batchDeleteUsersAPI, resetUserPasswordAPI, forceUserOfflineAPI } from '@/api/user'
 import { getDeptTreeAPI } from '@/api/dept'
 import { getRoleListAPI } from '@/api/role'
 import { getPostListAPI } from '@/api/post'
@@ -229,28 +157,11 @@ const isSuperAdmin = computed(() => {
   return roles.includes('super_admin') || roles.includes('admin')
 })
 
-const tableRef = ref(null)
-const loading = ref(false)
-const tableData = ref([])
-const total = ref(0)
-const selectedIds = ref([])
-
-const queryParams = reactive({
-  pageNum: 1,
-  pageSize: 10,
-  userName: '',
-  phone: '',
-  status: '',
-})
-
-const dialogVisible = ref(false)
-const dialogTitle = computed(() => (form.id ? '编辑用户' : '新增用户'))
-const submitLoading = ref(false)
 const formRef = ref(null)
-const form = reactive({
+
+const formDefaults = {
   id: '',
   userName: '',
-  password: '',
   nickName: '',
   phone: '',
   email: '',
@@ -260,7 +171,31 @@ const form = reactive({
   deptId: null,
   roleIds: [],
   postIds: [],
-})
+}
+
+const {
+  tableData, loading, total, queryParams, page, limit,
+  getData, handlePageChange, handleSizeChange, handleRefresh,
+  form, dialogVisible, submitLoading, selectedIds, resetForm,
+  handleAdd, handleEdit, handleSubmit, handleDelete, handleStatusChange,
+  handleSelectionChange, handleBatchDelete,
+} = useCrud(
+  getUserListAPI,
+  { create: createUserAPI, update: updateUserAPI, delete: deleteUserAPI, batchDelete: batchDeleteUsersAPI },
+  {
+    nameField: 'userName',
+    formDefaults,
+    defaultParams: { userName: '', phone: '', status: '' },
+    formatFormData: (row) => ({
+      ...row,
+      deptId: row.deptId || row.dept?.id || null,
+      roleIds: (row.roles || []).map((r) => r.id),
+      postIds: (row.posts || []).map((p) => p.id),
+    }),
+  }
+)
+
+const dialogTitle = computed(() => (form.value.id ? '编辑用户' : '新增用户'))
 
 const rules = {
   userName: [{ required: true, message: '用户账号不能为空', trigger: 'blur' }],
@@ -282,13 +217,9 @@ const columns = [
 // 重置密码
 const resetPasswordVisible = ref(false)
 const resetLoading = ref(false)
-const resetPasswordForm = reactive({
-  id: '',
-  userName: '',
-})
+const resetPasswordForm = ref({ id: '', userName: '' })
 
 // 部门树、角色列表、岗位列表
-const deptTree = ref([])
 const roleList = ref([])
 const postList = ref([])
 
@@ -296,34 +227,12 @@ const postList = ref([])
 
 // #region 数据获取
 
-const getData = async () => {
-  loading.value = true
-  try {
-    const res = await getUserListAPI(queryParams)
-    tableData.value = res?.list || []
-    total.value = res?.total || 0
-  } catch (error) {
-    console.error('获取用户列表失败:', error)
-  } finally {
-    loading.value = false
-  }
-}
-
-const loadDeptTree = async () => {
-  try {
-    const res = await getDeptTreeAPI()
-    deptTree.value = res?.data || res || []
-  } catch (error) {
-    console.error('获取部门树失败:', error)
-  }
-}
-
 const loadRoleList = async () => {
   try {
     const res = await getRoleListAPI()
     roleList.value = res?.list || res?.data || res || []
   } catch (error) {
-    console.error('获取角色列表失败:', error)
+    // 错误由 axios 拦截器处理
   }
 }
 
@@ -332,174 +241,28 @@ const loadPostList = async () => {
     const res = await getPostListAPI()
     postList.value = res?.list || res?.data || res || []
   } catch (error) {
-    console.error('获取岗位列表失败:', error)
+    // 错误由 axios 拦截器处理
   }
-}
-
-const handleRefresh = () => {
-  getData()
-}
-
-const handlePageChange = (page) => {
-  queryParams.pageNum = page
-  getData()
-}
-
-const handleSizeChange = (size) => {
-  queryParams.pageSize = size
-  queryParams.pageNum = 1
-  getData()
-}
-
-const handleSelectionChange = (selection) => {
-  selectedIds.value = selection.map((item) => item.id)
 }
 
 // #endregion
 
 // #region 新增/编辑
 
-const handleAdd = () => {
-  resetForm()
-  loadDeptTree()
+const onAdd = () => {
+  handleAdd()
   loadRoleList()
   loadPostList()
-  dialogVisible.value = true
 }
 
-const handleEdit = async (row) => {
-  resetForm()
-
-  // 先加载所需的基础数据
-  await Promise.all([loadDeptTree(), loadRoleList(), loadPostList()])
-
-  // 等待 DOM 更新后再赋值
+const onEdit = async (row) => {
+  await Promise.all([loadRoleList(), loadPostList()])
   await nextTick()
-
-  // 填充表单数据
-  Object.assign(form, {
-    id: row.id,
-    userName: row.userName,
-    nickName: row.nickName,
-    phone: row.phone,
-    email: row.email,
-    sex: row.sex || 0,
-    status: row.status || 0,
-    remark: row.remark || '',
-    deptId: row.deptId || row.dept?.id || null,
-    roleIds: (row.roles || []).map((r) => r.id),
-    postIds: (row.posts || []).map((p) => p.id),
-  })
-
-  console.log('[用户编辑] 表单数据:', {
-    id: form.id,
-    roleIds: form.roleIds,
-    postIds: form.postIds,
-  })
-  console.log('[用户编辑] 角色列表:', roleList.value)
-  console.log('[用户编辑] 岗位列表:', postList.value)
-
-  dialogVisible.value = true
+  handleEdit(row)
 }
 
-const handleSubmit = async () => {
-  if (!formRef.value) return
-
-  await formRef.value.validate(async (valid) => {
-    if (!valid) return
-
-    submitLoading.value = true
-    try {
-      if (form.id) {
-        await updateUserAPI(form.id, form)
-        ElMessage.success('修改成功')
-      } else {
-        await createUserAPI(form)
-        ElMessage.success('新增成功')
-      }
-      dialogVisible.value = false
-      getData()
-    } catch (error) {
-      console.error('提交失败:', error)
-    } finally {
-      submitLoading.value = false
-    }
-  })
-}
-
-const resetForm = () => {
-  Object.assign(form, {
-    id: '',
-    userName: '',
-    nickName: '',
-    phone: '',
-    email: '',
-    sex: 0,
-    status: 1,
-    remark: '',
-    deptId: null,
-    roleIds: [],
-    postIds: [],
-  })
-}
-
-// #endregion
-
-// #region 删除
-
-const handleDelete = (row) => {
-  ElMessageBox.confirm(`确认要删除用户"${row.userName}"吗？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(async () => {
-    try {
-      await deleteUserAPI(row.id)
-      ElMessage.success('删除成功')
-      getData()
-    } catch (error) {
-      console.error('删除失败:', error)
-    }
-  })
-}
-
-const handleBatchDelete = () => {
-  if (selectedIds.value.length === 0) {
-    ElMessage.warning('请选择要删除的用户')
-    return
-  }
-  ElMessageBox.confirm(`确认要删除选中的 ${selectedIds.value.length} 个用户吗？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(async () => {
-    try {
-      await batchDeleteUsersAPI(selectedIds.value)
-      ElMessage.success('删除成功')
-      getData()
-    } catch (error) {
-      console.error('批量删除失败:', error)
-    }
-  })
-}
-
-// #endregion
-
-// #region 状态切换
-
-const handleStatusChange = async (row) => {
-  const id = row.id
-  if (!id) {
-    row.status = row.status === 0 ? 1 : 0
-    return
-  }
-  try {
-    await updateUserAPI(id, { status: row.status })
-    ElMessage.success('状态更新成功')
-  } catch (error) {
-    row.status = row.status === 0 ? 1 : 0
-    console.error('状态更新失败:', error)
-  }
+const onSubmit = () => {
+  handleSubmit(formRef.value)
 }
 
 // #endregion
@@ -507,21 +270,18 @@ const handleStatusChange = async (row) => {
 // #region 重置密码
 
 const handleResetPassword = (row) => {
-  Object.assign(resetPasswordForm, {
-    id: row.id,
-    userName: row.userName,
-  })
+  resetPasswordForm.value = { id: row.id, userName: row.userName }
   resetPasswordVisible.value = true
 }
 
 const handleResetPasswordSubmit = async () => {
   resetLoading.value = true
   try {
-    await resetUserPasswordAPI(resetPasswordForm.id)
+    await resetUserPasswordAPI(resetPasswordForm.value.id)
     ElMessage.success('密码重置成功，新密码为：123456')
     resetPasswordVisible.value = false
   } catch (error) {
-    console.error('密码重置失败:', error)
+    // 错误由 axios 拦截器处理
   } finally {
     resetLoading.value = false
   }
@@ -534,25 +294,14 @@ const handleForceOffline = async (row) => {
       cancelButtonText: '取消',
       type: 'warning',
     })
-  } catch {
-    return
-  }
-
-  try {
     await forceUserOfflineAPI(row.id)
     ElMessage.success('用户已强制下线')
   } catch (error) {
-    console.error('强制下线失败:', error)
+    if (error !== 'cancel') {
+      // 错误由 axios 拦截器处理
+    }
   }
 }
-
-// #endregion
-
-// #region 生命周期
-
-onMounted(() => {
-  getData()
-})
 
 // #endregion
 </script>

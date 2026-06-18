@@ -100,6 +100,7 @@ import { Refresh, Setting, Grid } from '@element-plus/icons-vue'
 
 defineOptions({
   name: 'ProTable',
+  inheritAttrs: false,
 })
 
 // #region Props 定义
@@ -179,9 +180,16 @@ const emit = defineEmits(['update:page', 'update:limit', 'page-change', 'size-ch
 
 const tableRef = ref(null)
 const tableData = computed(() => props.data)
-const currentPage = ref(props.page)
-const pageSize = ref(props.limit)
 const tableSize = ref('default')
+
+const currentPage = computed({
+  get: () => props.page,
+  set: (val) => emit('update:page', val),
+})
+const pageSize = computed({
+  get: () => props.limit,
+  set: (val) => emit('update:limit', val),
+})
 
 const tableSizes = [
   { label: '大', value: 'large' },
@@ -211,12 +219,10 @@ const handleSizeChange = (size) => {
 }
 
 const handlePageChange = (page) => {
-  emit('update:page', page)
   emit('page-change', page)
 }
 
 const handlePageSizeChange = (size) => {
-  emit('update:limit', size)
   emit('size-change', size)
 }
 
@@ -227,20 +233,6 @@ const handleSortChange = (column, prop, order) => {
 // #endregion
 
 // #region 监听器
-
-watch(
-  () => props.page,
-  (val) => {
-    currentPage.value = val
-  }
-)
-
-watch(
-  () => props.limit,
-  (val) => {
-    pageSize.value = val
-  }
-)
 
 watch(
   () => props.columns,

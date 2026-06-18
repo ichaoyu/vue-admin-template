@@ -28,7 +28,7 @@ export const createArticleAPI = (data) => api.post('/cms/article', data)
  * @param {Object} data - 文章信息
  * @returns {Promise<Object>} 返回更新后的文章信息
  */
-export const updateArticleAPI = (data) => api.put('/cms/article', data)
+export const updateArticleAPI = (data) => api.patch('/cms/article', data)
 
 /**
  * 删除文章

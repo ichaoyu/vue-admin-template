@@ -27,7 +27,7 @@ export const createCategoryAPI = (data) => api.post('/cms/category', data)
  * @param {Object} data - 栏目信息
  * @returns {Promise<Object>} 返回更新后的栏目信息
  */
-export const updateCategoryAPI = (data) => api.put('/cms/category', data)
+export const updateCategoryAPI = (data) => api.patch('/cms/category', data)
 
 /**
  * 删除栏目

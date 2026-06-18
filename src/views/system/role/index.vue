@@ -7,8 +7,8 @@
       :columns="columns"
       :loading="loading"
       :total="total"
-      :page="queryParams.pageNum"
-      :limit="queryParams.pageSize"
+      v-model:page="page"
+      v-model:limit="limit"
       @page-change="handlePageChange"
       @size-change="handleSizeChange"
       @refresh="handleRefresh"
@@ -17,44 +17,19 @@
       <template #toolbar-left>
         <el-input v-model="queryParams.roleName" placeholder="角色名称" clearable style="width: 200px" />
         <el-input v-model="queryParams.roleKey" placeholder="权限字符" clearable style="width: 200px" />
-        <DictSelect
-          v-model="queryParams.status"
-          dict-type="sys_normal_disable"
-          placeholder="角色状态"
-          style="width: 120px"
-        />
-        <!-- 新增按钮：需要 system:role:add 权限 -->
-        <el-button v-permission="['system:role:add']" type="primary" :icon="Plus" @click="handleAdd"> 新增 </el-button>
-        <!-- 批量删除按钮 -->
-        <el-button
-          v-permission="['system:role:delete']"
-          type="danger"
-          :disabled="selectedIds.length === 0"
-          @click="handleBatchDelete"
-        >
+        <DictSelect v-model="queryParams.status" dict-type="sys_normal_disable" placeholder="角色状态" style="width: 120px" />
+        <el-button v-permission="['system:role:add']" type="primary" :icon="Plus" @click="onAdd">新增</el-button>
+        <el-button v-permission="['system:role:delete']" type="danger" :disabled="selectedIds.length === 0" @click="handleBatchDelete">
           批量删除(已选{{ selectedIds.length }}项)
         </el-button>
       </template>
 
-      <!-- 状态 -->
       <template #status="{ row }">
         <StatusSwitch v-model="row.status" :id="row.id" :api="updateRoleAPI" />
       </template>
 
-      <!-- 操作 -->
       <template #operation="{ row }">
-        <!-- 编辑按钮：需要 system:role:edit 权限 -->
-        <el-button
-          v-permission="['system:role:edit']"
-          type="primary"
-          size="small"
-          link
-          :icon="Edit"
-          @click="handleEdit(row)"
-        >
-          编辑
-        </el-button>
-        <!-- 删除按钮：需要 system:role:delete 权限 -->
+        <el-button v-permission="['system:role:edit']" type="primary" size="small" link :icon="Edit" @click="onEdit(row)">编辑</el-button>
         <ConfirmButton
           v-permission="['system:role:delete']"
           type="danger"
@@ -77,7 +52,7 @@
       width="750px"
       content-height="500px"
       :confirm-loading="submitLoading"
-      @confirm="handleSubmit"
+      @confirm="onSubmit"
       @closed="handleDialogClosed"
     >
       <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
@@ -122,12 +97,8 @@
                 <el-checkbox v-model="treeCheckStrictly">父子联动</el-checkbox>
               </div>
               <div class="toolbar-right">
-                <span class="stat-item"
-                  >已选菜单：<el-tag type="success">{{ selectedMenuCount }}</el-tag></span
-                >
-                <span class="stat-item"
-                  >已选权限：<el-tag type="primary">{{ selectedPermsCount }}</el-tag></span
-                >
+                <span class="stat-item">已选菜单：<el-tag type="success">{{ selectedMenuCount }}</el-tag></span>
+                <span class="stat-item">已选权限：<el-tag type="primary">{{ selectedPermsCount }}</el-tag></span>
               </div>
             </div>
             <el-tree
@@ -171,58 +142,69 @@
 </template>
 
 <script setup>
-import { ElMessage } from 'element-plus'
 import { Plus, Edit, InfoFilled } from '@element-plus/icons-vue'
 import { nextTick } from 'vue'
-import { useTable } from '@/hooks'
+import { useCrud } from '@/hooks'
 import { getRoleListAPI, createRoleAPI, updateRoleAPI, deleteRoleAPI, batchDeleteRolesAPI, getRoleDetailAPI } from '@/api/role'
 import { getMenuTreeAPI } from '@/api/menu'
 import { formatDateTime } from '@/utils/date'
 import { roleRules } from '@/utils/validator'
 import ProTable from '@/components/Table/index.vue'
 import ProDialog from '@/components/Dialog/index.vue'
-import StatusSwitch from '@/components/StatusSwitch/index.vue'
 import DictSelect from '@/components/DictSelect/index.vue'
+import StatusSwitch from '@/components/StatusSwitch/index.vue'
 import ConfirmButton from '@/components/ConfirmButton/index.vue'
 
 defineOptions({
   name: 'SystemRoleIndex',
 })
 
-// #region 表格数据
+// #region 数据定义
 
-const { tableData, loading, total, queryParams, getData, handlePageChange, handleSizeChange, handleRefresh } = useTable(
-  getRoleListAPI,
-  {
-    defaultParams: { roleName: '', roleKey: '', status: '' },
-  }
-)
-
-const selectedIds = ref([])
-
-// #endregion
-
-// #region 表单数据
-
-const dialogVisible = ref(false)
-const submitLoading = ref(false)
 const formRef = ref(null)
 const treeRef = ref(null)
 const menuTreeData = ref([])
 
-// 树形配置
-const treeProps = {
-  children: 'children',
-  label: 'menuName',
+const formDefaults = {
+  id: '',
+  roleName: '',
+  roleKey: '',
+  roleSort: 0,
+  status: 1,
+  remark: '',
+  menuIds: [],
 }
+
+const {
+  tableData, loading, total, queryParams, page, limit,
+  getData, handlePageChange, handleSizeChange, handleRefresh,
+  form, dialogVisible, submitLoading, selectedIds, resetForm,
+  handleAdd, handleEdit, handleSubmit, handleDelete,
+  handleSelectionChange, handleBatchDelete,
+} = useCrud(
+  getRoleListAPI,
+  { create: createRoleAPI, update: updateRoleAPI, delete: deleteRoleAPI, batchDelete: batchDeleteRolesAPI },
+  {
+    nameField: 'roleName',
+    formDefaults,
+    defaultParams: { roleName: '', roleKey: '', status: '' },
+    formatSubmitData: (formData) => ({
+      ...formData,
+      menuIds: getCheckedMenuIds(),
+    }),
+  }
+)
+
+const dialogTitle = computed(() => (form.value.id ? '修改角色' : '新增角色'))
+const rules = roleRules
+
+// 树形配置
+const treeProps = { children: 'children', label: 'menuName' }
 const treeExpandAll = ref(true)
 const treeCheckAll = ref(false)
 const treeCheckStrictly = ref(true)
-
-// 当前选中的节点
 const selectedNode = ref(null)
 
-// 常用权限类型
 const commonPerms = [
   { label: '查看', value: 'view' },
   { label: '新增', value: 'add' },
@@ -234,21 +216,6 @@ const commonPerms = [
   { label: '其他', value: 'other' },
 ]
 
-// 表单数据
-const form = ref({
-  id: '',
-  roleName: '',
-  roleKey: '',
-  roleSort: 0,
-  status: 1,
-  remark: '',
-  menuIds: [],
-})
-
-const dialogTitle = computed(() => (form.value.id ? '修改角色' : '新增角色'))
-const rules = roleRules
-
-// 统计信息
 const selectedMenuCount = computed(() => {
   const checkedKeys = treeRef.value?.getCheckedKeys(false) || []
   const halfCheckedKeys = treeRef.value?.getHalfCheckedKeys() || []
@@ -262,33 +229,35 @@ const selectedPermsCount = computed(() => {
   let count = 0
   allNodes.forEach((node) => {
     if (node.perms) {
-      const perms = node.perms.split(',')
-      count += perms.length
+      count += node.perms.split(',').length
     }
   })
   return count
 })
 
+const columns = [
+  { type: 'selection', width: 55, align: 'center' },
+  { prop: 'roleName', label: '角色名称', minWidth: 150 },
+  { prop: 'roleKey', label: '权限字符', minWidth: 150 },
+  { prop: 'roleSort', label: '显示顺序', width: 100, align: 'center' },
+  { prop: 'status', label: '状态', width: 100, align: 'center', slot: 'status' },
+  { prop: 'createTime', label: '创建时间', minWidth: 180, formatter: (row) => formatDateTime(row.createTime) },
+  { prop: 'operation', label: '操作', width: 180, align: 'center', fixed: 'right', slot: 'operation' },
+]
+
 // #endregion
 
 // #region 菜单树操作
 
-/**
- * 获取菜单树数据
- */
 const loadMenuTree = async () => {
   try {
     const res = await getMenuTreeAPI()
     menuTreeData.value = res || []
   } catch (error) {
-    console.error('获取菜单树失败:', error)
     menuTreeData.value = []
   }
 }
 
-/**
- * 展开/折叠所有节点
- */
 const handleExpandAll = (val) => {
   const nodes = treeRef.value?.store?.nodesMap
   if (nodes) {
@@ -298,9 +267,6 @@ const handleExpandAll = (val) => {
   }
 }
 
-/**
- * 全选/全不选
- */
 const handleCheckAll = (val) => {
   if (val) {
     treeRef.value?.setCheckedNodes(menuTreeData.value)
@@ -309,33 +275,21 @@ const handleCheckAll = (val) => {
   }
 }
 
-/**
- * 获取选中的菜单 ID 列表
- */
 const getCheckedMenuIds = () => {
   const checkedKeys = treeRef.value?.getCheckedKeys(false) || []
   const halfCheckedKeys = treeRef.value?.getHalfCheckedKeys() || []
   return [...checkedKeys, ...halfCheckedKeys]
 }
 
-/**
- * 树节点选中事件处理
- */
-const handleTreeCheck = (data, checked) => {
+const handleTreeCheck = (data) => {
   selectedNode.value = data
 }
 
-/**
- * 判断是否包含某个权限
- */
 const hasPerm = (perms, permValue) => {
   if (!perms) return false
   return perms.includes(permValue)
 }
 
-/**
- * 权限变更处理
- */
 const handlePermChange = (checked, node, permValue) => {
   if (!node.perms) {
     node.perms = permValue
@@ -359,56 +313,27 @@ const handlePermChange = (checked, node, permValue) => {
 
 // #region 新增/编辑
 
-/**
- * 重置表单
- */
-const resetForm = () => {
-  form.value = {
-    id: '',
-    roleName: '',
-    roleKey: '',
-    roleSort: 0,
-    status: 1,
-    remark: '',
-    menuIds: [],
-  }
+const onAdd = () => {
+  handleAdd()
   treeCheckAll.value = false
   treeCheckStrictly.value = true
   treeExpandAll.value = true
   selectedNode.value = null
-}
-
-/**
- * 新增角色
- */
-const handleAdd = () => {
-  resetForm()
   loadMenuTree()
-  dialogVisible.value = true
 }
 
-/**
- * 编辑角色
- * @param {Object} row - 行数据
- */
-const handleEdit = async (row) => {
-  resetForm()
+const onEdit = async (row) => {
   submitLoading.value = true
   try {
-    // 先加载菜单树
     await loadMenuTree()
-
-    // 再加载角色详情
     const detailRes = await getRoleDetailAPI(row.id)
 
-    // 判断是否是超级管理员（权限为 *:*:* 或角色标识为 admin）
     const isAdmin =
       detailRes.roleKey === 'admin' ||
       (detailRes.permissions && (detailRes.permissions.includes('*:*:*') || detailRes.permissions.includes('*')))
 
     let menuIds = []
     if (isAdmin) {
-      // 超级管理员，获取所有菜单的id
       const getAllMenuIds = (menus) => {
         let ids = []
         menus.forEach((menu) => {
@@ -421,11 +346,9 @@ const handleEdit = async (row) => {
       }
       menuIds = getAllMenuIds(menuTreeData.value)
     } else {
-      // 普通角色，使用返回的菜单id
       menuIds = detailRes.menus?.map((item) => item.id) || []
     }
 
-    // 填充表单数据
     form.value = {
       id: detailRes.id,
       roleName: detailRes.roleName,
@@ -437,134 +360,30 @@ const handleEdit = async (row) => {
     }
     dialogVisible.value = true
 
-    // 等待 DOM 更新后设置树的勾选状态
     await nextTick()
-
-    // 确保树已经渲染完成
     if (treeRef.value && form.value.menuIds && form.value.menuIds.length > 0) {
       setTimeout(() => {
         treeRef.value.setCheckedKeys(form.value.menuIds)
       }, 300)
     }
   } catch (error) {
-    console.error('获取角色详情失败:', error)
-    ElMessage.error('获取角色详情失败')
+    // 错误由 axios 拦截器处理
   } finally {
     submitLoading.value = false
   }
 }
 
-/**
- * 提交表单
- */
-const handleSubmit = async () => {
-  if (!formRef.value) return
-
-  await formRef.value.validate(async (valid) => {
-    if (!valid) return
-
-    submitLoading.value = true
-    try {
-      const menuIds = getCheckedMenuIds()
-
-      // 将 menuIds 添加到表单数据中
-      const submitData = {
-        ...form.value,
-        menuIds: menuIds,
-      }
-
-      if (form.value.id) {
-        // 编辑：更新角色（包含 menuIds）
-        await updateRoleAPI(form.value.id, submitData)
-        ElMessage.success('修改成功')
-      } else {
-        // 新增：创建角色（包含 menuIds）
-        await createRoleAPI(submitData)
-        ElMessage.success('新增成功')
-      }
-      dialogVisible.value = false
-      getData()
-    } catch (error) {
-      console.error('提交失败:', error)
-      ElMessage.error(error.response?.data?.message || '操作失败')
-    } finally {
-      submitLoading.value = false
-    }
-  })
+const onSubmit = () => {
+  handleSubmit(formRef.value)
 }
 
-/**
- * 弹窗关闭时重置
- */
 const handleDialogClosed = () => {
   resetForm()
+  treeCheckAll.value = false
+  treeCheckStrictly.value = true
+  treeExpandAll.value = true
+  selectedNode.value = null
   formRef.value?.resetFields()
-}
-
-// #endregion
-
-// #region 删除
-
-/**
- * 删除角色
- * @param {Object} row - 行数据
- */
-const handleDelete = async (row) => {
-  await deleteRoleAPI(row.id)
-  getData()
-}
-
-/**
- * 批量删除角色
- */
-const handleBatchDelete = () => {
-  if (selectedIds.value.length === 0) {
-    ElMessage.warning('请选择要删除的角色')
-    return
-  }
-  ElMessageBox.confirm(`确认要删除选中的 ${selectedIds.value.length} 个角色吗？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(async () => {
-    try {
-      await batchDeleteRolesAPI(selectedIds.value)
-      ElMessage.success('删除成功')
-      getData()
-    } catch (error) {
-      console.error('批量删除失败:', error)
-    }
-  })
-}
-
-// #endregion
-
-// #region 列配置
-
-const columns = [
-  { type: 'selection', width: 55, align: 'center' },
-  { prop: 'roleName', label: '角色名称', minWidth: 150 },
-  { prop: 'roleKey', label: '权限字符', minWidth: 150 },
-  { prop: 'roleSort', label: '显示顺序', width: 100, align: 'center' },
-  { prop: 'status', label: '状态', width: 100, align: 'center', slot: 'status' },
-  {
-    prop: 'createTime',
-    label: '创建时间',
-    minWidth: 180,
-    formatter: (row) => formatDateTime(row.createTime),
-  },
-  {
-    prop: 'operation',
-    label: '操作',
-    width: 180,
-    align: 'center',
-    fixed: 'right',
-    slot: 'operation',
-  },
-]
-
-const handleSelectionChange = (selection) => {
-  selectedIds.value = selection.map((item) => item.id)
 }
 
 // #endregion
@@ -579,7 +398,6 @@ const handleSelectionChange = (selection) => {
   box-sizing: border-box;
 }
 
-/* 表单提示文字 */
 .form-tip {
   display: flex;
   align-items: center;
@@ -590,7 +408,6 @@ const handleSelectionChange = (selection) => {
   line-height: 1.4;
 }
 
-/* 菜单权限区域 */
 .menu-tree-container {
   width: 100%;
   border: 1px solid #dcdfe6;
@@ -645,7 +462,6 @@ const handleSelectionChange = (selection) => {
   margin-left: 8px;
 }
 
-/* 权限快速选择区域 */
 .perms-quick-select {
   margin-top: 12px;
   padding: 12px;

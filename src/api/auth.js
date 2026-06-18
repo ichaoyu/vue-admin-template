@@ -42,7 +42,7 @@ export const getUserProfileAPI = () => api.get('/auth/getUserProfile')
  * @param {Object} data - 用户基本信息
  * @returns {Promise<void>}
  */
-export const updateUserBaseAPI = (data) => api.put('/auth/updateUserBase', data)
+export const updateUserBaseAPI = (data) => api.patch('/auth/updateUserBase', data)
 
 /**
  * 更新用户密码
@@ -51,6 +51,6 @@ export const updateUserBaseAPI = (data) => api.put('/auth/updateUserBase', data)
  * @param {string} data.newPassword - 新密码
  * @returns {Promise<void>}
  */
-export const updateUserPasswordAPI = (data) => api.put('/auth/updateUserPassword', data)
+export const updateUserPasswordAPI = (data) => api.patch('/auth/updateUserPassword', data)
 
 // #endregion

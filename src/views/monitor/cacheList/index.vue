@@ -312,7 +312,6 @@ const loadStats = async () => {
     const res = await getCacheStatsAPI()
     cacheStats.value = res?.data || res || {}
   } catch (error) {
-    console.warn('获取Redis统计失败:', error.message)
     cacheStats.value = {}
   } finally {
     statsLoading.value = false
@@ -329,7 +328,6 @@ const loadGroups = async () => {
     const res = await getCacheGroupsAPI()
     cacheGroups.value = res?.data?.list || res?.list || []
   } catch (error) {
-    console.error('获取缓存分组失败:', error)
     cacheGroups.value = []
   } finally {
     loading.value = false
@@ -365,7 +363,6 @@ const handleGroupClick = async (row) => {
     currentGroupKeys.value = res?.data?.list || res?.list || []
     keyListTotal.value = res?.data?.total || res?.total || 0
   } catch (error) {
-    console.error('获取分组键列表失败:', error)
     currentGroupKeys.value = []
   } finally {
     loading.value = false
@@ -410,7 +407,7 @@ const handleClearAllCache = async () => {
       handleGroupClick(currentGroup.value)
     }
   } catch (error) {
-    console.error('清空缓存失败:', error)
+    // 错误由 axios 拦截器处理
   } finally {
     loading.value = false
   }
@@ -432,7 +429,7 @@ const handleResetStats = async () => {
     ElMessage.success('重置统计成功')
     loadStats()
   } catch (error) {
-    console.error('重置统计失败:', error)
+    // 错误由 axios 拦截器处理
   }
 }
 
@@ -467,7 +464,6 @@ const handleKeyClick = async (row) => {
       value: detailDataRes.value ?? '无内容',
     }
   } catch (error) {
-    console.error('获取缓存详情失败:', error)
     detailData.value = {
       ...detailData.value,
       value: '获取缓存内容失败',
@@ -493,7 +489,6 @@ const handleClearGroup = (row) => {
         ElMessage.success(`已清空 ${row.count} 条缓存`)
         handleRefreshGroups()
       } catch (error) {
-        console.error('清空分组失败:', error)
         ElMessage.error('清空分组失败')
       }
     })
@@ -513,7 +508,6 @@ const handleDeleteKey = (row) => {
         ElMessage.success('删除成功')
         handleRefreshKeys()
       } catch (error) {
-        console.error('删除失败:', error)
         ElMessage.error('删除失败')
       }
     })
@@ -532,7 +526,6 @@ const handleClearAll = () => {
         ElMessage.success(`已清空所有缓存，共 ${res?.data?.count || res?.count || 0} 条`)
         handleRefreshGroups()
       } catch (error) {
-        console.error('清空失败:', error)
         ElMessage.error('清空失败')
       }
     })

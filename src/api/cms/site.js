@@ -27,7 +27,7 @@ export const createSiteAPI = (data) => api.post('/cms/site', data)
  * @param {Object} data - 站点信息
  * @returns {Promise<Object>} 返回更新后的站点信息
  */
-export const updateSiteAPI = (data) => api.put('/cms/site', data)
+export const updateSiteAPI = (data) => api.patch('/cms/site', data)
 
 /**
  * 删除站点信息

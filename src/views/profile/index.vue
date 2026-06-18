@@ -205,7 +205,6 @@ const pwdRules = {
 const loadProfile = async () => {
   try {
     const res = await getUserProfileAPI()
-    console.log('res: ', res)
     profile.value = res || {}
     // 填充表单
     Object.assign(baseForm, {

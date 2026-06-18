@@ -11,26 +11,18 @@
  * @param {boolean} options.immediate - 是否立即执行，默认 true
  * @param {Function} options.beforeFetch - 请求前的数据处理函数
  * @param {Function} options.afterFetch - 请求后的数据处理函数
- * @param {Function} options.onError - 错误处理函数
  *
  * @returns {Object} 表格相关的状态和方法
  *
  * @example
  * ```javascript
- * const { tableData, loading, total, queryParams, getData, handlePageChange } = useTable(getUserListAPI, {
+ * const { tableData, loading, total, queryParams, getData, page, limit } = useTable(getUserListAPI, {
  *   defaultParams: { userName: '', status: '' }
  * })
  * ```
  */
 export const useTable = (fetchAPI, options = {}) => {
-  const {
-    defaultParams = {},
-    defaultPageSize = 10,
-    immediate = true,
-    beforeFetch = null,
-    afterFetch = null,
-    onError = null,
-  } = options
+  const { defaultParams = {}, defaultPageSize = 10, immediate = true, beforeFetch = null, afterFetch = null } = options
 
   // #region 状态定义
 
@@ -42,6 +34,29 @@ export const useTable = (fetchAPI, options = {}) => {
     pageNum: 1,
     pageSize: defaultPageSize,
     ...defaultParams,
+  })
+
+  /**
+   * 分页页码（v-model 绑定用）
+   * 与 ProTable v-model:page 配合使用
+   */
+  const page = computed({
+    get: () => queryParams.pageNum,
+    set: (val) => {
+      queryParams.pageNum = val
+    },
+  })
+
+  /**
+   * 每页条数（v-model 绑定用）
+   * 与 ProTable v-model:limit 配合使用
+   */
+  const limit = computed({
+    get: () => queryParams.pageSize,
+    set: (val) => {
+      queryParams.pageSize = val
+      queryParams.pageNum = 1
+    },
   })
 
   // #endregion
@@ -80,10 +95,7 @@ export const useTable = (fetchAPI, options = {}) => {
       tableData.value = result?.list || result || []
       total.value = result?.total || 0
     } catch (error) {
-      console.error('获取数据失败:', error)
-      if (onError) {
-        onError(error)
-      }
+      // 错误由 axios 拦截器统一处理，此处仅管理 loading 状态
     } finally {
       loading.value = false
     }
@@ -95,19 +107,19 @@ export const useTable = (fetchAPI, options = {}) => {
 
   /**
    * 页码改变处理
-   * @param {number} page - 新页码
+   * @param {number} val - 新页码
    */
-  const handlePageChange = (page) => {
-    queryParams.pageNum = page
+  const handlePageChange = (val) => {
+    queryParams.pageNum = val
     getData()
   }
 
   /**
    * 每页条数改变处理
-   * @param {number} size - 新的每页条数
+   * @param {number} val - 新的每页条数
    */
-  const handleSizeChange = (size) => {
-    queryParams.pageSize = size
+  const handleSizeChange = (val) => {
+    queryParams.pageSize = val
     queryParams.pageNum = 1
     getData()
   }
@@ -163,6 +175,8 @@ export const useTable = (fetchAPI, options = {}) => {
     tableData,
     total,
     queryParams,
+    page,
+    limit,
 
     // 方法
     getData,

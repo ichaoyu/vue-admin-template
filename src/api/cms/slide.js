@@ -27,7 +27,7 @@ export const createSlideAPI = (data) => api.post('/cms/slide', data)
  * @param {Object} data - 轮播图信息
  * @returns {Promise<Object>} 返回更新后的轮播图信息
  */
-export const updateSlideAPI = (data) => api.put('/cms/slide', data)
+export const updateSlideAPI = (data) => api.patch('/cms/slide', data)
 
 /**
  * 删除轮播图

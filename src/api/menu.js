@@ -17,11 +17,10 @@ export const createMenuAPI = (data) => api.post('/system/menu', data)
 
 /**
  * 更新菜单
- * @param {string} id - 菜单ID
  * @param {Object} data - 菜单信息
  * @returns {Promise<Object>} 返回更新后的菜单信息
  */
-export const updateMenuAPI = (id, data) => api.patch(`/system/menu/${id}`, data)
+export const updateMenuAPI = (data) => api.patch('/system/menu', data)
 
 /**
  * 删除菜单
