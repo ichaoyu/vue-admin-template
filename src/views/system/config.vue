@@ -114,7 +114,7 @@ import {
   updateConfigAPI,
   deleteConfigAPI,
   batchDeleteConfigsAPI,
-} from '@/api/config'
+} from '@/api/system/config'
 import { formatDateTime } from '@/utils/date'
 import { useCrud } from '@/hooks'
 import ProTable from '@/components/Table/index.vue'

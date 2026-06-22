@@ -54,3 +54,21 @@ export const updateUserBaseAPI = (data) => api.patch('/auth/updateUserBase', dat
 export const updateUserPasswordAPI = (data) => api.patch('/auth/updateUserPassword', data)
 
 // #endregion
+
+// #region 用户管理-认证操作
+
+/**
+ * 重置用户密码（仅超级管理员可用）
+ * @param {string} userId - 用户 ID
+ * @returns {Promise<void>}
+ */
+export const resetUserPasswordAPI = (userId) => api.patch('/auth/reset-password', { userId })
+
+/**
+ * 强制用户下线（仅超级管理员可用）
+ * @param {string} userId - 用户 ID
+ * @returns {Promise<void>}
+ */
+export const forceUserOfflineAPI = (userId) => api.post('/auth/force-offline', { userId })
+
+// #endregion

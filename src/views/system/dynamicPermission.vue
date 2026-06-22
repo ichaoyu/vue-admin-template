@@ -126,7 +126,7 @@ import {
   updateDynamicPermissionAPI,
   deleteDynamicPermissionAPI,
   batchDeleteDynamicPermissionAPI,
-} from '@/api/dynamicPermission'
+} from '@/api/system/dynamicPermission'
 import { formatDateTime } from '@/utils/date'
 import { useCrud } from '@/hooks'
 import ProTable from '@/components/Table/index.vue'

@@ -44,18 +44,4 @@ export const deleteUserAPI = (id) => api.delete(`/system/user/${id}`)
  */
 export const batchDeleteUsersAPI = (ids) => api.delete('/system/user', { data: { ids } })
 
-/**
- * 重置用户密码（仅超级管理员可用）
- * @param {string} userId - 用户 ID
- * @returns {Promise<void>}
- */
-export const resetUserPasswordAPI = (userId) => api.patch('/auth/reset-password', { userId })
-
-/**
- * 强制用户下线（仅超级管理员可用）
- * @param {string} userId - 用户 ID
- * @returns {Promise<void>}
- */
-export const forceUserOfflineAPI = (userId) => api.post('/auth/force-offline', { userId })
-
 // #endregion

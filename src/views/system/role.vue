@@ -174,8 +174,8 @@ import {
   deleteRoleAPI,
   batchDeleteRolesAPI,
   getRoleDetailAPI,
-} from '@/api/role'
-import { getMenuTreeAPI } from '@/api/menu'
+} from '@/api/system/role'
+import { getMenuTreeAPI } from '@/api/system/menu'
 import { formatDateTime } from '@/utils/date'
 import { roleRules } from '@/utils/validator'
 import ProTable from '@/components/Table/index.vue'

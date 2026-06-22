@@ -156,7 +156,7 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Edit, Delete, Search, Expand } from '@element-plus/icons-vue'
 import { useTable } from '@/hooks'
-import { getMenuTreeAPI, createMenuAPI, updateMenuAPI, deleteMenuAPI } from '@/api/menu'
+import { getMenuTreeAPI, createMenuAPI, updateMenuAPI, deleteMenuAPI } from '@/api/system/menu'
 import { filterTree } from '@/utils/common'
 import ProTable from '@/components/Table/index.vue'
 import ProDialog from '@/components/Dialog/index.vue'

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { getDictDataByTypeAPI } from '@/api/dict'
+import { getDictDataByTypeAPI } from '@/api/system/dict-data'
 import { isDictEqual, toDictNumber } from '@/utils/dict'
 
 /**

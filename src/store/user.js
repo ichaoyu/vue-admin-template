@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { getUserInfoAPI } from '@/api/auth'
+import { getUserInfoAPI } from '@/api/auth/auth'
 import { resetRouter } from '@/router'
 import { usePermissionStore } from '@/store/permission'
 import { useDictStore } from '@/store/dict'

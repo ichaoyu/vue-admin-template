@@ -114,7 +114,7 @@ import {
   updateDictTypeAPI,
   deleteDictTypeAPI,
   batchDeleteDictTypesAPI,
-} from '@/api/dict'
+} from '@/api/system/dict-type'
 import { formatDateTime } from '@/utils/date'
 import ProTable from '@/components/Table/index.vue'
 import ProDialog from '@/components/Dialog/index.vue'

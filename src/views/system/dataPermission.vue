@@ -163,8 +163,8 @@ import {
   updateDataPermissionAPI,
   deleteDataPermissionAPI,
   batchDeleteDataPermissionsAPI,
-} from '@/api/dataPermission'
-import { getDeptTreeAPI } from '@/api/dept'
+} from '@/api/system/dataPermission'
+import { getDeptTreeAPI } from '@/api/system/dept'
 import { formatDateTime } from '@/utils/date'
 import ProTable from '@/components/Table/index.vue'
 import ProDialog from '@/components/Dialog/index.vue'

@@ -144,7 +144,7 @@ import {
   updatePermissionAPI,
   deletePermissionAPI,
   batchDeletePermissionsAPI,
-} from '@/api/permission'
+} from '@/api/system/permission'
 import { formatDateTime } from '@/utils/date'
 import ProTable from '@/components/Table/index.vue'
 import ProDialog from '@/components/Dialog/index.vue'

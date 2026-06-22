@@ -98,7 +98,7 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Edit, Delete, Search, Expand } from '@element-plus/icons-vue'
 import { useTable } from '@/hooks'
-import { getDeptTreeAPI, createDeptAPI, updateDeptAPI, deleteDeptAPI } from '@/api/dept'
+import { getDeptTreeAPI, createDeptAPI, updateDeptAPI, deleteDeptAPI } from '@/api/system/dept'
 import { formatDateTime } from '@/utils/date'
 import { filterTree } from '@/utils/common'
 import ProTable from '@/components/Table/index.vue'

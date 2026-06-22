@@ -99,7 +99,7 @@
 <script setup>
 import { Plus, Edit, Delete } from '@element-plus/icons-vue'
 import { useCrud } from '@/hooks'
-import { getPostListAPI, createPostAPI, updatePostAPI, deletePostAPI, batchDeletePostsAPI } from '@/api/post'
+import { getPostListAPI, createPostAPI, updatePostAPI, deletePostAPI, batchDeletePostsAPI } from '@/api/system/post'
 import { formatDateTime } from '@/utils/date'
 import ProTable from '@/components/Table/index.vue'
 import ProDialog from '@/components/Dialog/index.vue'

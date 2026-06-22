@@ -185,18 +185,11 @@
 import { Plus, Edit, Delete, Key, SwitchButton } from '@element-plus/icons-vue'
 import { nextTick } from 'vue'
 import { useCrud } from '@/hooks'
-import {
-  getUserListAPI,
-  createUserAPI,
-  updateUserAPI,
-  deleteUserAPI,
-  batchDeleteUsersAPI,
-  resetUserPasswordAPI,
-  forceUserOfflineAPI,
-} from '@/api/user'
-import { getDeptTreeAPI } from '@/api/dept'
-import { getRoleListAPI } from '@/api/role'
-import { getPostListAPI } from '@/api/post'
+import { getUserListAPI, createUserAPI, updateUserAPI, deleteUserAPI, batchDeleteUsersAPI } from '@/api/system/user'
+import { resetUserPasswordAPI, forceUserOfflineAPI } from '@/api/auth/auth'
+import { getDeptTreeAPI } from '@/api/system/dept'
+import { getRoleListAPI } from '@/api/system/role'
+import { getPostListAPI } from '@/api/system/post'
 import { formatDateTime } from '@/utils/date'
 import { useUserStore } from '@/store/user'
 import ProTable from '@/components/Table/index.vue'
