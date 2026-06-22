@@ -13,20 +13,13 @@ const loadView = (component) => {
 
   const keys = Object.keys(modules)
 
-  // 1. 尝试直接匹配完整路径：system/config/index -> ../views/system/config/index.vue
+  // 1. 精确匹配：system/user -> ../views/system/user.vue
   const fullPath = `../views/${component}.vue`
   if (modules[fullPath]) {
     return modules[fullPath]
   }
 
-  // 2. 尝试匹配末尾路径：system/config/index -> config/index.vue
-  const suffix = component.includes('/') ? component.split('/').slice(-2).join('/') : component
-  const matchedBySuffix = keys.find((key) => key.endsWith(`${suffix}.vue`))
-  if (matchedBySuffix) {
-    return modules[matchedBySuffix]
-  }
-
-  // 3. 兜底：查找以 component 任意段落结尾的文件
+  // 2. 兜底：查找以 component 任意段落结尾的文件
   const segments = component.split('/')
   for (let i = segments.length - 1; i >= 0; i--) {
     const tail = segments.slice(i).join('/')

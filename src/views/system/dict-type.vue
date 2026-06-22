@@ -125,7 +125,7 @@ defineOptions({
   name: 'SystemDictTypeIndex',
 })
 
-const DictDataPanel = defineAsyncComponent(() => import('../data/index.vue'))
+const DictDataPanel = defineAsyncComponent(() => import('./dict-data.vue'))
 
 // #region 数据定义
 

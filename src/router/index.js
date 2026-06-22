@@ -11,7 +11,7 @@ export const constantRoutes = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('@/views/login/index.vue'),
+    component: () => import('@/views/login.vue'),
     meta: {
       title: '登录',
     },
@@ -45,7 +45,7 @@ export const constantRoutes = [
       {
         path: 'index',
         name: 'Profile',
-        component: () => import('@/views/profile/index.vue'),
+        component: () => import('@/views/profile.vue'),
         meta: {
           title: '个人中心',
           requiresAuth: true,
@@ -66,7 +66,7 @@ export const constantRoutes = [
       {
         path: 'index',
         name: 'Settings',
-        component: () => import('@/views/system/settings/index.vue'),
+        component: () => import('@/views/system/settings.vue'),
         meta: {
           title: '系统设置',
           requiresAuth: true,
