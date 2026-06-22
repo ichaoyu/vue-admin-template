@@ -17,9 +17,19 @@
       <template #toolbar-left>
         <el-input v-model="queryParams.roleName" placeholder="角色名称" clearable style="width: 200px" />
         <el-input v-model="queryParams.roleKey" placeholder="权限字符" clearable style="width: 200px" />
-        <DictSelect v-model="queryParams.status" dict-type="sys_normal_disable" placeholder="角色状态" style="width: 120px" />
+        <DictSelect
+          v-model="queryParams.status"
+          dict-type="sys_normal_disable"
+          placeholder="角色状态"
+          style="width: 120px"
+        />
         <el-button v-permission="['system:role:add']" type="primary" :icon="Plus" @click="onAdd">新增</el-button>
-        <el-button v-permission="['system:role:delete']" type="danger" :disabled="selectedIds.length === 0" @click="handleBatchDelete">
+        <el-button
+          v-permission="['system:role:delete']"
+          type="danger"
+          :disabled="selectedIds.length === 0"
+          @click="handleBatchDelete"
+        >
           批量删除(已选{{ selectedIds.length }}项)
         </el-button>
       </template>
@@ -29,7 +39,15 @@
       </template>
 
       <template #operation="{ row }">
-        <el-button v-permission="['system:role:edit']" type="primary" size="small" link :icon="Edit" @click="onEdit(row)">编辑</el-button>
+        <el-button
+          v-permission="['system:role:edit']"
+          type="primary"
+          size="small"
+          link
+          :icon="Edit"
+          @click="onEdit(row)"
+          >编辑</el-button
+        >
         <ConfirmButton
           v-permission="['system:role:delete']"
           type="danger"
@@ -97,8 +115,12 @@
                 <el-checkbox v-model="treeCheckStrictly">父子联动</el-checkbox>
               </div>
               <div class="toolbar-right">
-                <span class="stat-item">已选菜单：<el-tag type="success">{{ selectedMenuCount }}</el-tag></span>
-                <span class="stat-item">已选权限：<el-tag type="primary">{{ selectedPermsCount }}</el-tag></span>
+                <span class="stat-item"
+                  >已选菜单：<el-tag type="success">{{ selectedMenuCount }}</el-tag></span
+                >
+                <span class="stat-item"
+                  >已选权限：<el-tag type="primary">{{ selectedPermsCount }}</el-tag></span
+                >
               </div>
             </div>
             <el-tree
@@ -145,7 +167,14 @@
 import { Plus, Edit, InfoFilled } from '@element-plus/icons-vue'
 import { nextTick } from 'vue'
 import { useCrud } from '@/hooks'
-import { getRoleListAPI, createRoleAPI, updateRoleAPI, deleteRoleAPI, batchDeleteRolesAPI, getRoleDetailAPI } from '@/api/role'
+import {
+  getRoleListAPI,
+  createRoleAPI,
+  updateRoleAPI,
+  deleteRoleAPI,
+  batchDeleteRolesAPI,
+  getRoleDetailAPI,
+} from '@/api/role'
 import { getMenuTreeAPI } from '@/api/menu'
 import { formatDateTime } from '@/utils/date'
 import { roleRules } from '@/utils/validator'
@@ -176,11 +205,27 @@ const formDefaults = {
 }
 
 const {
-  tableData, loading, total, queryParams, page, limit,
-  getData, handlePageChange, handleSizeChange, handleRefresh,
-  form, dialogVisible, submitLoading, selectedIds, resetForm,
-  handleAdd, handleEdit, handleSubmit, handleDelete,
-  handleSelectionChange, handleBatchDelete,
+  tableData,
+  loading,
+  total,
+  queryParams,
+  page,
+  limit,
+  getData,
+  handlePageChange,
+  handleSizeChange,
+  handleRefresh,
+  form,
+  dialogVisible,
+  submitLoading,
+  selectedIds,
+  resetForm,
+  handleAdd,
+  handleEdit,
+  handleSubmit,
+  handleDelete,
+  handleSelectionChange,
+  handleBatchDelete,
 } = useCrud(
   getRoleListAPI,
   { create: createRoleAPI, update: updateRoleAPI, delete: deleteRoleAPI, batchDelete: batchDeleteRolesAPI },

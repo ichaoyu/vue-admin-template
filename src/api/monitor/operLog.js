@@ -34,6 +34,6 @@ export const batchDeleteOperLogsAPI = (ids) => api.delete('/monitor/oper-log', {
  * 清空操作日志
  * @returns {Promise<void>}
  */
-export const clearOperLogAPI = () => api.delete('/monitor/oper-log')
+export const clearOperLogAPI = () => api.delete('/monitor/oper-log/clear')
 
 // #endregion

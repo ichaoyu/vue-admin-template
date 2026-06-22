@@ -236,9 +236,11 @@ onMounted(() => {
   0% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.05);
   }
+
   100% {
     transform: scale(1);
   }
@@ -249,7 +251,7 @@ onMounted(() => {
   max-height: 450px;
   overflow-y: auto;
   border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
   background-color: #fff;
 }
 
@@ -363,7 +365,7 @@ onMounted(() => {
   min-width: 6px;
   padding: 0;
   background-color: #409eff;
-  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+  box-shadow: 0 0 0 2px rgb(64 158 255 / 20%);
   animation: pulse 2s infinite;
 }
 
@@ -428,7 +430,7 @@ onMounted(() => {
 }
 
 /* 响应式调整 */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .notification-dropdown {
     min-width: 300px;
   }

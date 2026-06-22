@@ -11,24 +11,24 @@
           <el-col :span="8">
             <el-card shadow="hover" class="stat-card">
               <div class="stat-content">
-                <h3>Total Users</h3>
-                <p>1,234</p>
+                <h3>用户总数</h3>
+                <p>{{ stats.totalUsers }}</p>
               </div>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover" class="stat-card">
               <div class="stat-content">
-                <h3>Active Users</h3>
-                <p>876</p>
+                <h3>在线用户</h3>
+                <p>{{ stats.onlineUsers }}</p>
               </div>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover" class="stat-card">
               <div class="stat-content">
-                <h3>Tasks</h3>
-                <p>456</p>
+                <h3>今日操作</h3>
+                <p>{{ stats.todayOperations }}</p>
               </div>
             </el-card>
           </el-col>
@@ -38,7 +38,48 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { getServerStatsAPI } from '@/api/monitor/server'
+
+defineOptions({
+  name: 'DashboardIndex',
+})
+
+// #region 数据定义
+
+const stats = reactive({
+  totalUsers: 0,
+  onlineUsers: 0,
+  todayOperations: 0,
+})
+
+// #endregion
+
+// #region 数据加载
+
+const loadStats = async () => {
+  try {
+    const res = await getServerStatsAPI()
+    if (res) {
+      stats.totalUsers = res.totalUsers || 0
+      stats.onlineUsers = res.onlineUsers || 0
+      stats.todayOperations = res.todayOperations || 0
+    }
+  } catch (error) {
+    // 错误由 axios 拦截器处理，保留默认值 0
+  }
+}
+
+// #endregion
+
+// #region 生命周期
+
+onMounted(() => {
+  loadStats()
+})
+
+// #endregion
+</script>
 
 <style scoped>
 .dashboard {

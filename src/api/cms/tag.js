@@ -3,10 +3,17 @@ import api from '@/utils/axios'
 // #region 标签管理接口
 
 /**
- * 查询标签列表
+ * 查询标签列表（分页）
+ * @param {Object} params - 查询参数
+ * @returns {Promise<Object>} 返回标签分页数据
+ */
+export const getTagListAPI = (params) => api.get('/cms/tag', { params })
+
+/**
+ * 查询全部标签（不分页，用于下拉选择）
  * @returns {Promise<Array>} 返回标签列表
  */
-export const getTagListAPI = () => api.get('/cms/tag')
+export const getAllTagsAPI = () => api.get('/cms/tag/all')
 
 /**
  * 查询标签详情

@@ -30,8 +30,15 @@
           clearable
           style="width: 120px"
         />
-        <el-button v-permission="['system:dataPermission:add']" type="primary" :icon="Plus" @click="onAdd">新增</el-button>
-        <el-button v-permission="['system:dataPermission:delete']" type="danger" :disabled="selectedIds.length === 0" @click="handleBatchDelete">
+        <el-button v-permission="['system:dataPermission:add']" type="primary" :icon="Plus" @click="onAdd"
+          >新增</el-button
+        >
+        <el-button
+          v-permission="['system:dataPermission:delete']"
+          type="danger"
+          :disabled="selectedIds.length === 0"
+          @click="handleBatchDelete"
+        >
           批量删除(已选{{ selectedIds.length }}项)
         </el-button>
       </template>
@@ -56,7 +63,15 @@
 
       <!-- 操作 -->
       <template #operation="{ row }">
-        <el-button v-permission="['system:dataPermission:edit']" type="primary" size="small" link :icon="Edit" @click="onEdit(row)">编辑</el-button>
+        <el-button
+          v-permission="['system:dataPermission:edit']"
+          type="primary"
+          size="small"
+          link
+          :icon="Edit"
+          @click="onEdit(row)"
+          >编辑</el-button
+        >
         <ConfirmButton
           v-permission="['system:dataPermission:delete']"
           type="danger"
@@ -104,7 +119,12 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="范围类型:" prop="scopeType">
-              <DictSelect v-model="form.scopeType" dict-type="sys_data_scope" placeholder="请选择范围类型" style="width: 100%" />
+              <DictSelect
+                v-model="form.scopeType"
+                dict-type="sys_data_scope"
+                placeholder="请选择范围类型"
+                style="width: 100%"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -163,14 +183,34 @@ const formRef = ref(null)
 const deptTree = ref([])
 
 const {
-  tableData, loading, total, queryParams, page, limit,
-  getData, handlePageChange, handleSizeChange, handleRefresh,
-  form, dialogVisible, submitLoading, selectedIds,
-  handleAdd, handleEdit, handleSubmit, handleDelete,
-  handleSelectionChange, handleBatchDelete,
+  tableData,
+  loading,
+  total,
+  queryParams,
+  page,
+  limit,
+  getData,
+  handlePageChange,
+  handleSizeChange,
+  handleRefresh,
+  form,
+  dialogVisible,
+  submitLoading,
+  selectedIds,
+  handleAdd,
+  handleEdit,
+  handleSubmit,
+  handleDelete,
+  handleSelectionChange,
+  handleBatchDelete,
 } = useCrud(
   getDataPermissionListAPI,
-  { create: createDataPermissionAPI, update: updateDataPermissionAPI, delete: deleteDataPermissionAPI, batchDelete: batchDeleteDataPermissionsAPI },
+  {
+    create: createDataPermissionAPI,
+    update: updateDataPermissionAPI,
+    delete: deleteDataPermissionAPI,
+    batchDelete: batchDeleteDataPermissionsAPI,
+  },
   {
     nameField: 'ruleName',
     formDefaults: { ruleName: '', resourceType: '', scopeType: '', deptIds: [], status: 1, remark: '' },

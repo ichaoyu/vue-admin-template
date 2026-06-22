@@ -21,7 +21,15 @@
 
       <!-- 操作 -->
       <template #operation="{ row }">
-        <el-button type="danger" size="small" link :icon="SwitchButton" v-permission="['monitor:online:force']" @click="handleForceLogout(row)">强退</el-button>
+        <el-button
+          type="danger"
+          size="small"
+          link
+          :icon="SwitchButton"
+          v-permission="['monitor:online:force']"
+          @click="handleForceLogout(row)"
+          >强退</el-button
+        >
       </template>
     </pro-table>
     <!-- #endregion -->
@@ -40,7 +48,20 @@ defineOptions({ name: 'MonitorOnlineIndex' })
 
 // #region 数据定义
 
-const { tableData, loading, total, queryParams, page, limit, getData, handlePageChange, handleSizeChange, handleRefresh, handleSearch, resetQuery } = useTable(getOnlineUserListAPI, {
+const {
+  tableData,
+  loading,
+  total,
+  queryParams,
+  page,
+  limit,
+  getData,
+  handlePageChange,
+  handleSizeChange,
+  handleRefresh,
+  handleSearch,
+  resetQuery,
+} = useTable(getOnlineUserListAPI, {
   defaultParams: { userName: '', loginIp: '' },
 })
 

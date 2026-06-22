@@ -34,6 +34,6 @@ export const batchDeleteLoginLogsAPI = (ids) => api.delete('/monitor/login-log',
  * 清空登录日志
  * @returns {Promise<void>}
  */
-export const clearLoginLogAPI = () => api.delete('/monitor/login-log')
+export const clearLoginLogAPI = () => api.delete('/monitor/login-log/clear')
 
 // #endregion

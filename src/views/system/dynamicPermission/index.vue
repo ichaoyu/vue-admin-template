@@ -50,7 +50,14 @@
 
       <!-- #region 操作 -->
       <template #operation="{ row }">
-        <el-button type="primary" size="small" link :icon="Edit" v-permission="'dynamic:permission:edit'" @click="onEdit(row)">
+        <el-button
+          type="primary"
+          size="small"
+          link
+          :icon="Edit"
+          v-permission="'dynamic:permission:edit'"
+          @click="onEdit(row)"
+        >
           编辑
         </el-button>
         <confirm-button
@@ -144,7 +151,7 @@ const crudState = useCrud(
   {
     nameField: 'ruleName',
     formDefaults: { ruleName: '', resourceType: '', conditionExpression: '', priority: 0, status: 1, remark: '' },
-  },
+  }
 )
 
 const {
@@ -191,7 +198,13 @@ const columns = [
   { type: 'index', label: '序号', width: 60, align: 'center' },
   { prop: 'ruleName', label: '规则名称', minWidth: 150 },
   { prop: 'resourceType', label: '资源类型', minWidth: 120 },
-  { prop: 'conditionExpression', label: '条件表达式', minWidth: 200, 'show-overflow-tooltip': true, slot: 'conditionExpression' },
+  {
+    prop: 'conditionExpression',
+    label: '条件表达式',
+    minWidth: 200,
+    'show-overflow-tooltip': true,
+    slot: 'conditionExpression',
+  },
   { prop: 'priority', label: '优先级', width: 80, align: 'center' },
   { prop: 'status', label: '状态', width: 120, align: 'center', slot: 'status' },
   { prop: 'createTime', label: '创建时间', minWidth: 180, formatter: (row) => formatDateTime(row.createTime) },

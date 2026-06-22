@@ -6,25 +6,31 @@
       :data="tableData"
       :columns="columns"
       :loading="loading"
-      :show-pagination="false"
       @refresh="handleRefresh"
       @selection-change="handleSelectionChange"
     >
       <template #toolbar-left>
-        <el-button v-permission="['cms:message:delete']" type="danger" :disabled="selectedIds.length === 0" @click="handleBatchDelete">
+        <el-button
+          v-permission="['cms:message:delete']"
+          type="danger"
+          :disabled="selectedIds.length === 0"
+          @click="handleBatchDelete"
+        >
           批量删除(已选{{ selectedIds.length }}项)
         </el-button>
       </template>
 
-      <!-- 状态 -->
-      <template #status="{ row }">
-        <el-tag v-if="row.status === 1" type="success" size="small">已读</el-tag>
-        <el-tag v-else type="info" size="small">未读</el-tag>
-      </template>
-
       <!-- 操作 -->
       <template #operation="{ row }">
-        <el-button v-permission="['cms:message:delete']" type="danger" size="small" link :icon="Delete" @click="handleDelete(row)">删除</el-button>
+        <el-button
+          v-permission="['cms:message:delete']"
+          type="danger"
+          size="small"
+          link
+          :icon="Delete"
+          @click="handleDelete(row)"
+          >删除</el-button
+        >
       </template>
     </pro-table>
     <!-- #endregion -->
@@ -48,8 +54,16 @@ defineOptions({
 const selectedIds = ref([])
 
 const {
-  tableData, loading, total, queryParams, page, limit,
-  getData, handlePageChange, handleSizeChange, handleRefresh,
+  tableData,
+  loading,
+  total,
+  queryParams,
+  page,
+  limit,
+  getData,
+  handlePageChange,
+  handleSizeChange,
+  handleRefresh,
 } = useTable(getMessageListAPI, {
   defaultParams: {},
 })
@@ -57,10 +71,10 @@ const {
 const columns = [
   { type: 'selection', width: 55, align: 'center' },
   { type: 'index', label: '序号', width: 60, align: 'center' },
-  { prop: 'nickname', label: '昵称', minWidth: 120 },
+  { prop: 'name', label: '昵称', minWidth: 120 },
+  { prop: 'title', label: '标题', minWidth: 120 },
   { prop: 'content', label: '留言内容', minWidth: 200, showOverflowTooltip: true },
-  { prop: 'reply', label: '回复', minWidth: 150 },
-  { prop: 'status', label: '状态', width: 100, align: 'center', slot: 'status' },
+  { prop: 'tel', label: '电话', width: 130, align: 'center' },
   { prop: 'createTime', label: '创建时间', minWidth: 180, formatter: (row) => formatDateTime(row.createTime) },
   { prop: 'operation', label: '操作', width: 100, align: 'center', fixed: 'right', slot: 'operation' },
 ]
@@ -93,15 +107,11 @@ const handleBatchDelete = async () => {
   }
 
   try {
-    await ElMessageBox.confirm(
-      `确认要删除选中的 ${selectedIds.value.length} 条留言吗？`,
-      '提示',
-      {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      }
-    )
+    await ElMessageBox.confirm(`确认要删除选中的 ${selectedIds.value.length} 条留言吗？`, '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
     await batchDeleteMessagesAPI(selectedIds.value)
     ElMessage.success('删除成功')
     selectedIds.value = []

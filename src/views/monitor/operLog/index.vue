@@ -21,7 +21,9 @@
         <el-button type="danger" :disabled="selectedIds.length === 0" @click="handleBatchDelete">
           批量删除(已选{{ selectedIds.length }}项)
         </el-button>
-        <el-button type="danger" :icon="Delete" v-permission="['monitor:operLog:clear']" @click="handleClear">清空</el-button>
+        <el-button type="danger" :icon="Delete" v-permission="['monitor:operLog:clear']" @click="handleClear"
+          >清空</el-button
+        >
       </template>
 
       <!-- 状态 -->
@@ -32,7 +34,15 @@
 
       <!-- 操作 -->
       <template #operation="{ row }">
-        <el-button type="danger" size="small" link :icon="Delete" v-permission="['monitor:operLog:delete']" @click="handleDelete(row)">删除</el-button>
+        <el-button
+          type="danger"
+          size="small"
+          link
+          :icon="Delete"
+          v-permission="['monitor:operLog:delete']"
+          @click="handleDelete(row)"
+          >删除</el-button
+        >
       </template>
     </pro-table>
     <!-- #endregion -->
@@ -53,7 +63,20 @@ defineOptions({ name: 'MonitorOperLogIndex' })
 
 const selectedIds = ref([])
 
-const { tableData, loading, total, queryParams, page, limit, getData, handlePageChange, handleSizeChange, handleRefresh, handleSearch, resetQuery } = useTable(getOperLogListAPI, {
+const {
+  tableData,
+  loading,
+  total,
+  queryParams,
+  page,
+  limit,
+  getData,
+  handlePageChange,
+  handleSizeChange,
+  handleRefresh,
+  handleSearch,
+  resetQuery,
+} = useTable(getOperLogListAPI, {
   defaultParams: { title: '', operName: '' },
 })
 

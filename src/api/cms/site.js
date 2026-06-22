@@ -3,10 +3,11 @@ import api from '@/utils/axios'
 // #region 站点设置接口
 
 /**
- * 查询站点信息列表
- * @returns {Promise<Array>} 返回站点信息列表
+ * 查询站点信息列表（分页）
+ * @param {Object} params - 查询参数
+ * @returns {Promise<Object>} 返回站点信息分页数据
  */
-export const getSiteListAPI = () => api.get('/cms/site')
+export const getSiteListAPI = (params) => api.get('/cms/site', { params })
 
 /**
  * 查询站点信息详情

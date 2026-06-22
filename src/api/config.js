@@ -51,10 +51,4 @@ export const batchDeleteConfigsAPI = (ids) => api.delete('/system/config', { dat
  */
 export const getConfigByKeyAPI = (configKey) => api.get(`/system/config/key/${configKey}`)
 
-/**
- * 刷新参数缓存
- * @returns {Promise<void>}
- */
-export const refreshConfigCacheAPI = () => api.post('/system/config/cache/refresh')
-
 // #endregion

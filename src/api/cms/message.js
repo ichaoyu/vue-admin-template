@@ -3,10 +3,11 @@ import api from '@/utils/axios'
 // #region 留言管理接口
 
 /**
- * 查询留言列表
- * @returns {Promise<Array>} 返回留言列表
+ * 查询留言列表（分页）
+ * @param {Object} params - 查询参数
+ * @returns {Promise<Object>} 返回留言分页数据
  */
-export const getMessageListAPI = () => api.get('/cms/message')
+export const getMessageListAPI = (params) => api.get('/cms/message', { params })
 
 /**
  * 查询留言详情

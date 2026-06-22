@@ -45,25 +45,29 @@
         <el-table-column label="预览" width="80" align="center">
           <template #default="{ row }">
             <el-image
-              v-if="isImage(row.type)"
+              v-if="isImage(row.mimeType)"
               :src="row.url"
               :preview-src-list="[row.url]"
               fit="cover"
               style="width: 50px; height: 50px; border-radius: 4px"
             />
             <el-icon v-else :size="40" color="#909399">
-              <component :is="getFileIcon(row.type)" />
+              <component :is="getFileIcon(row.mimeType)" />
             </el-icon>
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="文件名" min-width="200" show-overflow-tooltip />
-        <el-table-column prop="type" label="文件类型" width="120" />
+        <el-table-column prop="originalName" label="文件名" min-width="200" show-overflow-tooltip />
+        <el-table-column prop="mimeType" label="文件类型" width="120" />
         <el-table-column label="文件大小" width="120" align="center">
           <template #default="{ row }">
             {{ formatFileSize(row.size) }}
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="上传时间" width="180" />
+        <el-table-column label="上传时间" width="180">
+          <template #default="{ row }">
+            {{ formatDateTime(row.createTime) }}
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="160" align="center" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" size="small" link :icon="View" @click="handleView(row)"> 查看 </el-button>
@@ -71,23 +75,34 @@
           </template>
         </el-table-column>
       </el-table>
+      <div class="pagination-wrapper">
+        <el-pagination
+          v-model:current-page="queryParams.page"
+          v-model:page-size="queryParams.pageSize"
+          :total="total"
+          :page-sizes="[10, 20, 50, 100]"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="handleSizeChange"
+          @current-change="handlePageChange"
+        />
+      </div>
     </el-card>
     <!-- #endregion -->
 
     <!-- #region 文件详情对话框 -->
     <el-dialog v-model="detailVisible" title="文件详情" width="600px">
       <el-descriptions :column="1" border>
-        <el-descriptions-item label="文件名">{{ currentFile.name }}</el-descriptions-item>
-        <el-descriptions-item label="文件类型">{{ currentFile.type }}</el-descriptions-item>
+        <el-descriptions-item label="文件名">{{ currentFile.originalName }}</el-descriptions-item>
+        <el-descriptions-item label="文件类型">{{ currentFile.mimeType }}</el-descriptions-item>
         <el-descriptions-item label="文件大小">{{ formatFileSize(currentFile.size) }}</el-descriptions-item>
         <el-descriptions-item label="文件路径">
           <el-link :href="currentFile.url" target="_blank" type="primary">
             {{ currentFile.url }}
           </el-link>
         </el-descriptions-item>
-        <el-descriptions-item label="上传时间">{{ currentFile.createTime }}</el-descriptions-item>
+        <el-descriptions-item label="上传时间">{{ formatDateTime(currentFile.createTime) }}</el-descriptions-item>
       </el-descriptions>
-      <div v-if="isImage(currentFile.type)" class="preview-image">
+      <div v-if="isImage(currentFile.mimeType)" class="preview-image">
         <el-image :src="currentFile.url" fit="contain" style="width: 100%; max-height: 400px" />
       </div>
     </el-dialog>
@@ -96,7 +111,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   UploadFilled,
@@ -110,7 +125,8 @@ import {
   Folder,
 } from '@element-plus/icons-vue'
 import { useUserStore } from '@/store/user'
-import { getFileInfoAPI, deleteFileAPI } from '@/api/system/file'
+import { getFileListAPI, getFileInfoAPI, deleteFileAPI } from '@/api/system/file'
+import { formatDateTime } from '@/utils/date'
 
 defineOptions({
   name: 'SystemFileIndex',
@@ -124,6 +140,13 @@ const searchKeyword = ref('')
 const detailVisible = ref(false)
 const currentFile = ref({})
 const fileList = ref([])
+const total = ref(0)
+
+const queryParams = reactive({
+  page: 1,
+  pageSize: 20,
+  keyword: '',
+})
 
 const uploadUrl = computed(() => {
   const baseURL = import.meta.env.VITE_API_BASE_URL || '/api'
@@ -168,18 +191,34 @@ const handleUploadError = () => {
 const loadFileList = async () => {
   loading.value = true
   try {
-    // 这里需要后端提供文件列表接口
-    // 暂时使用模拟数据
-    fileList.value = []
+    const res = await getFileListAPI({
+      page: queryParams.page,
+      pageSize: queryParams.pageSize,
+      keyword: searchKeyword.value || undefined,
+    })
+    fileList.value = res?.list || []
+    total.value = res?.total || 0
   } catch (error) {
-    console.error('获取文件列表失败:', error)
+    // 错误由 axios 拦截器处理
   } finally {
     loading.value = false
   }
 }
 
 const handleSearch = () => {
-  // 实现搜索逻辑
+  queryParams.page = 1
+  loadFileList()
+}
+
+const handlePageChange = (val) => {
+  queryParams.page = val
+  loadFileList()
+}
+
+const handleSizeChange = (val) => {
+  queryParams.pageSize = val
+  queryParams.page = 1
+  loadFileList()
 }
 
 // #endregion
@@ -192,13 +231,12 @@ const handleView = async (row) => {
     currentFile.value = res || row
     detailVisible.value = true
   } catch (error) {
-    console.error('获取文件详情失败:', error)
-    ElMessage.error('获取文件详情失败')
+    // 错误由 axios 拦截器处理
   }
 }
 
 const handleDelete = (row) => {
-  ElMessageBox.confirm(`确认要删除文件"${row.name}"吗？`, '提示', {
+  ElMessageBox.confirm(`确认要删除文件"${row.originalName}"吗？`, '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning',
@@ -208,8 +246,7 @@ const handleDelete = (row) => {
       ElMessage.success('删除成功')
       loadFileList()
     } catch (error) {
-      console.error('删除文件失败:', error)
-      ElMessage.error('删除失败')
+      // 错误由 axios 拦截器处理
     }
   })
 }
@@ -280,5 +317,11 @@ onMounted(() => {
 .preview-image {
   margin-top: 16px;
   text-align: center;
+}
+
+.pagination-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
 }
 </style>

@@ -25,7 +25,12 @@
           style="width: 120px"
         />
         <el-button v-permission="['system:dict:add']" type="primary" :icon="Plus" @click="onAdd">新增</el-button>
-        <el-button v-permission="['system:dict:delete']" type="danger" :disabled="selectedIds.length === 0" @click="handleBatchDelete">
+        <el-button
+          v-permission="['system:dict:delete']"
+          type="danger"
+          :disabled="selectedIds.length === 0"
+          @click="handleBatchDelete"
+        >
           批量删除(已选{{ selectedIds.length }}项)
         </el-button>
       </template>
@@ -42,8 +47,24 @@
 
       <!-- 操作 -->
       <template #operation="{ row }">
-        <el-button v-permission="['system:dict:edit']" type="primary" size="small" link :icon="Edit" @click="onEdit(row)">编辑</el-button>
-        <el-button v-permission="['system:dict:delete']" type="danger" size="small" link :icon="Delete" @click="handleDelete(row)">删除</el-button>
+        <el-button
+          v-permission="['system:dict:edit']"
+          type="primary"
+          size="small"
+          link
+          :icon="Edit"
+          @click="onEdit(row)"
+          >编辑</el-button
+        >
+        <el-button
+          v-permission="['system:dict:delete']"
+          type="danger"
+          size="small"
+          link
+          :icon="Delete"
+          @click="handleDelete(row)"
+          >删除</el-button
+        >
       </template>
     </pro-table>
     <!-- #endregion -->
@@ -87,7 +108,13 @@
 import { defineAsyncComponent } from 'vue'
 import { Plus, Edit, Delete } from '@element-plus/icons-vue'
 import { useCrud } from '@/hooks'
-import { getDictTypeListAPI, createDictTypeAPI, updateDictTypeAPI, deleteDictTypeAPI, batchDeleteDictTypesAPI } from '@/api/dict'
+import {
+  getDictTypeListAPI,
+  createDictTypeAPI,
+  updateDictTypeAPI,
+  deleteDictTypeAPI,
+  batchDeleteDictTypesAPI,
+} from '@/api/dict'
 import { formatDateTime } from '@/utils/date'
 import ProTable from '@/components/Table/index.vue'
 import ProDialog from '@/components/Dialog/index.vue'
@@ -105,14 +132,35 @@ const DictDataPanel = defineAsyncComponent(() => import('../data/index.vue'))
 const formRef = ref(null)
 
 const {
-  tableData, loading, total, queryParams, page, limit,
-  getData, handlePageChange, handleSizeChange, handleRefresh,
-  form, dialogVisible, submitLoading, selectedIds, resetForm,
-  handleAdd, handleEdit, handleSubmit, handleDelete,
-  handleSelectionChange, handleBatchDelete,
+  tableData,
+  loading,
+  total,
+  queryParams,
+  page,
+  limit,
+  getData,
+  handlePageChange,
+  handleSizeChange,
+  handleRefresh,
+  form,
+  dialogVisible,
+  submitLoading,
+  selectedIds,
+  resetForm,
+  handleAdd,
+  handleEdit,
+  handleSubmit,
+  handleDelete,
+  handleSelectionChange,
+  handleBatchDelete,
 } = useCrud(
   getDictTypeListAPI,
-  { create: createDictTypeAPI, update: updateDictTypeAPI, delete: deleteDictTypeAPI, batchDelete: batchDeleteDictTypesAPI },
+  {
+    create: createDictTypeAPI,
+    update: updateDictTypeAPI,
+    delete: deleteDictTypeAPI,
+    batchDelete: batchDeleteDictTypesAPI,
+  },
   {
     nameField: 'dictName',
     formDefaults: { dictName: '', dictType: '', status: 1, remark: '' },

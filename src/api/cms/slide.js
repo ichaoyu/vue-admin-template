@@ -3,10 +3,11 @@ import api from '@/utils/axios'
 // #region 轮播图管理接口
 
 /**
- * 查询轮播图列表
- * @returns {Promise<Array>} 返回轮播图列表
+ * 查询轮播图列表（分页）
+ * @param {Object} params - 查询参数
+ * @returns {Promise<Object>} 返回轮播图分页数据
  */
-export const getSlideListAPI = () => api.get('/cms/slide')
+export const getSlideListAPI = (params) => api.get('/cms/slide', { params })
 
 /**
  * 查询轮播图详情

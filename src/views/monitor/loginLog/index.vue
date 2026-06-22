@@ -20,7 +20,9 @@
         <el-button type="danger" :disabled="selectedIds.length === 0" @click="handleBatchDelete">
           批量删除(已选{{ selectedIds.length }}项)
         </el-button>
-        <el-button type="danger" :icon="Delete" v-permission="['monitor:loginLog:clear']" @click="handleClear">清空</el-button>
+        <el-button type="danger" :icon="Delete" v-permission="['monitor:loginLog:clear']" @click="handleClear"
+          >清空</el-button
+        >
       </template>
 
       <!-- 状态 -->
@@ -31,7 +33,15 @@
 
       <!-- 操作 -->
       <template #operation="{ row }">
-        <el-button type="danger" size="small" link :icon="Delete" v-permission="['monitor:loginLog:delete']" @click="handleDelete(row)">删除</el-button>
+        <el-button
+          type="danger"
+          size="small"
+          link
+          :icon="Delete"
+          v-permission="['monitor:loginLog:delete']"
+          @click="handleDelete(row)"
+          >删除</el-button
+        >
       </template>
     </pro-table>
     <!-- #endregion -->
@@ -42,7 +52,12 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, Refresh, Delete } from '@element-plus/icons-vue'
 import { useTable } from '@/hooks'
-import { getLoginLogListAPI, deleteLoginLogAPI, batchDeleteLoginLogsAPI, clearLoginLogAPI } from '@/api/monitor/loginLog'
+import {
+  getLoginLogListAPI,
+  deleteLoginLogAPI,
+  batchDeleteLoginLogsAPI,
+  clearLoginLogAPI,
+} from '@/api/monitor/loginLog'
 import { formatDateTime } from '@/utils/date'
 import ProTable from '@/components/Table/index.vue'
 
@@ -52,7 +67,20 @@ defineOptions({ name: 'MonitorLoginLogIndex' })
 
 const selectedIds = ref([])
 
-const { tableData, loading, total, queryParams, page, limit, getData, handlePageChange, handleSizeChange, handleRefresh, handleSearch, resetQuery } = useTable(getLoginLogListAPI, {
+const {
+  tableData,
+  loading,
+  total,
+  queryParams,
+  page,
+  limit,
+  getData,
+  handlePageChange,
+  handleSizeChange,
+  handleRefresh,
+  handleSearch,
+  resetQuery,
+} = useTable(getLoginLogListAPI, {
   defaultParams: { userName: '' },
 })
 

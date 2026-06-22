@@ -6,23 +6,27 @@
       :data="tableData"
       :columns="columns"
       :loading="loading"
-      :show-pagination="false"
       @refresh="handleRefresh"
       @selection-change="handleSelectionChange"
     >
       <template #toolbar-left>
         <el-button v-permission="['cms:slide:add']" type="primary" :icon="Plus" @click="handleAdd">新增</el-button>
-        <el-button v-permission="['cms:slide:delete']" type="danger" :disabled="selectedIds.length === 0" @click="handleBatchDelete">
+        <el-button
+          v-permission="['cms:slide:delete']"
+          type="danger"
+          :disabled="selectedIds.length === 0"
+          @click="handleBatchDelete"
+        >
           批量删除(已选{{ selectedIds.length }}项)
         </el-button>
       </template>
 
       <!-- 图片 -->
-      <template #imageUrl="{ row }">
+      <template #imgUrl="{ row }">
         <el-image
-          v-if="row.imageUrl"
-          :src="row.imageUrl"
-          :preview-src-list="[row.imageUrl]"
+          v-if="row.imgUrl"
+          :src="row.imgUrl"
+          :preview-src-list="[row.imgUrl]"
           style="width: 100px; height: 60px"
           fit="cover"
         />
@@ -36,8 +40,24 @@
 
       <!-- 操作 -->
       <template #operation="{ row }">
-        <el-button v-permission="['cms:slide:edit']" type="primary" size="small" link :icon="Edit" @click="handleEdit(row)">编辑</el-button>
-        <el-button v-permission="['cms:slide:delete']" type="danger" size="small" link :icon="Delete" @click="handleDelete(row)">删除</el-button>
+        <el-button
+          v-permission="['cms:slide:edit']"
+          type="primary"
+          size="small"
+          link
+          :icon="Edit"
+          @click="handleEdit(row)"
+          >编辑</el-button
+        >
+        <el-button
+          v-permission="['cms:slide:delete']"
+          type="danger"
+          size="small"
+          link
+          :icon="Delete"
+          @click="handleDelete(row)"
+          >删除</el-button
+        >
       </template>
     </pro-table>
     <!-- #endregion -->
@@ -56,8 +76,8 @@
         <el-form-item label="标题:" prop="title">
           <el-input v-model="form.title" placeholder="请输入标题" clearable />
         </el-form-item>
-        <el-form-item label="图片地址:" prop="imageUrl">
-          <el-input v-model="form.imageUrl" placeholder="请输入图片地址" clearable />
+        <el-form-item label="图片地址:" prop="imgUrl">
+          <el-input v-model="form.imgUrl" placeholder="请输入图片地址" clearable />
         </el-form-item>
         <el-form-item label="链接地址:" prop="linkUrl">
           <el-input v-model="form.linkUrl" placeholder="请输入链接地址" clearable />
@@ -68,8 +88,8 @@
         <el-form-item label="状态:" prop="status">
           <el-switch v-model="form.status" :active-value="1" :inactive-value="0" />
         </el-form-item>
-        <el-form-item label="备注:" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" :rows="2" />
+        <el-form-item label="备注:" prop="mark">
+          <el-input v-model="form.mark" type="textarea" placeholder="请输入备注" :rows="2" />
         </el-form-item>
       </el-form>
     </pro-dialog>
@@ -96,19 +116,36 @@ const formRef = ref(null)
 const formDefaults = {
   id: '',
   title: '',
-  imageUrl: '',
+  imgUrl: '',
   linkUrl: '',
   sort: 0,
   status: 1,
-  remark: '',
+  mark: '',
 }
 
 const {
-  tableData, loading, total, queryParams, page, limit,
-  getData, handlePageChange, handleSizeChange, handleRefresh,
-  form, dialogVisible, submitLoading, selectedIds, resetForm,
-  handleAdd, handleEdit, handleSubmit, handleDelete, handleStatusChange,
-  handleSelectionChange, handleBatchDelete,
+  tableData,
+  loading,
+  total,
+  queryParams,
+  page,
+  limit,
+  getData,
+  handlePageChange,
+  handleSizeChange,
+  handleRefresh,
+  form,
+  dialogVisible,
+  submitLoading,
+  selectedIds,
+  resetForm,
+  handleAdd,
+  handleEdit,
+  handleSubmit,
+  handleDelete,
+  handleStatusChange,
+  handleSelectionChange,
+  handleBatchDelete,
 } = useCrud(
   getSlideListAPI,
   { create: createSlideAPI, update: updateSlideAPI, delete: deleteSlideAPI, batchDelete: batchDeleteSlidesAPI },
@@ -123,13 +160,13 @@ const dialogTitle = computed(() => (form.value.id ? '编辑轮播图' : '新增�
 
 const rules = {
   title: [{ required: true, message: '标题不能为空', trigger: 'blur' }],
-  imageUrl: [{ required: true, message: '图片地址不能为空', trigger: 'blur' }],
+  imgUrl: [{ required: true, message: '图片地址不能为空', trigger: 'blur' }],
 }
 
 const columns = [
   { type: 'selection', width: 55, align: 'center' },
   { type: 'index', label: '序号', width: 60, align: 'center' },
-  { prop: 'imageUrl', label: '图片', width: 130, align: 'center', slot: 'imageUrl' },
+  { prop: 'imgUrl', label: '图片', width: 130, align: 'center', slot: 'imgUrl' },
   { prop: 'title', label: '标题', minWidth: 150 },
   { prop: 'linkUrl', label: '链接地址', minWidth: 200 },
   { prop: 'sort', label: '排序', width: 100, align: 'center' },

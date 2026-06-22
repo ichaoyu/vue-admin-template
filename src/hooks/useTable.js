@@ -31,7 +31,7 @@ export const useTable = (fetchAPI, options = {}) => {
   const total = ref(0)
 
   const queryParams = reactive({
-    pageNum: 1,
+    page: 1,
     pageSize: defaultPageSize,
     ...defaultParams,
   })
@@ -41,9 +41,9 @@ export const useTable = (fetchAPI, options = {}) => {
    * 与 ProTable v-model:page 配合使用
    */
   const page = computed({
-    get: () => queryParams.pageNum,
+    get: () => queryParams.page,
     set: (val) => {
-      queryParams.pageNum = val
+      queryParams.page = val
     },
   })
 
@@ -55,7 +55,7 @@ export const useTable = (fetchAPI, options = {}) => {
     get: () => queryParams.pageSize,
     set: (val) => {
       queryParams.pageSize = val
-      queryParams.pageNum = 1
+      queryParams.page = 1
     },
   })
 
@@ -110,7 +110,7 @@ export const useTable = (fetchAPI, options = {}) => {
    * @param {number} val - 新页码
    */
   const handlePageChange = (val) => {
-    queryParams.pageNum = val
+    queryParams.page = val
     getData()
   }
 
@@ -120,7 +120,7 @@ export const useTable = (fetchAPI, options = {}) => {
    */
   const handleSizeChange = (val) => {
     queryParams.pageSize = val
-    queryParams.pageNum = 1
+    queryParams.page = 1
     getData()
   }
 
@@ -139,7 +139,7 @@ export const useTable = (fetchAPI, options = {}) => {
    * 重置并搜索（回到第一页）
    */
   const handleSearch = () => {
-    queryParams.pageNum = 1
+    queryParams.page = 1
     getData()
   }
 
@@ -149,7 +149,7 @@ export const useTable = (fetchAPI, options = {}) => {
    */
   const resetQuery = (resetValues = {}) => {
     Object.assign(queryParams, {
-      pageNum: 1,
+      page: 1,
       pageSize: defaultPageSize,
       ...defaultParams,
       ...resetValues,

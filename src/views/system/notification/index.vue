@@ -31,7 +31,9 @@
 
       <!-- 操作 -->
       <template #operation="{ row }">
-        <el-button v-if="row.isRead === 0" type="success" size="small" link :icon="Check" @click="handleMarkRead(row)">标记已读</el-button>
+        <el-button v-if="row.isRead === 0" type="success" size="small" link :icon="Check" @click="handleMarkRead(row)"
+          >标记已读</el-button
+        >
       </template>
     </pro-table>
     <!-- #endregion -->
@@ -51,7 +53,20 @@ defineOptions({ name: 'SystemNotificationIndex' })
 
 // #region 数据定义
 
-const { tableData, loading, total, queryParams, page, limit, getData, handlePageChange, handleSizeChange, handleRefresh, handleSearch, resetQuery } = useTable(getNotificationListAPI, {
+const {
+  tableData,
+  loading,
+  total,
+  queryParams,
+  page,
+  limit,
+  getData,
+  handlePageChange,
+  handleSizeChange,
+  handleRefresh,
+  handleSearch,
+  resetQuery,
+} = useTable(getNotificationListAPI, {
   defaultParams: { title: '' },
 })
 
@@ -60,7 +75,7 @@ const columns = [
   { prop: 'content', label: '内容', minWidth: 280, showOverflowTooltip: true },
   { prop: 'type', label: '类型', width: 100, align: 'center', slot: 'type' },
   { prop: 'isRead', label: '是否已读', width: 100, align: 'center', slot: 'isRead' },
-  { prop: 'createTime', label: '创建时间', minWidth: 180, formatter: (row) => formatDateTime(row.createTime) },
+  { prop: 'sendTime', label: '发送时间', minWidth: 180, formatter: (row) => formatDateTime(row.sendTime) },
   { prop: 'operation', label: '操作', width: 120, align: 'center', fixed: 'right', slot: 'operation' },
 ]
 

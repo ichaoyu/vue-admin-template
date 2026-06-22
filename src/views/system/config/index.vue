@@ -25,13 +25,15 @@
           style="width: 120px"
         />
         <el-button v-permission="['system:config:add']" type="primary" :icon="Plus" @click="handleAdd">新增</el-button>
-        <el-button v-permission="['system:config:delete']" type="danger" :disabled="selectedIds.length === 0" @click="handleBatchDelete">
+        <el-button
+          v-permission="['system:config:delete']"
+          type="danger"
+          :disabled="selectedIds.length === 0"
+          @click="handleBatchDelete"
+        >
           批量删除(已选{{ selectedIds.length }}项)
         </el-button>
-        <el-button type="warning" :icon="Refresh" @click="handleRefreshCache">刷新缓存</el-button>
       </template>
-
-      <!-- 系统内置 -->
       <template #configType="{ row }">
         <DictTag :value="row.configType" dict-type="sys_yes_no" />
       </template>
@@ -43,8 +45,24 @@
 
       <!-- 操作 -->
       <template #operation="{ row }">
-        <el-button v-permission="['system:config:edit']" type="primary" size="small" link :icon="Edit" @click="handleEdit(row)">编辑</el-button>
-        <el-button v-permission="['system:config:delete']" type="danger" size="small" link :icon="Delete" @click="handleDelete(row)">删除</el-button>
+        <el-button
+          v-permission="['system:config:edit']"
+          type="primary"
+          size="small"
+          link
+          :icon="Edit"
+          @click="handleEdit(row)"
+          >编辑</el-button
+        >
+        <el-button
+          v-permission="['system:config:delete']"
+          type="danger"
+          size="small"
+          link
+          :icon="Delete"
+          @click="handleDelete(row)"
+          >删除</el-button
+        >
       </template>
     </pro-table>
     <!-- #endregion -->
@@ -89,8 +107,14 @@
 
 <script setup>
 import { ElMessage } from 'element-plus'
-import { Plus, Edit, Delete, Refresh } from '@element-plus/icons-vue'
-import { getConfigListAPI, createConfigAPI, updateConfigAPI, deleteConfigAPI, batchDeleteConfigsAPI, refreshConfigCacheAPI } from '@/api/config'
+import { Plus, Edit, Delete } from '@element-plus/icons-vue'
+import {
+  getConfigListAPI,
+  createConfigAPI,
+  updateConfigAPI,
+  deleteConfigAPI,
+  batchDeleteConfigsAPI,
+} from '@/api/config'
 import { formatDateTime } from '@/utils/date'
 import { useCrud } from '@/hooks'
 import ProTable from '@/components/Table/index.vue'
@@ -185,17 +209,6 @@ const columns = [
 ]
 
 // #endregion
-
-// #region 刷新缓存
-
-const handleRefreshCache = async () => {
-  try {
-    await refreshConfigCacheAPI()
-    ElMessage.success('刷新缓存成功')
-  } catch {
-    // 错误由 axios 拦截器统一处理
-  }
-}
 
 // #endregion
 </script>

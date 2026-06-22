@@ -11,6 +11,7 @@ export default {
         ignorePseudoClasses: ['deep', 'global', 'slotted'],
       },
     ],
+    'no-invalid-position-declaration': null,
   },
   overrides: [
     {

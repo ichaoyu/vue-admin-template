@@ -3,10 +3,17 @@ import api from '@/utils/axios'
 // #region 栏目管理接口
 
 /**
- * 查询栏目列表
+ * 查询栏目列表（分页）
+ * @param {Object} params - 查询参数
+ * @returns {Promise<Object>} 返回栏目分页数据
+ */
+export const getCategoryListAPI = (params) => api.get('/cms/category', { params })
+
+/**
+ * 查询全部栏目（不分页，用于下拉选择）
  * @returns {Promise<Array>} 返回栏目列表
  */
-export const getCategoryListAPI = () => api.get('/cms/category')
+export const getAllCategoriesAPI = () => api.get('/cms/category/all')
 
 /**
  * 查询栏目详情

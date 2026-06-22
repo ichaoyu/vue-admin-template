@@ -7,20 +7,38 @@ const modules = import.meta.glob('../views/**/*.vue')
 const loadView = (component) => {
   if (!component) return null
 
-  if (component === 'Layout' || component === 'DefaultLayout') {
+  if (component === 'Layout' || component === 'DefaultLayout' || component === 'ParentLayout') {
     return Layout
   }
 
-  // 1. 尝试直接匹配完整路径：cms/article/index.vue
+  const keys = Object.keys(modules)
+
+  // 1. 尝试直接匹配完整路径：system/config/index -> ../views/system/config/index.vue
   const fullPath = `../views/${component}.vue`
   if (modules[fullPath]) {
     return modules[fullPath]
   }
 
-  // 2. 尝试查找以 component.vue 结尾的文件（兼容旧格式）
-  const keys = Object.keys(modules)
-  const matchedKey = keys.find((key) => key.endsWith(`${component}.vue`))
-  return matchedKey ? modules[matchedKey] : null
+  // 2. 尝试匹配末尾路径：system/config/index -> config/index.vue
+  const suffix = component.includes('/') ? component.split('/').slice(-2).join('/') : component
+  const matchedBySuffix = keys.find((key) => key.endsWith(`${suffix}.vue`))
+  if (matchedBySuffix) {
+    return modules[matchedBySuffix]
+  }
+
+  // 3. 兜底：查找以 component 任意段落结尾的文件
+  const segments = component.split('/')
+  for (let i = segments.length - 1; i >= 0; i--) {
+    const tail = segments.slice(i).join('/')
+    const matched = keys.find((key) => key.endsWith(`${tail}.vue`))
+    if (matched) {
+      console.warn(`[Route] 组件 "${component}" 使用模糊匹配: ${matched}`)
+      return modules[matched]
+    }
+  }
+
+  console.warn(`[Route] 未找到组件: "${component}"，请检查菜单配置或文件是否存在`)
+  return null
 }
 
 // #endregion
@@ -129,6 +147,12 @@ const transformMenuToRoute = (menu) => {
 
     return route
   } else {
+    const viewComponent = loadView(menu.component)
+    if (!viewComponent) {
+      console.warn(`[Route] 跳过无法解析的路由: path="${menu.path}", component="${menu.component}"`)
+      return null
+    }
+
     const route = {
       path: menu.path,
       component: Layout,
@@ -142,7 +166,7 @@ const transformMenuToRoute = (menu) => {
         {
           path: '',
           name: menu.key,
-          component: loadView(menu.component),
+          component: viewComponent,
           meta: {
             title: menu.meta?.title || '',
             icon: menu.meta?.icon || '',
@@ -160,10 +184,16 @@ const transformMenuToRoute = (menu) => {
 const transformChildRoute = (menu) => {
   if (!menu) return null
 
+  const viewComponent = loadView(menu.component)
+  if (!viewComponent) {
+    console.warn(`[Route] 跳过无法解析的子路由: path="${menu.path}", component="${menu.component}"`)
+    return null
+  }
+
   const route = {
     path: menu.path,
     name: menu.key || menu.componentName,
-    component: loadView(menu.component),
+    component: viewComponent,
     meta: {
       title: menu.meta?.title || '',
       icon: menu.meta?.icon || '',

@@ -267,7 +267,7 @@ onMounted(() => {
 }
 
 .component-item:hover {
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
 }
 
 .component-header {
@@ -324,7 +324,7 @@ onMounted(() => {
 }
 
 /* 响应式调整 */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .components-grid {
     grid-template-columns: 1fr;
   }

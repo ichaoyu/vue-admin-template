@@ -25,7 +25,12 @@
           style="width: 120px"
         />
         <el-button v-permission="['system:post:add']" type="primary" :icon="Plus" @click="handleAdd">新增</el-button>
-        <el-button v-permission="['system:post:delete']" type="danger" :disabled="selectedIds.length === 0" @click="handleBatchDelete">
+        <el-button
+          v-permission="['system:post:delete']"
+          type="danger"
+          :disabled="selectedIds.length === 0"
+          @click="handleBatchDelete"
+        >
           批量删除(已选{{ selectedIds.length }}项)
         </el-button>
       </template>
@@ -37,8 +42,24 @@
 
       <!-- 操作 -->
       <template #operation="{ row }">
-        <el-button v-permission="['system:post:edit']" type="primary" size="small" link :icon="Edit" @click="handleEdit(row)">编辑</el-button>
-        <el-button v-permission="['system:post:delete']" type="danger" size="small" link :icon="Delete" @click="handleDelete(row)">删除</el-button>
+        <el-button
+          v-permission="['system:post:edit']"
+          type="primary"
+          size="small"
+          link
+          :icon="Edit"
+          @click="handleEdit(row)"
+          >编辑</el-button
+        >
+        <el-button
+          v-permission="['system:post:delete']"
+          type="danger"
+          size="small"
+          link
+          :icon="Delete"
+          @click="handleDelete(row)"
+          >删除</el-button
+        >
       </template>
     </pro-table>
     <!-- #endregion -->
@@ -102,11 +123,28 @@ const formDefaults = {
 }
 
 const {
-  tableData, loading, total, queryParams, page, limit,
-  getData, handlePageChange, handleSizeChange, handleRefresh,
-  form, dialogVisible, submitLoading, selectedIds, resetForm,
-  handleAdd, handleEdit, handleSubmit, handleDelete, handleStatusChange,
-  handleSelectionChange, handleBatchDelete,
+  tableData,
+  loading,
+  total,
+  queryParams,
+  page,
+  limit,
+  getData,
+  handlePageChange,
+  handleSizeChange,
+  handleRefresh,
+  form,
+  dialogVisible,
+  submitLoading,
+  selectedIds,
+  resetForm,
+  handleAdd,
+  handleEdit,
+  handleSubmit,
+  handleDelete,
+  handleStatusChange,
+  handleSelectionChange,
+  handleBatchDelete,
 } = useCrud(
   getPostListAPI,
   { create: createPostAPI, update: updatePostAPI, delete: deletePostAPI, batchDelete: batchDeletePostsAPI },

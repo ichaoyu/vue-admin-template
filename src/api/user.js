@@ -46,10 +46,10 @@ export const batchDeleteUsersAPI = (ids) => api.delete('/system/user', { data: {
 
 /**
  * 重置用户密码（仅超级管理员可用）
- * @param {Object} data - 重置密码参数
+ * @param {string} userId - 用户 ID
  * @returns {Promise<void>}
  */
-export const resetUserPasswordAPI = (data) => api.patch('/system/user/reset-password', data)
+export const resetUserPasswordAPI = (userId) => api.patch('/auth/reset-password', { userId })
 
 /**
  * 强制用户下线（仅超级管理员可用）

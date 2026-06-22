@@ -17,9 +17,20 @@
       <template #toolbar-left>
         <el-input v-model="queryParams.userName" placeholder="用户账号" clearable style="width: 200px" />
         <el-input v-model="queryParams.phone" placeholder="手机号码" clearable style="width: 200px" />
-        <DictSelect v-model="queryParams.status" dict-type="sys_normal_disable" placeholder="用户状态" clearable style="width: 120px" />
+        <DictSelect
+          v-model="queryParams.status"
+          dict-type="sys_normal_disable"
+          placeholder="用户状态"
+          clearable
+          style="width: 120px"
+        />
         <el-button v-permission="['system:user:add']" type="primary" :icon="Plus" @click="onAdd">新增</el-button>
-        <el-button v-permission="['system:user:delete']" type="danger" :disabled="selectedIds.length === 0" @click="handleBatchDelete">
+        <el-button
+          v-permission="['system:user:delete']"
+          type="danger"
+          :disabled="selectedIds.length === 0"
+          @click="handleBatchDelete"
+        >
           批量删除(已选{{ selectedIds.length }}项)
         </el-button>
       </template>
@@ -33,10 +44,44 @@
       </template>
 
       <template #operation="{ row }">
-        <el-button v-permission="['system:user:edit']" type="primary" size="small" link :icon="Edit" @click="onEdit(row)">编辑</el-button>
-        <el-button v-permission="['system:user:delete']" type="danger" size="small" link :icon="Delete" @click="handleDelete(row)">删除</el-button>
-        <el-button v-permission="['system:user:resetPwd']" v-if="isSuperAdmin" type="warning" size="small" link :icon="Key" @click="handleResetPassword(row)">重置密码</el-button>
-        <el-button v-permission="['system:user:forceOffline']" v-if="isSuperAdmin" type="danger" size="small" link :icon="SwitchButton" @click="handleForceOffline(row)">强制下线</el-button>
+        <el-button
+          v-permission="['system:user:edit']"
+          type="primary"
+          size="small"
+          link
+          :icon="Edit"
+          @click="onEdit(row)"
+          >编辑</el-button
+        >
+        <el-button
+          v-permission="['system:user:delete']"
+          type="danger"
+          size="small"
+          link
+          :icon="Delete"
+          @click="handleDelete(row)"
+          >删除</el-button
+        >
+        <el-button
+          v-permission="['system:user:resetPwd']"
+          v-if="isSuperAdmin"
+          type="warning"
+          size="small"
+          link
+          :icon="Key"
+          @click="handleResetPassword(row)"
+          >重置密码</el-button
+        >
+        <el-button
+          v-permission="['system:user:forceOffline']"
+          v-if="isSuperAdmin"
+          type="danger"
+          size="small"
+          link
+          :icon="SwitchButton"
+          @click="handleForceOffline(row)"
+          >强制下线</el-button
+        >
       </template>
     </pro-table>
     <!-- #endregion -->
@@ -79,7 +124,12 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="用户性别:" prop="sex">
-              <DictSelect v-model="form.sex" dict-type="sys_user_sex" placeholder="请选择用户性别" style="width: 100%" />
+              <DictSelect
+                v-model="form.sex"
+                dict-type="sys_user_sex"
+                placeholder="请选择用户性别"
+                style="width: 100%"
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -135,7 +185,15 @@
 import { Plus, Edit, Delete, Key, SwitchButton } from '@element-plus/icons-vue'
 import { nextTick } from 'vue'
 import { useCrud } from '@/hooks'
-import { getUserListAPI, createUserAPI, updateUserAPI, deleteUserAPI, batchDeleteUsersAPI, resetUserPasswordAPI, forceUserOfflineAPI } from '@/api/user'
+import {
+  getUserListAPI,
+  createUserAPI,
+  updateUserAPI,
+  deleteUserAPI,
+  batchDeleteUsersAPI,
+  resetUserPasswordAPI,
+  forceUserOfflineAPI,
+} from '@/api/user'
 import { getDeptTreeAPI } from '@/api/dept'
 import { getRoleListAPI } from '@/api/role'
 import { getPostListAPI } from '@/api/post'
@@ -174,11 +232,28 @@ const formDefaults = {
 }
 
 const {
-  tableData, loading, total, queryParams, page, limit,
-  getData, handlePageChange, handleSizeChange, handleRefresh,
-  form, dialogVisible, submitLoading, selectedIds, resetForm,
-  handleAdd, handleEdit, handleSubmit, handleDelete, handleStatusChange,
-  handleSelectionChange, handleBatchDelete,
+  tableData,
+  loading,
+  total,
+  queryParams,
+  page,
+  limit,
+  getData,
+  handlePageChange,
+  handleSizeChange,
+  handleRefresh,
+  form,
+  dialogVisible,
+  submitLoading,
+  selectedIds,
+  resetForm,
+  handleAdd,
+  handleEdit,
+  handleSubmit,
+  handleDelete,
+  handleStatusChange,
+  handleSelectionChange,
+  handleBatchDelete,
 } = useCrud(
   getUserListAPI,
   { create: createUserAPI, update: updateUserAPI, delete: deleteUserAPI, batchDelete: batchDeleteUsersAPI },

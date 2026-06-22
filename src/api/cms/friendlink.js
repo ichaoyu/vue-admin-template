@@ -3,10 +3,11 @@ import api from '@/utils/axios'
 // #region 友情链接管理接口
 
 /**
- * 查询友情链接列表
- * @returns {Promise<Array>} 返回友情链接列表
+ * 查询友情链接列表（分页）
+ * @param {Object} params - 查询参数
+ * @returns {Promise<Object>} 返回友情链接分页数据
  */
-export const getFriendlinkListAPI = () => api.get('/cms/friendlink')
+export const getFriendlinkListAPI = (params) => api.get('/cms/friendlink', { params })
 
 /**
  * 查询友情链接详情

@@ -15,8 +15,8 @@
       @selection-change="handleSelectionChange"
     >
       <template #toolbar-left>
-        <el-select v-model="queryParams.categoryId" placeholder="选择栏目" clearable style="width: 150px">
-          <el-option v-for="item in categoryList" :key="item.id" :label="item.categoryName" :value="item.id ?? ''" />
+        <el-select v-model="queryParams.cid" placeholder="选择栏目" clearable style="width: 150px">
+          <el-option v-for="item in categoryList" :key="item.id" :label="item.name" :value="item.id ?? ''" />
         </el-select>
         <el-input v-model="queryParams.title" placeholder="文章标题" clearable style="width: 200px" />
         <el-select v-model="queryParams.status" placeholder="发布状态" clearable style="width: 120px">
@@ -68,14 +68,9 @@
       <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="所属栏目:" prop="categoryId">
-              <el-select v-model="form.categoryId" placeholder="请选择栏目" style="width: 100%">
-                <el-option
-                  v-for="item in categoryList"
-                  :key="item.id"
-                  :label="item.categoryName"
-                  :value="item.id ?? ''"
-                />
+            <el-form-item label="所属栏目:" prop="cid">
+              <el-select v-model="form.cid" placeholder="请选择栏目" style="width: 100%">
+                <el-option v-for="item in categoryList" :key="item.id" :label="item.name" :value="item.id ?? ''" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -87,32 +82,27 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="标签:" prop="tags">
-              <el-select v-model="form.tags" multiple placeholder="请选择标签" style="width: 100%">
-                <el-option v-for="item in tagList" :key="item.id" :label="item.tagName" :value="item.id" />
+            <el-form-item label="标签:" prop="tagId">
+              <el-select v-model="form.tagId" multiple placeholder="请选择标签" style="width: 100%">
+                <el-option v-for="item in tagList" :key="item.id" :label="item.name" :value="item.id" />
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="封面图:" prop="coverImage">
-              <el-input v-model="form.coverImage" placeholder="请输入封面图地址" clearable />
+            <el-form-item label="封面图:" prop="img">
+              <el-input v-model="form.img" placeholder="请输入封面图地址" clearable />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="排序:" prop="sort">
-              <el-input-number v-model="form.sort" :min="0" style="width: 100%" />
-            </el-form-item>
-          </el-col>
           <el-col :span="12">
             <el-form-item label="状态:" prop="status">
               <el-switch v-model="form.status" :active-value="1" :inactive-value="0" />
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="备注:" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" :rows="2" />
+        <el-form-item label="描述:" prop="description">
+          <el-input v-model="form.description" type="textarea" placeholder="请输入描述" :rows="2" />
         </el-form-item>
         <el-form-item label="文章内容:" prop="content">
           <RichTextEditor v-model="form.content" :height="400" placeholder="请输入文章内容..." />
@@ -137,8 +127,8 @@ import {
   deleteArticleAPI,
   batchDeleteArticlesAPI,
 } from '@/api/cms/article'
-import { getCategoryListAPI } from '@/api/cms/category'
-import { getTagListAPI } from '@/api/cms/tag'
+import { getAllCategoriesAPI } from '@/api/cms/category'
+import { getAllTagsAPI } from '@/api/cms/tag'
 import { formatDateTime } from '@/utils/date'
 import RichTextEditor from '@/components/RichTextEditor/index.vue'
 import ProTable from '@/components/Table/index.vue'
@@ -156,13 +146,12 @@ const tagList = ref([])
 const formDefaults = {
   id: '',
   title: '',
-  categoryId: '',
+  cid: '',
   content: '',
-  tags: [],
-  coverImage: '',
-  sort: 0,
-  status: 1,
-  remark: '',
+  tagId: '',
+  img: '',
+  status: 0,
+  description: '',
 }
 
 const {
@@ -194,10 +183,12 @@ const {
   {
     nameField: 'title',
     formDefaults,
-    defaultParams: { categoryId: '', title: '', status: '' },
+    defaultParams: { cid: '', title: '', status: '' },
     formatFormData: (row) => ({
       ...row,
-      tags: Array.isArray(row.tags) ? row.tags.map((t) => (typeof t === 'object' ? t.id : t)) : [],
+      cid: row.cid || row.category?.id || '',
+      tagId:
+        row.tagId || (Array.isArray(row.tags) ? row.tags.map((t) => (typeof t === 'object' ? t.id : t)).join(',') : ''),
     }),
   }
 )
@@ -205,7 +196,7 @@ const {
 const dialogTitle = computed(() => (form.value.id ? '编辑文章' : '新增文章'))
 
 const rules = {
-  categoryId: [{ required: true, message: '请选择栏目', trigger: 'change' }],
+  cid: [{ required: true, message: '请选择栏目', trigger: 'change' }],
   title: [{ required: true, message: '文章标题不能为空', trigger: 'blur' }],
   content: [{ required: true, message: '文章内容不能为空', trigger: 'blur' }],
 }
@@ -214,8 +205,7 @@ const columns = [
   { type: 'selection', width: 55, align: 'center' },
   { type: 'index', label: '序号', width: 60, align: 'center' },
   { prop: 'title', label: '文章标题', minWidth: 200 },
-  { prop: 'categoryId', label: '栏目', width: 120, align: 'center' },
-  { prop: 'sort', label: '排序', width: 80, align: 'center' },
+  { prop: 'cid', label: '栏目', width: 120, align: 'center' },
   { prop: 'status', label: '状态', width: 100, align: 'center', slot: 'status' },
   { prop: 'createTime', label: '创建时间', minWidth: 180, formatter: (row) => formatDateTime(row.createTime) },
   { prop: 'operation', label: '操作', width: 160, align: 'center', fixed: 'right', slot: 'operation' },
@@ -227,7 +217,7 @@ const columns = [
 
 const loadCategoryList = async () => {
   try {
-    const res = await getCategoryListAPI()
+    const res = await getAllCategoriesAPI()
     categoryList.value = Array.isArray(res) ? res : res?.list || []
   } catch (error) {
     // 错误由 axios 拦截器统一处理
@@ -236,7 +226,7 @@ const loadCategoryList = async () => {
 
 const loadTagList = async () => {
   try {
-    const res = await getTagListAPI()
+    const res = await getAllTagsAPI()
     tagList.value = Array.isArray(res) ? res : res?.list || []
   } catch (error) {
     // 错误由 axios 拦截器统一处理

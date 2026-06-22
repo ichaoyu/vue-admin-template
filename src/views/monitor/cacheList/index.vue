@@ -14,7 +14,10 @@
         <span class="stat-label">已用内存</span>
         <el-tag :type="cacheStats.memoryUsagePercent > 80 ? 'danger' : 'info'" size="small">
           {{ cacheStats.usedMemoryHuman || '-' }}
-          ({{ cacheStats.memoryUsagePercent != null ? cacheStats.memoryUsagePercent + '%' : '-' }})
+          <template v-if="cacheStats.memoryUsagePercent > 0">
+            ({{ cacheStats.memoryUsagePercent.toFixed(1) }}%)
+          </template>
+          <template v-else> (未限制) </template>
         </el-tag>
       </div>
       <div class="stat-item">
@@ -32,8 +35,21 @@
         </el-tag>
         <el-tooltip v-if="cacheStats.hits != null || cacheStats.misses != null" placement="top">
           <template #content>
-            命中: {{ cacheStats.hits ?? 0 }} 次<br />
-            未命中: {{ cacheStats.misses ?? 0 }} 次
+            Redis 命中: {{ cacheStats.hits ?? 0 }} 次<br />
+            Redis 未命中: {{ cacheStats.misses ?? 0 }} 次
+          </template>
+          <el-icon class="info-icon"><InfoFilled /></el-icon>
+        </el-tooltip>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">应用命中率</span>
+        <el-tag :type="getHitRateType(cacheStats.appHitRate)" size="small">
+          {{ cacheStats.appHitRate != null ? cacheStats.appHitRate.toFixed(1) + '%' : '-' }}
+        </el-tag>
+        <el-tooltip v-if="cacheStats.appHits != null || cacheStats.appMisses != null" placement="top">
+          <template #content>
+            应用命中: {{ cacheStats.appHits ?? 0 }} 次<br />
+            应用未命中: {{ cacheStats.appMisses ?? 0 }} 次
           </template>
           <el-icon class="info-icon"><InfoFilled /></el-icon>
         </el-tooltip>
@@ -103,9 +119,27 @@
           </div>
           <!-- 键列表格 -->
           <el-table :data="currentGroupKeys" highlight-current-row size="small" @row-click="handleKeyClick">
-            <el-table-column type="index" label="#" width="40" align="center" />
+            <el-table-column type="index" label="#" width="36" align="center" />
             <el-table-column prop="cacheName" label="缓存键名" min-width="140" show-overflow-tooltip />
-            <el-table-column label="" width="40" align="center">
+            <el-table-column prop="type" label="类型" width="70" align="center">
+              <template #default="{ row }">
+                <el-tag size="small" type="info">{{ row.type || '-' }}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="过期时间" width="100" align="center">
+              <template #default="{ row }">
+                <el-tag v-if="row.isExpired" type="danger" size="small">已过期</el-tag>
+                <el-tag v-else-if="row.ttl === -1" type="success" size="small">永久</el-tag>
+                <span v-else-if="row.ttlFormatted" size="small">{{ row.ttlFormatted }}</span>
+                <span v-else>{{ formatTTL(row.ttl) }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="大小" width="80" align="center">
+              <template #default="{ row }">
+                {{ formatSize(row.size) }}
+              </template>
+            </el-table-column>
+            <el-table-column label="" width="36" align="center">
               <template #default="{ row }">
                 <el-button type="danger" size="small" link :icon="Delete" @click.stop="handleDeleteKey(row)" />
               </template>
@@ -709,8 +743,8 @@ onMounted(() => {
 }
 
 .cache-key-panel {
-  width: 380px;
-  min-width: 300px;
+  width: 520px;
+  min-width: 420px;
   flex-shrink: 0;
 }
 

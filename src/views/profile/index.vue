@@ -215,7 +215,7 @@ const loadProfile = async () => {
       remark: res?.remark || '',
     })
   } catch (error) {
-    console.error('获取用户资料失败:', error)
+    // 错误由 axios 拦截器处理
   }
 }
 
@@ -259,7 +259,7 @@ const handleSaveBase = async () => {
       // 同步更新store中的用户名显示
       userStore.setUserInfo({ ...userStore.userInfo, nickName: baseForm.nickName })
     } catch (error) {
-      console.error('修改失败:', error)
+      // 错误由 axios 拦截器处理
     } finally {
       submitBaseLoading.value = false
     }
@@ -296,11 +296,12 @@ const handleUpdatePassword = async () => {
       await updateUserPasswordAPI({
         oldPassword: pwdForm.oldPassword,
         newPassword: pwdForm.newPassword,
+        confirmPassword: pwdForm.confirmPassword,
       })
       ElMessage.success('密码修改成功，请重新登录')
       resetPwdForm()
     } catch (error) {
-      console.error('修改密码失败:', error)
+      // 错误由 axios 拦截器处理
     } finally {
       submitPwdLoading.value = false
     }

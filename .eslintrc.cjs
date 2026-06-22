@@ -66,6 +66,7 @@ module.exports = {
       plugins: ['vue'],
       rules: {
         'vue/multi-word-component-names': 'off',
+        'vue/no-invalid-position-declaration': 'off',
       },
     },
   ],

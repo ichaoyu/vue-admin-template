@@ -6,7 +6,11 @@
       :data="tableData"
       :columns="columns"
       :loading="loading"
-      :show-pagination="false"
+      :total="total"
+      v-model:page="page"
+      v-model:limit="limit"
+      @page-change="handlePageChange"
+      @size-change="handleSizeChange"
       @refresh="handleRefresh"
       @selection-change="handleSelectionChange"
     >
@@ -77,7 +81,28 @@ defineOptions({
 const tableRef = ref(null)
 const loading = ref(false)
 const tableData = ref([])
+const total = ref(0)
 const selectedIds = ref([])
+
+const queryParams = reactive({
+  page: 1,
+  pageSize: 20,
+})
+
+const page = computed({
+  get: () => queryParams.page,
+  set: (val) => {
+    queryParams.page = val
+  },
+})
+
+const limit = computed({
+  get: () => queryParams.pageSize,
+  set: (val) => {
+    queryParams.pageSize = val
+    queryParams.page = 1
+  },
+})
 
 const dialogVisible = ref(false)
 const dialogTitle = computed(() => (form.id ? '编辑站点信息' : '新增站点信息'))
@@ -117,16 +142,31 @@ const columns = [
 const getData = async () => {
   loading.value = true
   try {
-    const res = await getSiteListAPI()
-    tableData.value = Array.isArray(res) ? res : res?.list || []
+    const res = await getSiteListAPI({
+      page: queryParams.page,
+      pageSize: queryParams.pageSize,
+    })
+    tableData.value = res?.list || []
+    total.value = res?.total || 0
   } catch (error) {
-    console.error('获取站点信息列表失败:', error)
+    // 错误由 axios 拦截器处理
   } finally {
     loading.value = false
   }
 }
 
 const handleRefresh = () => {
+  getData()
+}
+
+const handlePageChange = (val) => {
+  queryParams.page = val
+  getData()
+}
+
+const handleSizeChange = (val) => {
+  queryParams.pageSize = val
+  queryParams.page = 1
   getData()
 }
 

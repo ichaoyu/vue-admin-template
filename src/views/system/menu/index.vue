@@ -15,8 +15,20 @@
       @refresh="handleRefresh"
     >
       <template #toolbar-left>
-        <el-input v-model="searchForm.menuName" placeholder="搜索菜单名称" clearable :prefix-icon="Search" style="width: 240px" />
-        <DictSelect v-model="searchForm.status" dict-type="sys_normal_disable" placeholder="菜单状态" clearable style="width: 120px" />
+        <el-input
+          v-model="searchForm.menuName"
+          placeholder="搜索菜单名称"
+          clearable
+          :prefix-icon="Search"
+          style="width: 240px"
+        />
+        <DictSelect
+          v-model="searchForm.status"
+          dict-type="sys_normal_disable"
+          placeholder="菜单状态"
+          clearable
+          style="width: 120px"
+        />
         <el-button v-permission="['system:menu:add']" :icon="Plus" type="primary" @click="handleAdd">新增</el-button>
         <el-button :icon="Expand" @click="toggleExpand">{{ expandedAll ? '折叠' : '展开' }}</el-button>
       </template>
@@ -35,9 +47,34 @@
       </template>
 
       <template #operation="{ row }">
-        <el-button v-permission="['system:menu:edit']" type="primary" size="small" link :icon="Edit" @click="handleEdit(row)">编辑</el-button>
-        <el-button v-permission="['system:menu:add']" v-if="row.menuType !== 2" type="success" size="small" link :icon="Plus" @click="handleAdd(row)">新增</el-button>
-        <el-button v-permission="['system:menu:delete']" type="danger" size="small" link :icon="Delete" @click="handleDelete(row)">删除</el-button>
+        <el-button
+          v-permission="['system:menu:edit']"
+          type="primary"
+          size="small"
+          link
+          :icon="Edit"
+          @click="handleEdit(row)"
+          >编辑</el-button
+        >
+        <el-button
+          v-permission="['system:menu:add']"
+          v-if="row.menuType !== 2"
+          type="success"
+          size="small"
+          link
+          :icon="Plus"
+          @click="handleAdd(row)"
+          >新增</el-button
+        >
+        <el-button
+          v-permission="['system:menu:delete']"
+          type="danger"
+          size="small"
+          link
+          :icon="Delete"
+          @click="handleDelete(row)"
+          >删除</el-button
+        >
       </template>
     </pro-table>
     <!-- #endregion -->
@@ -186,7 +223,11 @@ const columns = [
 
 // #region 数据获取
 
-const { tableData: menuList, loading, getData } = useTable(getMenuTreeAPI, {
+const {
+  tableData: menuList,
+  loading,
+  getData,
+} = useTable(getMenuTreeAPI, {
   immediate: true,
   afterFetch: (res) => {
     return { list: res || [], total: 0 }

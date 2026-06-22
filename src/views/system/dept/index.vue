@@ -14,8 +14,20 @@
       @refresh="handleRefresh"
     >
       <template #toolbar-left>
-        <el-input v-model="searchForm.deptName" placeholder="搜索部门名称" clearable :prefix-icon="Search" style="width: 200px" />
-        <DictSelect v-model="searchForm.status" dict-type="sys_normal_disable" placeholder="部门状态" clearable style="width: 120px" />
+        <el-input
+          v-model="searchForm.deptName"
+          placeholder="搜索部门名称"
+          clearable
+          :prefix-icon="Search"
+          style="width: 200px"
+        />
+        <DictSelect
+          v-model="searchForm.status"
+          dict-type="sys_normal_disable"
+          placeholder="部门状态"
+          clearable
+          style="width: 120px"
+        />
         <el-button type="primary" :icon="Plus" @click="handleAdd()">新增</el-button>
         <el-button :icon="Expand" @click="toggleExpand">{{ expandedAll ? '折叠' : '展开' }}</el-button>
       </template>
@@ -146,7 +158,11 @@ const columns = [
 
 // #region 数据获取
 
-const { tableData: deptList, loading, getData } = useTable(getDeptTreeAPI, {
+const {
+  tableData: deptList,
+  loading,
+  getData,
+} = useTable(getDeptTreeAPI, {
   immediate: true,
   afterFetch: (res) => {
     // 树形数据不分页，直接返回数组

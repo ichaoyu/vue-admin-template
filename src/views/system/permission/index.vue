@@ -31,8 +31,15 @@
           clearable
           style="width: 100px"
         />
-        <el-button v-permission="['system:permission:add']" type="primary" :icon="Plus" @click="handleAdd">新增</el-button>
-        <el-button v-permission="['system:permission:delete']" type="danger" :disabled="selectedIds.length === 0" @click="handleBatchDelete">
+        <el-button v-permission="['system:permission:add']" type="primary" :icon="Plus" @click="handleAdd"
+          >新增</el-button
+        >
+        <el-button
+          v-permission="['system:permission:delete']"
+          type="danger"
+          :disabled="selectedIds.length === 0"
+          @click="handleBatchDelete"
+        >
           批量删除(已选{{ selectedIds.length }}项)
         </el-button>
       </template>
@@ -57,7 +64,15 @@
 
       <!-- 操作 -->
       <template #operation="{ row }">
-        <el-button v-permission="['system:permission:edit']" type="primary" size="small" link :icon="Edit" @click="handleEdit(row)">编辑</el-button>
+        <el-button
+          v-permission="['system:permission:edit']"
+          type="primary"
+          size="small"
+          link
+          :icon="Edit"
+          @click="handleEdit(row)"
+          >编辑</el-button
+        >
         <ConfirmButton
           v-permission="['system:permission:delete']"
           type="danger"
@@ -147,14 +162,34 @@ defineOptions({
 const formRef = ref(null)
 
 const {
-  tableData, loading, total, queryParams, page, limit,
-  getData, handlePageChange, handleSizeChange, handleRefresh,
-  form, dialogVisible, submitLoading, selectedIds,
-  handleAdd, handleEdit, handleSubmit, handleDelete,
-  handleSelectionChange, handleBatchDelete,
+  tableData,
+  loading,
+  total,
+  queryParams,
+  page,
+  limit,
+  getData,
+  handlePageChange,
+  handleSizeChange,
+  handleRefresh,
+  form,
+  dialogVisible,
+  submitLoading,
+  selectedIds,
+  handleAdd,
+  handleEdit,
+  handleSubmit,
+  handleDelete,
+  handleSelectionChange,
+  handleBatchDelete,
 } = useCrud(
   getPermissionListAPI,
-  { create: createPermissionAPI, update: updatePermissionAPI, delete: deletePermissionAPI, batchDelete: batchDeletePermissionsAPI },
+  {
+    create: createPermissionAPI,
+    update: updatePermissionAPI,
+    delete: deletePermissionAPI,
+    batchDelete: batchDeletePermissionsAPI,
+  },
   {
     nameField: 'permissionName',
     formDefaults: { permissionName: '', permissionCode: '', resourceId: '', actionType: '', status: 1, remark: '' },
