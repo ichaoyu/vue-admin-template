@@ -1,5 +1,5 @@
 <template>
-  <div class="notification-container">
+  <div class="page-container">
     <!-- #region 表格 -->
     <pro-table
       :data="tableData"
@@ -91,13 +91,3 @@ const handleMarkRead = async (row) => {
 
 // #endregion
 </script>
-
-<style scoped>
-.notification-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-}
-</style>

@@ -67,6 +67,7 @@ const loadStats = async () => {
     }
   } catch (error) {
     // 错误由 axios 拦截器处理，保留默认值 0
+    console.error('[API Error]', error)
   }
 }
 

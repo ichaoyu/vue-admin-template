@@ -1,5 +1,5 @@
 <template>
-  <div class="site-container">
+  <div class="page-container">
     <!-- #region 表格 -->
     <pro-table
       ref="tableRef"
@@ -150,6 +150,7 @@ const getData = async () => {
     total.value = res?.total || 0
   } catch (error) {
     // 错误由 axios 拦截器处理
+    console.error('[API Error]', error)
   } finally {
     loading.value = false
   }
@@ -214,7 +215,8 @@ const handleSubmit = async () => {
       dialogVisible.value = false
       getData()
     } catch (error) {
-      console.error('提交失败:', error)
+      // 错误由 axios 拦截器处理
+      console.error('[API Error]', error)
     } finally {
       submitLoading.value = false
     }
@@ -237,40 +239,48 @@ const resetForm = () => {
 
 // #region 删除
 
-const handleDelete = (row) => {
-  ElMessageBox.confirm(`确认要删除站点"${row.name}"吗？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(async () => {
+const handleDelete = async (row) => {
+  try {
+    await ElMessageBox.confirm(`确认要删除站点"${row.name}"吗？`, '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
     try {
       await deleteSiteAPI(row.id)
       ElMessage.success('删除成功')
       getData()
     } catch (error) {
-      console.error('删除失败:', error)
+      // 错误由 axios 拦截器处理
+      console.error('[API Error]', error)
     }
-  })
+  } catch {
+    // user cancelled
+  }
 }
 
-const handleBatchDelete = () => {
+const handleBatchDelete = async () => {
   if (selectedIds.value.length === 0) {
     ElMessage.warning('请选择要删除的站点信息')
     return
   }
-  ElMessageBox.confirm(`确认要删除选中的 ${selectedIds.value.length} 条站点信息吗？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(async () => {
+  try {
+    await ElMessageBox.confirm(`确认要删除选中的 ${selectedIds.value.length} 条站点信息吗？`, '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
     try {
       await batchDeleteSitesAPI(selectedIds.value)
       ElMessage.success('删除成功')
       getData()
     } catch (error) {
-      console.error('批量删除失败:', error)
+      // 错误由 axios 拦截器处理
+      console.error('[API Error]', error)
     }
-  })
+  } catch {
+    // user cancelled
+  }
 }
 
 // #endregion
@@ -283,13 +293,3 @@ onMounted(() => {
 
 // #endregion
 </script>
-
-<style scoped>
-.site-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-}
-</style>

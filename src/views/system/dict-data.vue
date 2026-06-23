@@ -1,5 +1,5 @@
 <template>
-  <div class="dict-data-container">
+  <div class="page-container">
     <!-- #region 表格 -->
     <pro-table
       ref="tableRef"
@@ -212,13 +212,3 @@ const onSubmit = () => {
 
 // #endregion
 </script>
-
-<style scoped>
-.dict-data-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-}
-</style>

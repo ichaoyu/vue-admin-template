@@ -200,6 +200,7 @@ const loadFileList = async () => {
     total.value = res?.total || 0
   } catch (error) {
     // 错误由 axios 拦截器处理
+    console.error('[API Error]', error)
   } finally {
     loading.value = false
   }
@@ -232,23 +233,28 @@ const handleView = async (row) => {
     detailVisible.value = true
   } catch (error) {
     // 错误由 axios 拦截器处理
+    console.error('[API Error]', error)
   }
 }
 
-const handleDelete = (row) => {
-  ElMessageBox.confirm(`确认要删除文件"${row.originalName}"吗？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(async () => {
+const handleDelete = async (row) => {
+  try {
+    await ElMessageBox.confirm(`确认要删除文件"${row.originalName}"吗？`, '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
     try {
       await deleteFileAPI(row.id)
       ElMessage.success('删除成功')
       loadFileList()
     } catch (error) {
       // 错误由 axios 拦截器处理
+      console.error('[API Error]', error)
     }
-  })
+  } catch {
+    // user cancelled
+  }
 }
 
 // #endregion

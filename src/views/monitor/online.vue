@@ -1,5 +1,5 @@
 <template>
-  <div class="online-container">
+  <div class="page-container">
     <!-- #region 表格 -->
     <pro-table
       :data="tableData"
@@ -80,27 +80,20 @@ const columns = [
 
 // #region 强制下线
 
-const handleForceLogout = (row) => {
-  ElMessageBox.confirm(`确认要强制下线用户"${row.userName}"吗？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(async () => {
+const handleForceLogout = async (row) => {
+  try {
+    await ElMessageBox.confirm(`确认要强制下线用户"${row.userName}"吗？`, '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
     await forceLogoutAPI(row.id)
     ElMessage.success('强制下线成功')
     getData()
-  })
+  } catch {
+    // user cancelled
+  }
 }
 
 // #endregion
 </script>
-
-<style scoped>
-.online-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-}
-</style>

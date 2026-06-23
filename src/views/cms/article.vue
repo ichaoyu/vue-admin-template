@@ -1,5 +1,5 @@
 <template>
-  <div class="article-container">
+  <div class="page-container">
     <!-- #region 表格 -->
     <pro-table
       ref="tableRef"
@@ -127,10 +127,11 @@ import {
   deleteArticleAPI,
   batchDeleteArticlesAPI,
 } from '@/api/cms/article'
+import { defineAsyncComponent } from 'vue'
 import { getAllCategoriesAPI } from '@/api/cms/category'
 import { getAllTagsAPI } from '@/api/cms/tag'
 import { formatDateTime } from '@/utils/date'
-import RichTextEditor from '@/components/RichTextEditor/index.vue'
+const RichTextEditor = defineAsyncComponent(() => import('@/components/RichTextEditor/index.vue'))
 import ProTable from '@/components/Table/index.vue'
 
 defineOptions({
@@ -221,6 +222,7 @@ const loadCategoryList = async () => {
     categoryList.value = Array.isArray(res) ? res : res?.list || []
   } catch (error) {
     // 错误由 axios 拦截器统一处理
+    console.error('[API Error]', error)
   }
 }
 
@@ -230,6 +232,7 @@ const loadTagList = async () => {
     tagList.value = Array.isArray(res) ? res : res?.list || []
   } catch (error) {
     // 错误由 axios 拦截器统一处理
+    console.error('[API Error]', error)
   }
 }
 
@@ -257,14 +260,6 @@ const onSubmit = () => {
 </script>
 
 <style scoped>
-.article-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-}
-
 :deep(.el-drawer__body) {
   overflow-y: auto;
   padding: 20px;

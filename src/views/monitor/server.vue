@@ -185,6 +185,7 @@ const getData = async () => {
     serverInfo.redis = res?.redis || {}
   } catch (error) {
     // 错误由 axios 拦截器处理
+    console.error('[API Error]', error)
   } finally {
     loading.value = false
   }

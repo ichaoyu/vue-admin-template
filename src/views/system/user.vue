@@ -1,5 +1,5 @@
 <template>
-  <div class="user-container">
+  <div class="page-container">
     <!-- #region 表格 -->
     <pro-table
       ref="tableRef"
@@ -298,18 +298,20 @@ const postList = ref([])
 const loadRoleList = async () => {
   try {
     const res = await getRoleListAPI()
-    roleList.value = res?.list || res?.data || res || []
+    roleList.value = Array.isArray(res) ? res : res?.list || []
   } catch (error) {
     // 错误由 axios 拦截器处理
+    console.error('[API Error]', error)
   }
 }
 
 const loadPostList = async () => {
   try {
     const res = await getPostListAPI()
-    postList.value = res?.list || res?.data || res || []
+    postList.value = Array.isArray(res) ? res : res?.list || []
   } catch (error) {
     // 错误由 axios 拦截器处理
+    console.error('[API Error]', error)
   }
 }
 
@@ -350,6 +352,7 @@ const handleResetPasswordSubmit = async () => {
     resetPasswordVisible.value = false
   } catch (error) {
     // 错误由 axios 拦截器处理
+    console.error('[API Error]', error)
   } finally {
     resetLoading.value = false
   }
@@ -367,19 +370,10 @@ const handleForceOffline = async (row) => {
   } catch (error) {
     if (error !== 'cancel') {
       // 错误由 axios 拦截器处理
+      console.error('[API Error]', error)
     }
   }
 }
 
 // #endregion
 </script>
-
-<style scoped>
-.user-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-}
-</style>

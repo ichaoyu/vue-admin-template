@@ -91,7 +91,17 @@ const router = createRouter({
 
 let isRoutesAdded = false
 
+/** 记录动态添加的路由名称，用于登出时清除 */
+const dynamicRouteNames = []
+
 export const resetRouter = () => {
+  // 清除所有动态添加的路由
+  dynamicRouteNames.forEach((name) => {
+    if (router.hasRoute(name)) {
+      router.removeRoute(name)
+    }
+  })
+  dynamicRouteNames.length = 0
   isRoutesAdded = false
 }
 
@@ -109,13 +119,28 @@ export const addDynamicRoutes = (routes) => {
   // 先添加动态路由
   routes.forEach((route) => {
     router.addRoute(route)
+    // 记录路由名称（用于后续清除）
+    if (route.name) {
+      dynamicRouteNames.push(route.name)
+    }
+    // 子路由也需要记录
+    if (route.children) {
+      route.children.forEach((child) => {
+        if (child.name) {
+          dynamicRouteNames.push(child.name)
+        }
+      })
+    }
   })
 
   // 最后添加 404 路由作为兜底
+  const catchAllName = '__catch_all_404__'
   router.addRoute({
+    name: catchAllName,
     path: '/:pathMatch(.*)*',
     redirect: '/404',
   })
+  dynamicRouteNames.push(catchAllName)
 
   isRoutesAdded = true
 }

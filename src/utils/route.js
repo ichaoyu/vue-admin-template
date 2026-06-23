@@ -2,7 +2,7 @@ import Layout from '@/layout/index.vue'
 
 // #region 模块导入映射
 
-const modules = import.meta.glob('../views/**/*.vue')
+const modules = import.meta.glob('../views/**/*.vue', { eager: false })
 
 const loadView = (component) => {
   if (!component) return null
@@ -16,7 +16,7 @@ const loadView = (component) => {
   // 1. 精确匹配：system/user -> ../views/system/user.vue
   const fullPath = `../views/${component}.vue`
   if (modules[fullPath]) {
-    return modules[fullPath]
+    return modules[fullPath] // 返回 lazy import 函数 () => import(...)
   }
 
   // 2. 兜底：查找以 component 任意段落结尾的文件

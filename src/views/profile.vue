@@ -216,6 +216,7 @@ const loadProfile = async () => {
     })
   } catch (error) {
     // 错误由 axios 拦截器处理
+    console.error('[API Error]', error)
   }
 }
 
@@ -260,6 +261,7 @@ const handleSaveBase = async () => {
       userStore.setUserInfo({ ...userStore.userInfo, nickName: baseForm.nickName })
     } catch (error) {
       // 错误由 axios 拦截器处理
+      console.error('[API Error]', error)
     } finally {
       submitBaseLoading.value = false
     }
@@ -302,6 +304,7 @@ const handleUpdatePassword = async () => {
       resetPwdForm()
     } catch (error) {
       // 错误由 axios 拦截器处理
+      console.error('[API Error]', error)
     } finally {
       submitPwdLoading.value = false
     }

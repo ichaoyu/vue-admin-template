@@ -1,5 +1,5 @@
 <template>
-  <div class="data-permission-container">
+  <div class="page-container">
     <!-- #region 表格 -->
     <pro-table
       :data="tableData"
@@ -246,6 +246,7 @@ const loadDeptTree = async () => {
     deptTree.value = res || []
   } catch (error) {
     // 错误由 axios 拦截器处理
+    console.error('[API Error]', error)
   }
 }
 
@@ -282,13 +283,3 @@ watch(
 
 // #endregion
 </script>
-
-<style scoped>
-.data-permission-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-}
-</style>

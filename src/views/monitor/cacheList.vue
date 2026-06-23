@@ -1,5 +1,5 @@
 <template>
-  <div class="cache-list-container">
+  <div class="page-container">
     <!-- #region 顶部：Redis统计信息 -->
     <div class="stats-bar" v-loading="statsLoading">
       <div class="stat-item">
@@ -344,7 +344,7 @@ const loadStats = async () => {
   statsLoading.value = true
   try {
     const res = await getCacheStatsAPI()
-    cacheStats.value = res?.data || res || {}
+    cacheStats.value = res || {}
   } catch (error) {
     cacheStats.value = {}
   } finally {
@@ -360,7 +360,7 @@ const loadGroups = async () => {
   loading.value = true
   try {
     const res = await getCacheGroupsAPI()
-    cacheGroups.value = res?.data?.list || res?.list || []
+    cacheGroups.value = res?.list || []
   } catch (error) {
     cacheGroups.value = []
   } finally {
@@ -394,8 +394,8 @@ const handleGroupClick = async (row) => {
   try {
     const params = { page: pagination.page, pageSize: pagination.pageSize, keyword: keyword.value }
     const res = await getCacheKeysByGroupAPI(row.key, params)
-    currentGroupKeys.value = res?.data?.list || res?.list || []
-    keyListTotal.value = res?.data?.total || res?.total || 0
+    currentGroupKeys.value = res?.list || []
+    keyListTotal.value = res?.total || 0
   } catch (error) {
     currentGroupKeys.value = []
   } finally {
@@ -442,6 +442,7 @@ const handleClearAllCache = async () => {
     }
   } catch (error) {
     // 错误由 axios 拦截器处理
+    console.error('[API Error]', error)
   } finally {
     loading.value = false
   }
@@ -464,6 +465,7 @@ const handleResetStats = async () => {
     loadStats()
   } catch (error) {
     // 错误由 axios 拦截器处理
+    console.error('[API Error]', error)
   }
 }
 
@@ -486,7 +488,7 @@ const handleKeyClick = async (row) => {
   try {
     loading.value = true
     const res = await getCacheDetailAPI(row.key)
-    const detailDataRes = res?.data || res || {}
+    const detailDataRes = res || {}
     detailData.value = {
       key: detailDataRes.key || row.key,
       cacheName: row.cacheName,
@@ -511,59 +513,62 @@ const handleKeyClick = async (row) => {
 
 // #region 删除操作
 
-const handleClearGroup = (row) => {
-  ElMessageBox.confirm(`确认要清空"${row.name}"分组的所有缓存吗？`, '警告', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  })
-    .then(async () => {
-      try {
-        await clearCacheByGroupAPI(row.key)
-        ElMessage.success(`已清空 ${row.count} 条缓存`)
-        handleRefreshGroups()
-      } catch (error) {
-        ElMessage.error('清空分组失败')
-      }
+const handleClearGroup = async (row) => {
+  try {
+    await ElMessageBox.confirm(`确认要清空"${row.name}"分组的所有缓存吗？`, '警告', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
     })
-    .catch(() => {})
+    try {
+      await clearCacheByGroupAPI(row.key)
+      ElMessage.success(`已清空 ${row.count} 条缓存`)
+      handleRefreshGroups()
+    } catch (error) {
+      ElMessage.error('清空分组失败')
+    }
+  } catch {
+    // user cancelled
+  }
 }
 
-const handleDeleteKey = (row) => {
+const handleDeleteKey = async (row) => {
   const displayName = row.cacheName || row.key
-  ElMessageBox.confirm(`确认要删除缓存"${displayName}"吗？`, '警告', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  })
-    .then(async () => {
-      try {
-        await deleteCacheAPI(row.key)
-        ElMessage.success('删除成功')
-        handleRefreshKeys()
-      } catch (error) {
-        ElMessage.error('删除失败')
-      }
+  try {
+    await ElMessageBox.confirm(`确认要删除缓存"${displayName}"吗？`, '警告', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
     })
-    .catch(() => {})
+    try {
+      await deleteCacheAPI(row.key)
+      ElMessage.success('删除成功')
+      handleRefreshKeys()
+    } catch (error) {
+      ElMessage.error('删除失败')
+    }
+  } catch {
+    // user cancelled
+  }
 }
 
-const handleClearAll = () => {
-  ElMessageBox.confirm('确认要清空所有缓存吗？此操作不可恢复！', '严重警告', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'error',
-  })
-    .then(async () => {
-      try {
-        const res = await clearCacheAPI()
-        ElMessage.success(`已清空所有缓存，共 ${res?.data?.count || res?.count || 0} 条`)
-        handleRefreshGroups()
-      } catch (error) {
-        ElMessage.error('清空失败')
-      }
+const handleClearAll = async () => {
+  try {
+    await ElMessageBox.confirm('确认要清空所有缓存吗？此操作不可恢复！', '严重警告', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'error',
     })
-    .catch(() => {})
+    try {
+      const res = await clearCacheAPI()
+      ElMessage.success(`已清空所有缓存，共 ${res?.count || 0} 条`)
+      handleRefreshGroups()
+    } catch (error) {
+      ElMessage.error('清空失败')
+    }
+  } catch {
+    // user cancelled
+  }
 }
 
 // #endregion
@@ -579,12 +584,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.cache-list-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 16px;
-  box-sizing: border-box;
+.page-container {
   gap: 12px;
 }
 

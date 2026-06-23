@@ -80,6 +80,7 @@ const refreshCaptcha = async () => {
     loginForm.captchaId = data.id
   } catch (error) {
     // 错误由 axios 拦截器处理
+    console.error('[API Error]', error)
   }
 }
 

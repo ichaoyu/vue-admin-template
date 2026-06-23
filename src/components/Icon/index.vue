@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import { getCurrentInstance } from 'vue'
 import './iconfont/iconfont.css'
 
 const props = defineProps({
@@ -24,13 +24,19 @@ const props = defineProps({
   },
 })
 
+// 使用全局注册的图标组件，避免全量 import
+const app = getCurrentInstance()?.appContext.app
+
 const isElementIcon = computed(() => {
-  return props.name.startsWith('el-') || ElementPlusIconsVue[props.name]
+  if (props.name.startsWith('el-')) return true
+  // 检查全局组件注册表中是否存在该图标
+  return !!app?.component(props.name)
 })
 
 const iconComponent = computed(() => {
   const iconName = props.name.startsWith('el-') ? props.name.substring(3) : props.name
-  return ElementPlusIconsVue[iconName] || null
+  // 从全局注册表获取图标组件
+  return app?.component(iconName) || null
 })
 
 const iconClass = computed(() => {

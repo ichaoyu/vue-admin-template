@@ -1,5 +1,5 @@
 <template>
-  <div class="category-container">
+  <div class="page-container">
     <!-- #region 表格 -->
     <pro-table
       ref="tableRef"
@@ -179,13 +179,3 @@ const onSubmit = () => {
 
 // #endregion
 </script>
-
-<style scoped>
-.category-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-}
-</style>

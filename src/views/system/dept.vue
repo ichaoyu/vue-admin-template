@@ -1,5 +1,5 @@
 <template>
-  <div class="dept-container">
+  <div class="page-container">
     <!-- #region 表格 -->
     <pro-table
       ref="tableRef"
@@ -241,6 +241,7 @@ const onSubmit = async () => {
     getData()
   } catch (error) {
     // 错误由 axios 拦截器处理
+    console.error('[API Error]', error)
   } finally {
     submitLoading.value = false
   }
@@ -250,24 +251,28 @@ const onSubmit = async () => {
 
 // #region 删除
 
-const handleDelete = (row) => {
+const handleDelete = async (row) => {
   if (row.children && row.children.length > 0) {
     ElMessage.warning('存在子部门，不能删除')
     return
   }
-  ElMessageBox.confirm(`确认要删除部门"${row.deptName}"吗？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(async () => {
+  try {
+    await ElMessageBox.confirm(`确认要删除部门"${row.deptName}"吗？`, '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
     try {
       await deleteDeptAPI(row.id)
       ElMessage.success('删除成功')
       getData()
     } catch (error) {
       // 错误由 axios 拦截器处理
+      console.error('[API Error]', error)
     }
-  })
+  } catch {
+    // user cancelled
+  }
 }
 
 // #endregion
@@ -299,13 +304,3 @@ const toggleExpand = () => {
 
 // #endregion
 </script>
-
-<style scoped>
-.dept-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-}
-</style>

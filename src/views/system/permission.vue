@@ -1,5 +1,5 @@
 <template>
-  <div class="permission-container">
+  <div class="page-container">
     <!-- #region 表格 -->
     <pro-table
       :data="tableData"
@@ -228,14 +228,6 @@ const onSubmit = () => {
 </script>
 
 <style scoped>
-.permission-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-}
-
 .form-tip {
   display: flex;
   align-items: center;

@@ -55,6 +55,7 @@
         height="100%"
         v-bind="$attrs"
         @sort-change="handleSortChange"
+        @selection-change="handleSelectionChange"
       >
         <template v-for="(col, index) in visibleColumns" :key="col.prop || index">
           <el-table-column v-if="col.type" v-bind="col" />
@@ -172,7 +173,7 @@ const props = defineProps({
 
 // #region Emits 定义
 
-const emit = defineEmits(['update:page', 'update:limit', 'page-change', 'size-change', 'refresh', 'sort-change'])
+const emit = defineEmits(['update:page', 'update:limit', 'page-change', 'size-change', 'refresh', 'sort-change', 'selection-change'])
 
 // #endregion
 
@@ -218,8 +219,8 @@ const handleSizeChange = (size) => {
   tableSize.value = size
 }
 
-const handlePageChange = (page) => {
-  emit('page-change', page)
+const handlePageChange = () => {
+  // v-model:current-page 已通过 update:page 事件同步状态
 }
 
 const handlePageSizeChange = (size) => {
@@ -228,6 +229,10 @@ const handlePageSizeChange = (size) => {
 
 const handleSortChange = (column, prop, order) => {
   emit('sort-change', column, prop, order)
+}
+
+const handleSelectionChange = (selection) => {
+  emit('selection-change', selection)
 }
 
 // #endregion

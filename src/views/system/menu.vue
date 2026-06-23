@@ -1,5 +1,5 @@
 <template>
-  <div class="menu-container">
+  <div class="page-container">
     <!-- #region 表格 -->
     <pro-table
       ref="tableRef"
@@ -335,6 +335,7 @@ const onSubmit = async () => {
     getData()
   } catch (error) {
     // 错误由 axios 拦截器处理
+    console.error('[API Error]', error)
   } finally {
     submitLoading.value = false
   }
@@ -344,20 +345,24 @@ const onSubmit = async () => {
 
 // #region 删除
 
-const handleDelete = (row) => {
-  ElMessageBox.confirm(`确认要删除菜单"${row.menuName}"吗？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(async () => {
+const handleDelete = async (row) => {
+  try {
+    await ElMessageBox.confirm(`确认要删除菜单"${row.menuName}"吗？`, '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
     try {
       await deleteMenuAPI(row.id)
       ElMessage.success('删除成功')
       getData()
     } catch (error) {
       // 错误由 axios 拦截器处理
+      console.error('[API Error]', error)
     }
-  })
+  } catch {
+    // user cancelled
+  }
 }
 
 // #endregion
@@ -373,14 +378,6 @@ const toggleExpand = () => {
 </script>
 
 <style scoped>
-.menu-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-}
-
 .menu-icon {
   margin-right: 8px;
   vertical-align: middle;

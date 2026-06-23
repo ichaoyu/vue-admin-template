@@ -147,6 +147,7 @@ const loadBasicSettings = () => {
     }
   } catch (e) {
     // 使用默认值
+    console.error('[Settings Error]', e)
   }
 }
 

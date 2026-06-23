@@ -72,6 +72,10 @@ export default defineConfig({
           if (id.includes('node_modules/element-plus/') || id.includes('node_modules/@element-plus/')) {
             return 'elementPlus'
           }
+          // wangeditor 仅在文章编辑器使用，拆分为独立 chunk
+          if (id.includes('node_modules/@wangeditor/')) {
+            return 'wangeditor'
+          }
         },
       },
     },

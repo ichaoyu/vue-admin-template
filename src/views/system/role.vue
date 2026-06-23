@@ -1,5 +1,5 @@
 <template>
-  <div class="role-container">
+  <div class="page-container">
     <!-- #region 表格 -->
     <pro-table
       ref="tableRef"
@@ -413,6 +413,7 @@ const onEdit = async (row) => {
     }
   } catch (error) {
     // 错误由 axios 拦截器处理
+    console.error('[API Error]', error)
   } finally {
     submitLoading.value = false
   }
@@ -435,14 +436,6 @@ const handleDialogClosed = () => {
 </script>
 
 <style scoped>
-.role-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-}
-
 .form-tip {
   display: flex;
   align-items: center;

@@ -1,5 +1,5 @@
 <template>
-  <div class="message-container">
+  <div class="page-container">
     <!-- #region 表格 -->
     <pro-table
       ref="tableRef"
@@ -96,6 +96,7 @@ const handleDelete = async (row) => {
   } catch (error) {
     if (error !== 'cancel') {
       // 错误由 axios 拦截器统一处理
+      console.error('[API Error]', error)
     }
   }
 }
@@ -119,6 +120,7 @@ const handleBatchDelete = async () => {
   } catch (error) {
     if (error !== 'cancel') {
       // 错误由 axios 拦截器统一处理
+      console.error('[API Error]', error)
     }
   }
 }
@@ -129,13 +131,3 @@ const handleSelectionChange = (selection) => {
 
 // #endregion
 </script>
-
-<style scoped>
-.message-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-}
-</style>

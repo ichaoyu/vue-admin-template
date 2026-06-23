@@ -1,5 +1,5 @@
 <template>
-  <div class="oper-log-container">
+  <div class="page-container">
     <!-- #region 表格 -->
     <pro-table
       :data="tableData"
@@ -100,52 +100,51 @@ const handleSelectionChange = (selection) => {
 
 // #region 删除
 
-const handleDelete = (row) => {
-  ElMessageBox.confirm('确认要删除该操作日志吗？', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(async () => {
+const handleDelete = async (row) => {
+  try {
+    await ElMessageBox.confirm('确认要删除该操作日志吗？', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
     await deleteOperLogAPI(row.id)
     ElMessage.success('删除成功')
     getData()
-  })
+  } catch {
+    // user cancelled
+  }
 }
 
-const handleBatchDelete = () => {
+const handleBatchDelete = async () => {
   if (selectedIds.value.length === 0) return
-  ElMessageBox.confirm(`确认要删除选中的 ${selectedIds.value.length} 条操作日志吗？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(async () => {
+  try {
+    await ElMessageBox.confirm(`确认要删除选中的 ${selectedIds.value.length} 条操作日志吗？`, '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
     await batchDeleteOperLogsAPI(selectedIds.value)
     ElMessage.success('删除成功')
     getData()
-  })
+  } catch {
+    // user cancelled
+  }
 }
 
-const handleClear = () => {
-  ElMessageBox.confirm('确认要清空所有操作日志吗？', '警告', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(async () => {
+const handleClear = async () => {
+  try {
+    await ElMessageBox.confirm('确认要清空所有操作日志吗？', '警告', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
     await clearOperLogAPI()
     ElMessage.success('清空成功')
     getData()
-  })
+  } catch {
+    // user cancelled
+  }
 }
 
 // #endregion
 </script>
-
-<style scoped>
-.oper-log-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-}
-</style>
