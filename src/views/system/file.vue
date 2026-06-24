@@ -20,7 +20,7 @@
         <el-icon class="el-icon--upload"><upload-filled /></el-icon>
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         <template #tip>
-          <div class="el-upload__tip">支持上传任意类型文件，单个文件大小不超过 50MB</div>
+          <div class="el-upload__tip">支持上传图片、文档、压缩包、音视频文件，单个文件大小不超过 10MB</div>
         </template>
       </el-upload>
     </el-card>
@@ -165,23 +165,33 @@ const uploadHeaders = computed(() => {
 // #region 上传相关
 
 const beforeUpload = (file) => {
-  const isLt50M = file.size / 1024 / 1024 < 50
-  if (!isLt50M) {
-    ElMessage.error('文件大小不能超过 50MB!')
+  const isLt10M = file.size / 1024 / 1024 < 10
+  if (!isLt10M) {
+    ElMessage.error('文件大小不能超过 10MB!')
     return false
   }
   return true
 }
 
 const handleUploadSuccess = (response) => {
-  if (response) {
+  if (response && response.code === 200) {
     ElMessage.success('上传成功')
     loadFileList()
+  } else {
+    ElMessage.error(response?.message || '上传失败')
   }
 }
 
-const handleUploadError = () => {
-  ElMessage.error('上传失败')
+const handleUploadError = (error) => {
+  // el-upload error 对象可能是 Error 或包含响应的对象
+  let message = '上传失败'
+  try {
+    const parsed = typeof error === 'string' ? JSON.parse(error) : error
+    message = parsed?.message || message
+  } catch {
+    // 无法解析，使用默认消息
+  }
+  ElMessage.error(message)
 }
 
 // #endregion
@@ -200,7 +210,6 @@ const loadFileList = async () => {
     total.value = res?.total || 0
   } catch (error) {
     // 错误由 axios 拦截器处理
-    console.error('[API Error]', error)
   } finally {
     loading.value = false
   }
@@ -233,7 +242,6 @@ const handleView = async (row) => {
     detailVisible.value = true
   } catch (error) {
     // 错误由 axios 拦截器处理
-    console.error('[API Error]', error)
   }
 }
 
