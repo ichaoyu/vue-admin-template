@@ -102,6 +102,7 @@ const relativeTime = computed(() => {
   100% {
     box-shadow: 0 0 0 2px var(--el-color-primary-light-7, #c6e2ff);
   }
+
   50% {
     box-shadow: 0 0 0 4px var(--el-color-primary-light-8, #d9ecff);
   }

@@ -84,6 +84,7 @@ const handleViewAll = () => {
   100% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.08);
   }

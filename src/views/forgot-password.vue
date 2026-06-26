@@ -15,21 +15,11 @@
         class="forgot-password-form"
       >
         <el-form-item prop="email">
-          <el-input
-            v-model="emailForm.email"
-            placeholder="请输入邮箱地址"
-            prefix-icon="Message"
-            size="large"
-          />
+          <el-input v-model="emailForm.email" placeholder="请输入邮箱地址" prefix-icon="Message" size="large" />
         </el-form-item>
         <el-form-item prop="captchaValue">
           <div class="captcha-row">
-            <el-input
-              v-model="emailForm.captchaValue"
-              placeholder="请输入验证码"
-              prefix-icon="Key"
-              size="large"
-            />
+            <el-input v-model="emailForm.captchaValue" placeholder="请输入验证码" prefix-icon="Key" size="large" />
             <div class="captcha-image" @click="refreshCaptcha">
               <img v-if="captchaImage" :src="captchaImage" alt="验证码" />
               <el-icon v-else class="captcha-loading"><Loading /></el-icon>
@@ -37,13 +27,7 @@
           </div>
         </el-form-item>
         <el-form-item>
-          <el-button
-            type="primary"
-            size="large"
-            :loading="loading"
-            class="submit-btn"
-            @click="handleSendCode"
-          >
+          <el-button type="primary" size="large" :loading="loading" class="submit-btn" @click="handleSendCode">
             发送验证码
           </el-button>
         </el-form-item>
@@ -61,12 +45,7 @@
         class="forgot-password-form"
       >
         <el-form-item>
-          <el-input
-            v-model="resetForm.email"
-            disabled
-            prefix-icon="Message"
-            size="large"
-          />
+          <el-input v-model="resetForm.email" disabled prefix-icon="Message" size="large" />
         </el-form-item>
         <el-form-item prop="code">
           <el-input
@@ -102,13 +81,7 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button
-            type="primary"
-            size="large"
-            :loading="loading"
-            class="submit-btn"
-            @click="handleResetPassword"
-          >
+          <el-button type="primary" size="large" :loading="loading" class="submit-btn" @click="handleResetPassword">
             重置密码
           </el-button>
         </el-form-item>
@@ -123,9 +96,7 @@
         <h3>密码重置成功！</h3>
         <p>您的新密码已设置成功，请使用新密码登录</p>
         <p class="countdown-text">{{ countdown }}秒后自动跳转到登录页...</p>
-        <el-button type="primary" size="large" class="submit-btn" @click="goToLogin">
-          立即登录
-        </el-button>
+        <el-button type="primary" size="large" class="submit-btn" @click="goToLogin"> 立即登录 </el-button>
       </div>
     </div>
   </div>

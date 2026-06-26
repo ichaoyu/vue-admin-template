@@ -42,9 +42,7 @@
         </el-form-item>
         <el-form-item>
           <div class="login-footer">
-            <router-link to="/forgot-password" class="forgot-link">
-              忘记密码？
-            </router-link>
+            <router-link to="/forgot-password" class="forgot-link"> 忘记密码？ </router-link>
           </div>
         </el-form-item>
       </el-form>

@@ -173,7 +173,15 @@ const props = defineProps({
 
 // #region Emits 定义
 
-const emit = defineEmits(['update:page', 'update:limit', 'page-change', 'size-change', 'refresh', 'sort-change', 'selection-change'])
+const emit = defineEmits([
+  'update:page',
+  'update:limit',
+  'page-change',
+  'size-change',
+  'refresh',
+  'sort-change',
+  'selection-change',
+])
 
 // #endregion
 
@@ -219,8 +227,8 @@ const handleSizeChange = (size) => {
   tableSize.value = size
 }
 
-const handlePageChange = () => {
-  // v-model:current-page 已通过 update:page 事件同步状态
+const handlePageChange = (val) => {
+  emit('page-change', val)
 }
 
 const handlePageSizeChange = (size) => {

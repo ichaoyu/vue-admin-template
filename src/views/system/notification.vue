@@ -45,13 +45,7 @@
 
       <!-- 操作 -->
       <template #operation="{ row }">
-        <el-button
-          v-if="row.isRead === 0"
-          type="success"
-          size="small"
-          link
-          :icon="Check"
-          @click="handleMarkRead(row)"
+        <el-button v-if="row.isRead === 0" type="success" size="small" link :icon="Check" @click="handleMarkRead(row)"
           >标记已读</el-button
         >
         <el-button
@@ -99,12 +93,7 @@
           </el-select>
         </el-form-item>
         <el-form-item v-if="form.targetType === 'user'" label="目标用户ID:" prop="targetIds">
-          <el-input
-            v-model="form.targetIds"
-            type="textarea"
-            placeholder="请输入用户ID，多个用逗号分隔"
-            :rows="2"
-          />
+          <el-input v-model="form.targetIds" type="textarea" placeholder="请输入用户ID，多个用逗号分隔" :rows="2" />
         </el-form-item>
       </el-form>
     </pro-dialog>
@@ -185,7 +174,7 @@ const {
       }
       return formData
     },
-  },
+  }
 )
 
 const rules = {
