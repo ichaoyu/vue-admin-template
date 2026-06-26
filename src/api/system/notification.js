@@ -15,7 +15,18 @@ import api from '@/utils/axios'
 export const sendNotificationAPI = (data) => api.post('/notification', data)
 
 /**
- * 查询通知列表
+ * 管理端查询通知列表
+ * @param {Object} params - 查询参数
+ * @param {number} params.page - 页码
+ * @param {number} params.pageSize - 每页数量
+ * @param {string} params.type - 通知类型
+ * @param {string} params.title - 标题
+ * @returns {Promise<Object>} 返回通知列表 { list, total, page, pageSize }
+ */
+export const getNotificationManageListAPI = (params) => api.get('/notification/manage/list', { params })
+
+/**
+ * 查询当前用户通知列表
  * @param {Object} params - 查询参数
  * @param {number} params.page - 页码
  * @param {number} params.pageSize - 每页数量

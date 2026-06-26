@@ -6,7 +6,7 @@ import { generateRoutes, filterVisibleMenus, getCachedRoutes } from '@/utils/rou
 
 // #region 白名单路由
 
-const whiteList = ['/login', '/404', '/500']
+const whiteList = ['/login', '/forgot-password', '/404', '/500']
 
 // #endregion
 

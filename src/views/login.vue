@@ -40,6 +40,13 @@
             登 录
           </el-button>
         </el-form-item>
+        <el-form-item>
+          <div class="login-footer">
+            <router-link to="/forgot-password" class="forgot-link">
+              忘记密码？
+            </router-link>
+          </div>
+        </el-form-item>
       </el-form>
     </div>
   </div>
@@ -196,5 +203,20 @@ onMounted(() => {
 
 .login-btn {
   width: 100%;
+}
+
+.login-footer {
+  width: 100%;
+  text-align: center;
+}
+
+.forgot-link {
+  color: #409eff;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
 }
 </style>

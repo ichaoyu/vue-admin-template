@@ -72,3 +72,28 @@ export const resetUserPasswordAPI = (userId) => api.patch('/auth/reset-password'
 export const forceUserOfflineAPI = (userId) => api.post('/auth/force-offline', { userId })
 
 // #endregion
+
+// #region 密码找回
+
+/**
+ * 发送密码重置验证码
+ * @param {Object} data - 发送验证码请求
+ * @param {string} data.email - 邮箱地址
+ * @param {string} data.captchaId - 图形验证码ID
+ * @param {string} data.captchaValue - 图形验证码值
+ * @returns {Promise<{message: string}>}
+ */
+export const sendResetCodeAPI = (data) => api.post('/auth/forgot-password/send-code', data)
+
+/**
+ * 通过验证码重置密码
+ * @param {Object} data - 重置密码请求
+ * @param {string} data.email - 邮箱地址
+ * @param {string} data.code - 6位验证码
+ * @param {string} data.newPassword - 新密码
+ * @param {string} data.confirmPassword - 确认密码
+ * @returns {Promise<{message: string}>}
+ */
+export const resetPasswordAPI = (data) => api.post('/auth/forgot-password/reset', data)
+
+// #endregion

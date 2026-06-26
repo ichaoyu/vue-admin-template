@@ -17,6 +17,14 @@ export const constantRoutes = [
     },
   },
   {
+    path: '/forgot-password',
+    name: 'ForgotPassword',
+    component: () => import('@/views/forgot-password.vue'),
+    meta: {
+      title: '密码找回',
+    },
+  },
+  {
     path: '/404',
     name: '404',
     component: () => import('@/views/error/404.vue'),
