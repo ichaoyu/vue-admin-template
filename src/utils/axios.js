@@ -140,8 +140,9 @@ const handleUnauthorized = () => {
   })
     .then(() => {
       const userStore = useUserStore()
-      userStore.logout()
-      window.location.href = '/login'
+      userStore.logout().finally(() => {
+        window.location.href = '/login'
+      })
     })
     .catch(() => {
       // 用户点击取消，不做处理

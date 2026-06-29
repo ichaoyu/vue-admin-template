@@ -55,10 +55,24 @@ export const markAllAsReadAPI = () => api.patch('/notification/read-all')
 export const getUnreadCountAPI = () => api.get('/notification/unread-count')
 
 /**
- * 批量删除通知
- * @param {string[]} ids - 通知ID数组
- * @returns {Promise<Object>} 返回删除结果 { success, affected }
+ * 管理端删除通知
+ * @param {string} id - 通知ID
+ * @returns {Promise<Object>} 返回删除结果
  */
-export const batchDeleteNotificationsAPI = (ids) => api.delete('/notification/batch', { data: { ids } })
+export const deleteNotificationAPI = (id) => api.delete(`/notification/${id}`)
+
+/**
+ * 管理端批量删除通知
+ * @param {string[]} ids - 通知ID数组
+ * @returns {Promise<Object>} 返回删除结果
+ */
+export const batchDeleteNotificationsAPI = (ids) => api.delete('/notification', { data: { ids } })
+
+/**
+ * 用户端批量隐藏通知
+ * @param {string[]} ids - 通知ID数组
+ * @returns {Promise<Object>} 返回隐藏结果 { success, affected }
+ */
+export const hideNotificationsAPI = (ids) => api.delete('/notification/batch', { data: { ids } })
 
 // #endregion

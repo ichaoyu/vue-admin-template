@@ -39,7 +39,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/store/user'
 import { useThemeStore } from '@/store/theme'
@@ -77,7 +77,7 @@ const handleCommand = async (command) => {
       }
       // 断开 WebSocket
       notificationStore.disconnectWebSocket()
-      userStore.logout()
+      await userStore.logout()
       router.push('/login')
       break
   }
@@ -86,6 +86,10 @@ const handleCommand = async (command) => {
 onMounted(() => {
   // 初始化通知数据（加载未读计数 + 最近通知 + WebSocket 连接）
   notificationStore.initNotifications()
+})
+
+onUnmounted(() => {
+  notificationStore.disconnectWebSocket()
 })
 </script>
 

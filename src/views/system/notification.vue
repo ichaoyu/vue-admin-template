@@ -108,6 +108,7 @@ import { useCrud } from '@/hooks'
 import {
   getNotificationManageListAPI,
   sendNotificationAPI,
+  deleteNotificationAPI,
   batchDeleteNotificationsAPI,
   markAsReadAPI,
 } from '@/api/system/notification'
@@ -156,7 +157,7 @@ const {
   getNotificationManageListAPI,
   {
     create: sendNotificationAPI,
-    delete: (id) => batchDeleteNotificationsAPI([id]),
+    delete: deleteNotificationAPI,
     batchDelete: batchDeleteNotificationsAPI,
   },
   {

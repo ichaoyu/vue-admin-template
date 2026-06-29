@@ -19,6 +19,7 @@ let wsInstance = null
 /** 重连相关状态 */
 let reconnectTimer = null
 let reconnectAttempts = 0
+let reconnectEnabled = true
 const MAX_RECONNECT_ATTEMPTS = 50
 const INITIAL_RECONNECT_DELAY = 1000
 const MAX_RECONNECT_DELAY = 30000
@@ -118,6 +119,12 @@ function cleanupConnection() {
  * 安排重连
  */
 function scheduleReconnect() {
+  const userStore = useUserStore()
+  if (!reconnectEnabled || !userStore.token) {
+    connectionStatus.value = WS_STATUS.DISCONNECTED
+    return
+  }
+
   if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
     console.warn('[WebSocket] 达到最大重连次数，停止重连')
     connectionStatus.value = WS_STATUS.DISCONNECTED
@@ -139,11 +146,17 @@ function scheduleReconnect() {
  * 建立 WebSocket 连接
  */
 function connect() {
+  reconnectEnabled = true
+
   const url = getWebSocketUrl()
   if (!url) {
-    console.warn('[WebSocket] 无 token，无法连接')
+    reconnectEnabled = false
+    connectionStatus.value = WS_STATUS.DISCONNECTED
+    console.debug('[WebSocket] 无 token，跳过连接')
     return
   }
+
+  reconnectEnabled = true
 
   // 如果已有连接，先关闭
   if (wsInstance) {
@@ -158,7 +171,7 @@ function connect() {
     wsInstance.onopen = () => {
       console.log('[WebSocket] 连接成功')
       connectionStatus.value = WS_STATUS.CONNECTED
-      reconnectAttempts = 0 // 重置重连计数
+      reconnectAttempts = 0
 
       // 通知所有处理器连接已恢复
       if (eventHandlers.has('_reconnected')) {
@@ -194,9 +207,10 @@ function connect() {
  * 断开 WebSocket 连接
  */
 function disconnect() {
+  reconnectEnabled = false
   connectionStatus.value = WS_STATUS.DISCONNECTED
   cleanupConnection()
-  reconnectAttempts = MAX_RECONNECT_ATTEMPTS // 阻止重连
+  reconnectAttempts = 0
   console.log('[WebSocket] 已主动断开连接')
 }
 

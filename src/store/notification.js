@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { getNotificationListAPI, markAsReadAPI, markAllAsReadAPI, getUnreadCountAPI } from '@/api/system/notification'
 import { useWebSocket, WS_STATUS } from '@/utils/websocket'
+import { useUserStore } from '@/store/user'
 
 export const useNotificationStore = defineStore('notification', {
   state: () => ({
@@ -119,6 +120,9 @@ export const useNotificationStore = defineStore('notification', {
      * 初始化 WebSocket 连接并绑定事件
      */
     initWebSocket() {
+      const userStore = useUserStore()
+      if (!userStore.token) return
+
       const ws = useWebSocket()
 
       // 监听新通知推送
@@ -170,6 +174,12 @@ export const useNotificationStore = defineStore('notification', {
      * 加载未读计数和最近通知，如果有未读通知则触发弹窗
      */
     async initNotifications() {
+      const userStore = useUserStore()
+      if (!userStore.token) {
+        this.disconnectWebSocket()
+        return
+      }
+
       try {
         // 先加载未读计数
         await this.fetchUnreadCount()
