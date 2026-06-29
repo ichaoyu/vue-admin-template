@@ -14,10 +14,10 @@
           <el-icon v-else><Moon /></el-icon>
         </el-button>
       </el-tooltip>
-      <!-- 通知铃铛 -->
-      <NotificationBell />
-      <!-- 新通知弹窗提醒 -->
-      <NotificationToast />
+      <!-- 通知铃铛（暂时隐藏 WebSocket 功能） -->
+      <!-- <NotificationBell /> -->
+      <!-- 新通知弹窗提醒（暂时隐藏 WebSocket 功能） -->
+      <!-- <NotificationToast /> -->
       <el-dropdown @command="handleCommand">
         <div class="user-info">
           <el-avatar :size="32" :src="userStore.userInfo?.avatar">
@@ -45,7 +45,7 @@ import { useUserStore } from '@/store/user'
 import { useThemeStore } from '@/store/theme'
 import { useNotificationStore } from '@/store/notification'
 import { logoutAPI } from '@/api/auth'
-import { NotificationBell, NotificationToast } from '@/components/Notification'
+// import { NotificationBell, NotificationToast } from '@/components/Notification' // 暂时隐藏 WebSocket 功能
 
 const route = useRoute()
 const router = useRouter()
@@ -75,8 +75,8 @@ const handleCommand = async (command) => {
       } catch (error) {
         console.error('退出登录失败:', error)
       }
-      // 断开 WebSocket
-      notificationStore.disconnectWebSocket()
+      // 断开 WebSocket（暂时隐藏 WebSocket 功能）
+      // notificationStore.disconnectWebSocket()
       await userStore.logout()
       router.push('/login')
       break
@@ -84,12 +84,12 @@ const handleCommand = async (command) => {
 }
 
 onMounted(() => {
-  // 初始化通知数据（加载未读计数 + 最近通知 + WebSocket 连接）
-  notificationStore.initNotifications()
+  // 暂时隐藏通知和 WebSocket 功能，不发起 API 请求
+  // notificationStore.initNotifications()
 })
 
 onUnmounted(() => {
-  notificationStore.disconnectWebSocket()
+  // notificationStore.disconnectWebSocket() // 暂时隐藏 WebSocket 功能
 })
 </script>
 

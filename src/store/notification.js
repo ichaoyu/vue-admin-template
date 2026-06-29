@@ -114,27 +114,29 @@ export const useNotificationStore = defineStore('notification', {
     // #region WebSocket 连接管理
 
     initWebSocket() {
-      const userStore = useUserStore()
-      if (!userStore.token) return
-
-      const ws = useWebSocket()
-      ws.clearHandlers(WS_EVENTS)
-
-      ws.on('notification:new', (data) => {
-        this.addNotification(data)
-      })
-
-      ws.on('notification:unread-count', (data) => {
-        if (typeof data?.count === 'number') {
-          this.updateUnreadCount(data.count)
-        }
-      })
-
-      ws.on('_reconnected', () => {
-        this.onWsReconnected()
-      })
-
-      ws.connect()
+      // 暂时禁用 WebSocket 连接
+      return
+      // const userStore = useUserStore()
+      // if (!userStore.token) return
+      //
+      // const ws = useWebSocket()
+      // ws.clearHandlers(WS_EVENTS)
+      //
+      // ws.on('notification:new', (data) => {
+      //   this.addNotification(data)
+      // })
+      //
+      // ws.on('notification:unread-count', (data) => {
+      //   if (typeof data?.count === 'number') {
+      //     this.updateUnreadCount(data.count)
+      //   }
+      // })
+      //
+      // ws.on('_reconnected', () => {
+      //   this.onWsReconnected()
+      // })
+      //
+      // ws.connect()
     },
 
     async onWsReconnected() {
@@ -147,10 +149,12 @@ export const useNotificationStore = defineStore('notification', {
     },
 
     disconnectWebSocket() {
-      const ws = useWebSocket()
-      ws.clearHandlers(WS_EVENTS)
-      ws.disconnect()
-      this.setWsConnected(false)
+      // 暂时禁用 WebSocket 连接
+      return
+      // const ws = useWebSocket()
+      // ws.clearHandlers(WS_EVENTS)
+      // ws.disconnect()
+      // this.setWsConnected(false)
     },
 
     // #endregion

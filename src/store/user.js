@@ -51,9 +51,10 @@ export const useUserStore = defineStore('user', {
       const dictStore = useDictStore()
       dictStore.clearDict()
 
-      const { useNotificationStore } = await import('@/store/notification')
-      const notificationStore = useNotificationStore()
-      notificationStore.disconnectWebSocket()
+      // 暂时禁用 WebSocket 断开连接
+      // const { useNotificationStore } = await import('@/store/notification')
+      // const notificationStore = useNotificationStore()
+      // notificationStore.disconnectWebSocket()
 
       resetRouter()
     },
