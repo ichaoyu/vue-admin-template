@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia'
 import { getNotificationListAPI, markAsReadAPI, markAllAsReadAPI, getUnreadCountAPI } from '@/api/system/notification'
-import { useWebSocket, WS_STATUS } from '@/utils/websocket'
+import { useWebSocket } from '@/utils/websocket'
 import { useUserStore } from '@/store/user'
+
+const WS_EVENTS = ['notification:new', 'notification:unread-count', '_reconnected']
 
 export const useNotificationStore = defineStore('notification', {
   state: () => ({
@@ -66,8 +68,6 @@ export const useNotificationStore = defineStore('notification', {
       if (notification) {
         notification.isRead = 1
       }
-      // WebSocket 会推送未读计数更新，无需手动 fetchUnreadCount
-      // 但作为降级方案，仍保留 HTTP 刷新
       await this.fetchUnreadCount()
     },
 
@@ -105,9 +105,6 @@ export const useNotificationStore = defineStore('notification', {
       this.wsConnected = connected
     },
 
-    /**
-     * 更新未读计数（由 WebSocket 推送触发）
-     */
     updateUnreadCount(count) {
       this.unreadCount = count
     },
@@ -116,39 +113,30 @@ export const useNotificationStore = defineStore('notification', {
 
     // #region WebSocket 连接管理
 
-    /**
-     * 初始化 WebSocket 连接并绑定事件
-     */
     initWebSocket() {
       const userStore = useUserStore()
       if (!userStore.token) return
 
       const ws = useWebSocket()
+      ws.clearHandlers(WS_EVENTS)
 
-      // 监听新通知推送
       ws.on('notification:new', (data) => {
         this.addNotification(data)
       })
 
-      // 监听未读计数推送
       ws.on('notification:unread-count', (data) => {
-        if (typeof data.count === 'number') {
+        if (typeof data?.count === 'number') {
           this.updateUnreadCount(data.count)
         }
       })
 
-      // 监听重连成功事件，刷新数据
       ws.on('_reconnected', () => {
         this.onWsReconnected()
       })
 
-      // 建立连接
       ws.connect()
     },
 
-    /**
-     * WebSocket 重连成功后，重新拉取数据确保一致
-     */
     async onWsReconnected() {
       this.setWsConnected(true)
       try {
@@ -158,21 +146,15 @@ export const useNotificationStore = defineStore('notification', {
       }
     },
 
-    /**
-     * 断开 WebSocket 连接
-     */
     disconnectWebSocket() {
       const ws = useWebSocket()
+      ws.clearHandlers(WS_EVENTS)
       ws.disconnect()
       this.setWsConnected(false)
     },
 
     // #endregion
 
-    /**
-     * 初始化通知数据（登录后调用）
-     * 加载未读计数和最近通知，如果有未读通知则触发弹窗
-     */
     async initNotifications() {
       const userStore = useUserStore()
       if (!userStore.token) {
@@ -181,13 +163,9 @@ export const useNotificationStore = defineStore('notification', {
       }
 
       try {
-        // 先加载未读计数
         await this.fetchUnreadCount()
-
-        // 加载最近通知
         await this.fetchNotifications({ pageSize: 10 })
 
-        // 如果有未读通知，将最新的一条设为 newNotification 以触发弹窗
         if (this.unreadCount > 0 && this.notifications.length > 0) {
           const latestUnread = this.notifications.find((n) => n.isRead === 0)
           if (latestUnread) {
@@ -195,11 +173,9 @@ export const useNotificationStore = defineStore('notification', {
           }
         }
 
-        // 初始化 WebSocket 连接
         this.initWebSocket()
       } catch (error) {
         console.error('[Notification] 初始化通知数据失败:', error)
-        // 即使失败也要尝试建立 WebSocket 连接
         this.initWebSocket()
       }
     },
@@ -208,6 +184,7 @@ export const useNotificationStore = defineStore('notification', {
       this.notifications = []
       this.unreadCount = 0
       this.total = 0
+      this.newNotification = null
     },
 
     setPagination(page, pageSize) {
