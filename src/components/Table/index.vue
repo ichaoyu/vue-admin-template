@@ -74,6 +74,9 @@
         <template v-if="$slots.empty" #empty>
           <slot name="empty" />
         </template>
+        <template v-else #empty>
+          <el-empty description="暂无数据" />
+        </template>
       </el-table>
     </div>
     <!-- #endregion -->

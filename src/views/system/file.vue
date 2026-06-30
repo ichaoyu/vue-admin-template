@@ -111,6 +111,7 @@
 </template>
 
 <script setup>
+import { useErrorHandler } from '@/composables/useErrorHandler'
 import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
@@ -127,6 +128,8 @@ import {
 import { useUserStore } from '@/store/user'
 import { getFileListAPI, getFileInfoAPI, deleteFileAPI } from '@/api/system/file'
 import { formatDateTime } from '@/utils/date'
+
+const { handleApiError } = useErrorHandler()
 
 defineOptions({
   name: 'SystemFileIndex',
@@ -257,8 +260,7 @@ const handleDelete = async (row) => {
       ElMessage.success('删除成功')
       loadFileList()
     } catch (error) {
-      // 错误由 axios 拦截器处理
-      console.error('[API Error]', error)
+      handleApiError(error, 'API')
     }
   } catch {
     // user cancelled

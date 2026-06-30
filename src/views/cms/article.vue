@@ -118,6 +118,7 @@
 </template>
 
 <script setup>
+import { useErrorHandler } from '@/composables/useErrorHandler'
 import { Plus, Edit, Delete } from '@element-plus/icons-vue'
 import { useCrud } from '@/hooks'
 import {
@@ -133,6 +134,8 @@ import { getAllTagsAPI } from '@/api/cms/tag'
 import { formatDateTime } from '@/utils/date'
 const RichTextEditor = defineAsyncComponent(() => import('@/components/RichTextEditor/index.vue'))
 import ProTable from '@/components/Table/index.vue'
+
+const { handleApiError } = useErrorHandler()
 
 defineOptions({
   name: 'CmsArticleIndex',
@@ -222,7 +225,7 @@ const loadCategoryList = async () => {
     categoryList.value = Array.isArray(res) ? res : res?.list || []
   } catch (error) {
     // 错误由 axios 拦截器统一处理
-    console.error('[API Error]', error)
+    handleApiError(error, 'API')
   }
 }
 
@@ -232,7 +235,7 @@ const loadTagList = async () => {
     tagList.value = Array.isArray(res) ? res : res?.list || []
   } catch (error) {
     // 错误由 axios 拦截器统一处理
-    console.error('[API Error]', error)
+    handleApiError(error, 'API')
   }
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard">
+  <div class="dashboard" v-loading="loading">
     <el-card shadow="hover">
       <template #header>
         <div class="card-header">
@@ -40,12 +40,16 @@
 
 <script setup>
 import { getServerStatsAPI } from '@/api/monitor/server'
+import { useErrorHandler } from '@/composables/useErrorHandler'
 
 defineOptions({
   name: 'DashboardIndex',
 })
 
 // #region 数据定义
+
+const { handleApiError } = useErrorHandler()
+const loading = ref(false)
 
 const stats = reactive({
   totalUsers: 0,
@@ -58,6 +62,7 @@ const stats = reactive({
 // #region 数据加载
 
 const loadStats = async () => {
+  loading.value = true
   try {
     const res = await getServerStatsAPI()
     if (res) {
@@ -66,8 +71,9 @@ const loadStats = async () => {
       stats.todayOperations = res.todayOperations || 0
     }
   } catch (error) {
-    // 错误由 axios 拦截器处理，保留默认值 0
-    console.error('[API Error]', error)
+    handleApiError(error, 'Dashboard')
+  } finally {
+    loading.value = false
   }
 }
 

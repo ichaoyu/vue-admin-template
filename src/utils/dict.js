@@ -1,44 +1,4 @@
-// #region 字典常量定义
-
-// 状态常量：0=停用，1=正常
-export const DICT_STATUS = {
-  NORMAL: 1,
-  DISABLED: 0,
-}
-
-// 性别常量：0=男，1=女，2=未知
-export const DICT_SEX = {
-  MALE: 0,
-  FEMALE: 1,
-  UNKNOWN: 2,
-}
-
-// 是否常量：0=否，1=是
-export const DICT_YES_NO = {
-  YES: 1,
-  NO: 0,
-}
-
-// 显示隐藏常量：0=隐藏，1=显示
-export const DICT_SHOW_HIDE = {
-  SHOW: 1,
-  HIDE: 0,
-}
-
-// 菜单类型常量：0=目录，1=菜单，2=按钮
-export const DICT_MENU_TYPE = {
-  DIRECTORY: 0,
-  MENU: 1,
-  BUTTON: 2,
-}
-
-// 删除标志常量：0=删除，1=存在
-export const DICT_DEL_FLAG = {
-  EXIST: 1,
-  DELETED: 0,
-}
-
-// #endregion
+import { DICT_DEL_FLAG, DICT_SEX, DICT_SHOW_HIDE, DICT_STATUS, DICT_YES_NO } from '@/constants'
 
 // #region 核心工具方法
 

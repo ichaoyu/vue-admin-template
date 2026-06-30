@@ -1,4 +1,5 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { STATUS } from '@/constants'
 import { useTable } from './useTable'
 
 /**
@@ -195,7 +196,7 @@ export const useCrud = (fetchAPI, apiMap, options = {}) => {
 
     if (!id) {
       // 没有 ID 时恢复状态
-      row[statusField] = oldStatus === '0' ? '1' : '0'
+      row[statusField] = oldStatus === STATUS.DISABLED ? STATUS.NORMAL : STATUS.DISABLED
       return
     }
 
@@ -204,7 +205,7 @@ export const useCrud = (fetchAPI, apiMap, options = {}) => {
       ElMessage.success('状态更新成功')
     } catch (error) {
       // 失败时恢复状态
-      row[statusField] = oldStatus === '0' ? '1' : '0'
+      row[statusField] = oldStatus === STATUS.DISABLED ? STATUS.NORMAL : STATUS.DISABLED
     }
   }
 

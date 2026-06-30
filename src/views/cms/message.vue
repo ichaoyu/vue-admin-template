@@ -38,12 +38,15 @@
 </template>
 
 <script setup>
+import { useErrorHandler } from '@/composables/useErrorHandler'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Delete } from '@element-plus/icons-vue'
 import { useTable } from '@/hooks'
 import { getMessageListAPI, deleteMessageAPI, batchDeleteMessagesAPI } from '@/api/cms/message'
 import { formatDateTime } from '@/utils/date'
 import ProTable from '@/components/Table/index.vue'
+
+const { handleApiError } = useErrorHandler()
 
 defineOptions({
   name: 'CmsMessageIndex',
@@ -96,7 +99,7 @@ const handleDelete = async (row) => {
   } catch (error) {
     if (error !== 'cancel') {
       // 错误由 axios 拦截器统一处理
-      console.error('[API Error]', error)
+      handleApiError(error, 'API')
     }
   }
 }
@@ -120,7 +123,7 @@ const handleBatchDelete = async () => {
   } catch (error) {
     if (error !== 'cancel') {
       // 错误由 axios 拦截器统一处理
-      console.error('[API Error]', error)
+      handleApiError(error, 'API')
     }
   }
 }

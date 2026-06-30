@@ -126,11 +126,14 @@
 </template>
 
 <script setup>
+import { useErrorHandler } from '@/composables/useErrorHandler'
 import { ElMessage } from 'element-plus'
 import { Camera } from '@element-plus/icons-vue'
 import { useUserStore } from '@/store/user'
 import { getUserProfileAPI, updateUserBaseAPI, updateUserPasswordAPI } from '@/api/auth'
 import { formatDateTime } from '@/utils/date'
+
+const { handleApiError } = useErrorHandler()
 
 defineOptions({
   name: 'UserProfile',
@@ -215,8 +218,7 @@ const loadProfile = async () => {
       remark: res?.remark || '',
     })
   } catch (error) {
-    // 错误由 axios 拦截器处理
-    console.error('[API Error]', error)
+    handleApiError(error, 'API')
   }
 }
 
@@ -260,8 +262,7 @@ const handleSaveBase = async () => {
       // 同步更新store中的用户名显示
       userStore.setUserInfo({ ...userStore.userInfo, nickName: baseForm.nickName })
     } catch (error) {
-      // 错误由 axios 拦截器处理
-      console.error('[API Error]', error)
+      handleApiError(error, 'API')
     } finally {
       submitBaseLoading.value = false
     }
@@ -303,8 +304,7 @@ const handleUpdatePassword = async () => {
       ElMessage.success('密码修改成功，请重新登录')
       resetPwdForm()
     } catch (error) {
-      // 错误由 axios 拦截器处理
-      console.error('[API Error]', error)
+      handleApiError(error, 'API')
     } finally {
       submitPwdLoading.value = false
     }

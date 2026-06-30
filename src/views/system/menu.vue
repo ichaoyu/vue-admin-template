@@ -153,6 +153,7 @@
 </template>
 
 <script setup>
+import { useErrorHandler } from '@/composables/useErrorHandler'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Edit, Delete, Search, Expand } from '@element-plus/icons-vue'
 import { useTable } from '@/hooks'
@@ -162,6 +163,8 @@ import ProTable from '@/components/Table/index.vue'
 import ProDialog from '@/components/Dialog/index.vue'
 import DictSelect from '@/components/DictSelect/index.vue'
 import DictTag from '@/components/DictTag/index.vue'
+
+const { handleApiError } = useErrorHandler()
 
 defineOptions({
   name: 'SystemMenuIndex',
@@ -334,8 +337,7 @@ const onSubmit = async () => {
     dialogVisible.value = false
     getData()
   } catch (error) {
-    // 错误由 axios 拦截器处理
-    console.error('[API Error]', error)
+    handleApiError(error, 'API')
   } finally {
     submitLoading.value = false
   }
@@ -357,8 +359,7 @@ const handleDelete = async (row) => {
       ElMessage.success('删除成功')
       getData()
     } catch (error) {
-      // 错误由 axios 拦截器处理
-      console.error('[API Error]', error)
+      handleApiError(error, 'API')
     }
   } catch {
     // user cancelled

@@ -10,22 +10,24 @@
  * 通用状态
  */
 export const STATUS = {
-  ENABLE: '0',
-  DISABLE: '1',
+  NORMAL: 1,
+  DISABLED: 0,
+  ENABLE: 1,
+  DISABLE: 0,
 }
 
 export const STATUS_OPTIONS = [
-  { label: '正常', value: STATUS.ENABLE },
-  { label: '停用', value: STATUS.DISABLE },
+  { label: '正常', value: STATUS.NORMAL },
+  { label: '停用', value: STATUS.DISABLED },
 ]
 
 /**
  * 性别
  */
 export const GENDER = {
-  MALE: '0',
-  FEMALE: '1',
-  UNKNOWN: '2',
+  MALE: 0,
+  FEMALE: 1,
+  UNKNOWN: 2,
 }
 
 export const GENDER_OPTIONS = [
@@ -38,8 +40,8 @@ export const GENDER_OPTIONS = [
  * 是否
  */
 export const YES_NO = {
-  YES: '1',
-  NO: '0',
+  YES: 1,
+  NO: 0,
 }
 
 export const YES_NO_OPTIONS = [
@@ -62,7 +64,7 @@ export const MENU_TYPE = {
 
 export const MENU_TYPE_OPTIONS = [
   { label: '目录', value: MENU_TYPE.DIRECTORY },
-  { label: '菜单', value: MENU.MENU },
+  { label: '菜单', value: MENU_TYPE.MENU },
   { label: '按钮', value: MENU_TYPE.BUTTON },
 ]
 
@@ -119,6 +121,23 @@ export const DICT_TYPE = {
   SYS_JOB_STATUS: 'sys_job_status',
   SYS_NOTICE_TYPE: 'sys_notice_type',
   SYS_NOTICE_STATUS: 'sys_notice_status',
+}
+
+export const DICT_STATUS = STATUS
+export const DICT_SEX = GENDER
+export const DICT_YES_NO = YES_NO
+export const DICT_SHOW_HIDE = {
+  SHOW: 1,
+  HIDE: 0,
+}
+export const DICT_MENU_TYPE = {
+  DIRECTORY: 0,
+  MENU: 1,
+  BUTTON: 2,
+}
+export const DICT_DEL_FLAG = {
+  EXIST: 1,
+  DELETED: 0,
 }
 
 // #endregion

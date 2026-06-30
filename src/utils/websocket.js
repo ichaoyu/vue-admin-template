@@ -34,15 +34,17 @@ function getReconnectDelay() {
   return Math.max(1000, baseDelay + jitter)
 }
 
-function getWebSocketUrl() {
+function getAuthToken() {
   const userStore = useUserStore()
-  const token = userStore.token
+  return userStore.token || null
+}
 
-  if (!token) return null
+function getWebSocketUrl() {
+  if (!getAuthToken()) return null
 
   const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
   const host = window.location.host
-  return `${protocol}//${host}/ws/notification?token=${encodeURIComponent(token)}`
+  return `${protocol}//${host}/ws/notification`
 }
 
 function scheduleReconnect() {
@@ -82,6 +84,13 @@ function emit(event, data) {
 function handleMessage(rawData) {
   try {
     const msg = JSON.parse(rawData)
+
+    if (msg.event === 'auth:success') {
+      connectionStatus.value = WS_STATUS.CONNECTED
+      reconnectAttempts = 0
+      emit('_reconnected')
+      return
+    }
 
     if (msg.event === 'ping') {
       if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
@@ -150,10 +159,15 @@ function connect() {
     wsInstance = new WebSocket(url)
 
     wsInstance.onopen = () => {
-      console.log('[WebSocket] 连接成功')
-      connectionStatus.value = WS_STATUS.CONNECTED
-      reconnectAttempts = 0
-      emit('_reconnected')
+      const token = getAuthToken()
+      if (!token) {
+        console.warn('[WebSocket] 无 token，关闭连接')
+        disconnect()
+        return
+      }
+
+      wsInstance.send(JSON.stringify({ event: 'auth', data: { token } }))
+      console.log('[WebSocket] 连接成功，已发送认证消息')
     }
 
     wsInstance.onclose = (event) => {

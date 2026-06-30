@@ -65,12 +65,15 @@
 </template>
 
 <script setup>
+import { useErrorHandler } from '@/composables/useErrorHandler'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Edit, Delete } from '@element-plus/icons-vue'
 import { getSiteListAPI, createSiteAPI, updateSiteAPI, deleteSiteAPI, batchDeleteSitesAPI } from '@/api/cms/site'
 import { formatDateTime } from '@/utils/date'
 import ProTable from '@/components/Table/index.vue'
 import ProDialog from '@/components/Dialog/index.vue'
+
+const { handleApiError } = useErrorHandler()
 
 defineOptions({
   name: 'CmsSiteIndex',
@@ -149,8 +152,7 @@ const getData = async () => {
     tableData.value = res?.list || []
     total.value = res?.total || 0
   } catch (error) {
-    // 错误由 axios 拦截器处理
-    console.error('[API Error]', error)
+    handleApiError(error, 'API')
   } finally {
     loading.value = false
   }
@@ -215,8 +217,7 @@ const handleSubmit = async () => {
       dialogVisible.value = false
       getData()
     } catch (error) {
-      // 错误由 axios 拦截器处理
-      console.error('[API Error]', error)
+      handleApiError(error, 'API')
     } finally {
       submitLoading.value = false
     }
@@ -251,8 +252,7 @@ const handleDelete = async (row) => {
       ElMessage.success('删除成功')
       getData()
     } catch (error) {
-      // 错误由 axios 拦截器处理
-      console.error('[API Error]', error)
+      handleApiError(error, 'API')
     }
   } catch {
     // user cancelled
@@ -275,8 +275,7 @@ const handleBatchDelete = async () => {
       ElMessage.success('删除成功')
       getData()
     } catch (error) {
-      // 错误由 axios 拦截器处理
-      console.error('[API Error]', error)
+      handleApiError(error, 'API')
     }
   } catch {
     // user cancelled

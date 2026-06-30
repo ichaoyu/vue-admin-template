@@ -103,12 +103,14 @@
 </template>
 
 <script setup>
+import { useErrorHandler } from '@/composables/useErrorHandler'
 import { ref, reactive, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { Loading, InfoFilled, CircleCheckFilled } from '@element-plus/icons-vue'
 import { sendResetCodeAPI, resetPasswordAPI, getCaptchaAPI } from '@/api/auth'
 
+const { handleApiError } = useErrorHandler()
 const router = useRouter()
 
 // #region 状态管理
@@ -197,7 +199,7 @@ const refreshCaptcha = async () => {
     captchaImage.value = data.image
     emailForm.captchaId = data.id
   } catch (error) {
-    console.error('[API Error]', error)
+    handleApiError(error, 'API')
   }
 }
 

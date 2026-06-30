@@ -148,8 +148,11 @@
 </template>
 
 <script setup>
+import { useErrorHandler } from '@/composables/useErrorHandler'
 import { Refresh, Monitor, Coin, Platform, Folder, Connection, DataLine } from '@element-plus/icons-vue'
 import { getServerInfoAPI } from '@/api/monitor/server'
+
+const { handleApiError } = useErrorHandler()
 
 defineOptions({
   name: 'MonitorServerIndex',
@@ -184,8 +187,7 @@ const getData = async () => {
     serverInfo.node = res?.node || {}
     serverInfo.redis = res?.redis || {}
   } catch (error) {
-    // 错误由 axios 拦截器处理
-    console.error('[API Error]', error)
+    handleApiError(error, 'API')
   } finally {
     loading.value = false
   }

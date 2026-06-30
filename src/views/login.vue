@@ -51,9 +51,12 @@
 </template>
 
 <script setup>
+import { useErrorHandler } from '@/composables/useErrorHandler'
+import { Loading } from '@element-plus/icons-vue'
 import { loginAPI, getCaptchaAPI } from '@/api/auth'
 import { useUserStore } from '@/store/user'
 
+const { handleApiError } = useErrorHandler()
 const router = useRouter()
 const userStore = useUserStore()
 const loginFormRef = ref(null)
@@ -84,8 +87,7 @@ const refreshCaptcha = async () => {
     captchaImage.value = data.image
     loginForm.captchaId = data.id
   } catch (error) {
-    // 错误由 axios 拦截器处理
-    console.error('[API Error]', error)
+    handleApiError(error, 'API')
   }
 }
 

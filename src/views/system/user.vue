@@ -182,6 +182,7 @@
 </template>
 
 <script setup>
+import { useErrorHandler } from '@/composables/useErrorHandler'
 import { Plus, Edit, Delete, Key, SwitchButton } from '@element-plus/icons-vue'
 import { nextTick } from 'vue'
 import { useCrud } from '@/hooks'
@@ -195,6 +196,8 @@ import { useUserStore } from '@/store/user'
 import ProTable from '@/components/Table/index.vue'
 import ProDialog from '@/components/Dialog/index.vue'
 import DictSelect from '@/components/DictSelect/index.vue'
+
+const { handleApiError } = useErrorHandler()
 
 defineOptions({
   name: 'SystemUserIndex',
@@ -300,8 +303,7 @@ const loadRoleList = async () => {
     const res = await getRoleListAPI()
     roleList.value = Array.isArray(res) ? res : res?.list || []
   } catch (error) {
-    // 错误由 axios 拦截器处理
-    console.error('[API Error]', error)
+    handleApiError(error, 'API')
   }
 }
 
@@ -310,8 +312,7 @@ const loadPostList = async () => {
     const res = await getPostListAPI()
     postList.value = Array.isArray(res) ? res : res?.list || []
   } catch (error) {
-    // 错误由 axios 拦截器处理
-    console.error('[API Error]', error)
+    handleApiError(error, 'API')
   }
 }
 
@@ -351,8 +352,7 @@ const handleResetPasswordSubmit = async () => {
     ElMessage.success('密码重置成功，新密码为：123456')
     resetPasswordVisible.value = false
   } catch (error) {
-    // 错误由 axios 拦截器处理
-    console.error('[API Error]', error)
+    handleApiError(error, 'API')
   } finally {
     resetLoading.value = false
   }
@@ -369,8 +369,7 @@ const handleForceOffline = async (row) => {
     ElMessage.success('用户已强制下线')
   } catch (error) {
     if (error !== 'cancel') {
-      // 错误由 axios 拦截器处理
-      console.error('[API Error]', error)
+      handleApiError(error, 'API')
     }
   }
 }

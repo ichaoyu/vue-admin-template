@@ -133,7 +133,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item v-if="form.scopeType === '1'" label="选择部门:" prop="deptIds">
+        <el-form-item v-if="Number(form.scopeType) === 1" label="选择部门:" prop="deptIds">
           <el-tree-select
             v-model="form.deptIds"
             :data="deptTree"
@@ -155,6 +155,7 @@
 </template>
 
 <script setup>
+import { useErrorHandler } from '@/composables/useErrorHandler'
 import { Plus, Edit, Delete } from '@element-plus/icons-vue'
 import { useCrud } from '@/hooks'
 import {
@@ -172,6 +173,8 @@ import DictSelect from '@/components/DictSelect/index.vue'
 import DictTag from '@/components/DictTag/index.vue'
 import StatusSwitch from '@/components/StatusSwitch/index.vue'
 import ConfirmButton from '@/components/ConfirmButton/index.vue'
+
+const { handleApiError } = useErrorHandler()
 
 defineOptions({
   name: 'SystemDataPermissionIndex',
@@ -245,8 +248,7 @@ const loadDeptTree = async () => {
     const res = await getDeptTreeAPI()
     deptTree.value = res || []
   } catch (error) {
-    // 错误由 axios 拦截器处理
-    console.error('[API Error]', error)
+    handleApiError(error, 'API')
   }
 }
 
@@ -275,7 +277,7 @@ const onSubmit = () => {
 watch(
   () => form.value.scopeType,
   (val) => {
-    if (val !== '1') {
+    if (Number(val) !== 1) {
       form.value.deptIds = []
     }
   }

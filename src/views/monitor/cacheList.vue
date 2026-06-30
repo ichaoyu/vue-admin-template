@@ -204,6 +204,7 @@
 </template>
 
 <script setup>
+import { useErrorHandler } from '@/composables/useErrorHandler'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Delete, Refresh, Search, InfoFilled, RefreshLeft } from '@element-plus/icons-vue'
 import {
@@ -216,6 +217,8 @@ import {
   getCacheStatsAPI,
   resetCacheStatsAPI,
 } from '@/api/monitor/cacheList'
+
+const { handleApiError } = useErrorHandler()
 
 defineOptions({
   name: 'MonitorCacheListIndex',
@@ -441,8 +444,7 @@ const handleClearAllCache = async () => {
       handleGroupClick(currentGroup.value)
     }
   } catch (error) {
-    // 错误由 axios 拦截器处理
-    console.error('[API Error]', error)
+    handleApiError(error, 'API')
   } finally {
     loading.value = false
   }
@@ -464,8 +466,7 @@ const handleResetStats = async () => {
     ElMessage.success('重置统计成功')
     loadStats()
   } catch (error) {
-    // 错误由 axios 拦截器处理
-    console.error('[API Error]', error)
+    handleApiError(error, 'API')
   }
 }
 

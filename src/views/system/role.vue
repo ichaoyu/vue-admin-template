@@ -164,6 +164,7 @@
 </template>
 
 <script setup>
+import { useErrorHandler } from '@/composables/useErrorHandler'
 import { Plus, Edit, InfoFilled } from '@element-plus/icons-vue'
 import { nextTick } from 'vue'
 import { useCrud } from '@/hooks'
@@ -183,6 +184,8 @@ import ProDialog from '@/components/Dialog/index.vue'
 import DictSelect from '@/components/DictSelect/index.vue'
 import StatusSwitch from '@/components/StatusSwitch/index.vue'
 import ConfirmButton from '@/components/ConfirmButton/index.vue'
+
+const { handleApiError } = useErrorHandler()
 
 defineOptions({
   name: 'SystemRoleIndex',
@@ -412,8 +415,7 @@ const onEdit = async (row) => {
       }, 300)
     }
   } catch (error) {
-    // 错误由 axios 拦截器处理
-    console.error('[API Error]', error)
+    handleApiError(error, 'API')
   } finally {
     submitLoading.value = false
   }
